@@ -9,12 +9,12 @@ import (
 )
 
 type Querier interface {
-	CountFiles(ctx context.Context) (int64, error)
 	CreateFile(ctx context.Context, arg CreateFileParams) (StorageFile, error)
-	DeleteFile(ctx context.Context, id string) error
+	CreateOutboxEvent(ctx context.Context, arg CreateOutboxEventParams) error
 	DeleteFilesByIDs(ctx context.Context, dollar_1 []string) error
-	GetFileByID(ctx context.Context, id string) (StorageFile, error)
 	GetFiles(ctx context.Context, arg GetFilesParams) ([]GetFilesRow, error)
+	GetOutboxUnpublishedEvents(ctx context.Context, limit int32) ([]GetOutboxUnpublishedEventsRow, error)
+	MarkEventAsPublished(ctx context.Context, eventID string) error
 }
 
 var _ Querier = (*Queries)(nil)

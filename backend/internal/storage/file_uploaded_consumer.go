@@ -13,13 +13,13 @@ import (
 
 type FileUploadedConsumer struct {
 	*nats.NatsConsumer[*events.FileUploadedEvent]
-	db storagedb.Querier
+	db *storagedb.Queries
 	s3 *s3.Client
 }
 
 func NewFileUploadedConsumer(
 	js jetstream.JetStream,
-	db storagedb.Querier,
+	db *storagedb.Queries,
 	s3 *s3.Client,
 ) *FileUploadedConsumer {
 	name := "storage_file_uploaded_consumer"

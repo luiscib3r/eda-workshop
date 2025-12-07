@@ -9,26 +9,29 @@ import (
 	"context"
 	"time"
 
+	"google.golang.org/protobuf/encoding/protojson"
+
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 type FilesService struct {
 	storage.UnimplementedFilesServiceServer
-	db       storagedb.Querier
-	producer *StorageProducer
+	db   *storagedb.Queries
+	pool *pgxpool.Pool
 }
 
 var _ storage.FilesServiceServer = (*FilesService)(nil)
 var _ service.Service = (*FilesService)(nil)
 
 func NewFilesService(
-	db storagedb.Querier,
-	producer *StorageProducer,
+	db *storagedb.Queries,
+	pool *pgxpool.Pool,
 ) *FilesService {
 	return &FilesService{
-		db:       db,
-		producer: producer,
+		db:   db,
+		pool: pool,
 	}
 }
 
@@ -87,7 +90,15 @@ func (f *FilesService) DeleteFiles(
 	ctx context.Context,
 	req *storage.DeleteFilesRequest,
 ) (*emptypb.Empty, error) {
-	err := f.db.DeleteFilesByIDs(ctx, req.FileKeys)
+	tx, err := f.pool.Begin(ctx)
+	if err != nil {
+		return nil, err
+	}
+	defer tx.Rollback(ctx)
+
+	qtx := f.db.WithTx(tx)
+
+	err = qtx.DeleteFilesByIDs(ctx, req.FileKeys)
 	if err != nil {
 		return nil, err
 	}
@@ -98,8 +109,23 @@ func (f *FilesService) DeleteFiles(
 		},
 	)
 
-	err = f.producer.Publish(ctx, event)
+	eventId := event.ID()
+	eventType := event.Type()
+	payload, err := protojson.Marshal(event.Data())
 	if err != nil {
+		return nil, err
+	}
+
+	err = qtx.CreateOutboxEvent(ctx, storagedb.CreateOutboxEventParams{
+		EventID:   eventId,
+		EventType: eventType,
+		Payload:   payload,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if err := tx.Commit(ctx); err != nil {
 		return nil, err
 	}
 

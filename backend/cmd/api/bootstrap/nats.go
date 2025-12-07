@@ -15,8 +15,10 @@ var NatsModule = fx.Module(
 	fx.Provide(storage.NewStorageProducer),
 	fx.Provide(storage.NewFileUploadedConsumer),
 	fx.Provide(storage.NewFilesDeletedConsumer),
+	fx.Provide(storage.NewOutboxProcessor),
 	fx.Invoke(CreateStorageChannel),
 	fx.Invoke(SubcribeStorageConsumers),
+	fx.Invoke(RunOutboxProcessor),
 )
 
 func CreateStorageChannel(
@@ -48,6 +50,25 @@ func SubcribeStorageConsumers(
 		OnStop: func(ctx context.Context) error {
 			fileUploadedConsumer.Stop()
 			filesDeletedConsumer.Stop()
+			return nil
+		},
+	})
+}
+
+func RunOutboxProcessor(
+	lc fx.Lifecycle,
+	processor *storage.OutboxProcessor,
+) {
+	ctx := context.Background()
+	ctx, cancel := context.WithCancel(ctx)
+
+	lc.Append(fx.Hook{
+		OnStart: func(_ context.Context) error {
+			go processor.Start(ctx)
+			return nil
+		},
+		OnStop: func(_ context.Context) error {
+			cancel()
 			return nil
 		},
 	})

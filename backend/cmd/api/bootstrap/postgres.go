@@ -17,7 +17,7 @@ import (
 var PostgresModule = fx.Module(
 	"postgres",
 	fx.Provide(postgres.NewPool),
-	fx.Provide(func(pool *pgxpool.Pool) storagedb.Querier {
+	fx.Provide(func(pool *pgxpool.Pool) *storagedb.Queries {
 		return storagedb.New(pool)
 	}),
 	fx.Invoke(RunStorageMigrations),

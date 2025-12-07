@@ -9,7 +9,7 @@ import (
 )
 
 type FilesDeletedEvent struct {
-	id      string
+	Id      string
 	Payload *storage.FilesDeletedEventData
 }
 
@@ -19,7 +19,7 @@ func NewFilesDeletedEvent(
 	payload *storage.FilesDeletedEventData,
 ) *FilesDeletedEvent {
 	return &FilesDeletedEvent{
-		id:      core.NewEventID(),
+		Id:      core.NewEventID(),
 		Payload: payload,
 	}
 }
@@ -36,7 +36,7 @@ func NewFilesDeletedEventFromMessage(
 	}
 
 	event := &FilesDeletedEvent{
-		id:      headers.Get("Event-ID"),
+		Id:      headers.Get("Event-ID"),
 		Payload: payload,
 	}
 
@@ -45,7 +45,7 @@ func NewFilesDeletedEventFromMessage(
 
 // ID implements core.EventSpec.
 func (ev *FilesDeletedEvent) ID() string {
-	return ev.id
+	return ev.Id
 }
 
 // Type implements core.EventSpec.

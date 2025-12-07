@@ -17,3 +17,11 @@ type StorageFile struct {
 	CreatedAt  pgtype.Timestamptz `json:"created_at"`
 	UpdatedAt  pgtype.Timestamptz `json:"updated_at"`
 }
+
+type StorageOutbox struct {
+	EventID     string             `json:"event_id"`
+	EventType   string             `json:"event_type"`
+	Payload     []byte             `json:"payload"`
+	CreatedAt   pgtype.Timestamptz `json:"created_at"`
+	PublishedAt pgtype.Timestamptz `json:"published_at"`
+}

@@ -11,17 +11,6 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
-const countFiles = `-- name: CountFiles :one
-SELECT COUNT(*) FROM storage.files
-`
-
-func (q *Queries) CountFiles(ctx context.Context) (int64, error) {
-	row := q.db.QueryRow(ctx, countFiles)
-	var count int64
-	err := row.Scan(&count)
-	return count, err
-}
-
 const createFile = `-- name: CreateFile :one
 INSERT INTO storage.files (id, file_name, file_size, file_type, bucket_name)
 VALUES ($1, $2, $3, $4, $5)
@@ -57,16 +46,6 @@ func (q *Queries) CreateFile(ctx context.Context, arg CreateFileParams) (Storage
 	return i, err
 }
 
-const deleteFile = `-- name: DeleteFile :exec
-DELETE FROM storage.files
-WHERE id = $1
-`
-
-func (q *Queries) DeleteFile(ctx context.Context, id string) error {
-	_, err := q.db.Exec(ctx, deleteFile, id)
-	return err
-}
-
 const deleteFilesByIDs = `-- name: DeleteFilesByIDs :exec
 DELETE FROM storage.files
 WHERE id = ANY($1::text[])
@@ -75,26 +54,6 @@ WHERE id = ANY($1::text[])
 func (q *Queries) DeleteFilesByIDs(ctx context.Context, dollar_1 []string) error {
 	_, err := q.db.Exec(ctx, deleteFilesByIDs, dollar_1)
 	return err
-}
-
-const getFileByID = `-- name: GetFileByID :one
-SELECT id, file_name, file_size, file_type, bucket_name, created_at, updated_at FROM storage.files
-WHERE id = $1
-`
-
-func (q *Queries) GetFileByID(ctx context.Context, id string) (StorageFile, error) {
-	row := q.db.QueryRow(ctx, getFileByID, id)
-	var i StorageFile
-	err := row.Scan(
-		&i.ID,
-		&i.FileName,
-		&i.FileSize,
-		&i.FileType,
-		&i.BucketName,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-	)
-	return i, err
 }
 
 const getFiles = `-- name: GetFiles :many

@@ -11,17 +11,7 @@ FROM storage.files
 ORDER BY created_at DESC
 LIMIT $1 OFFSET $2;
 
--- name: CountFiles :one
-SELECT COUNT(*) FROM storage.files;
-
--- name: GetFileByID :one
-SELECT * FROM storage.files
-WHERE id = $1;
-
--- name: DeleteFile :exec
-DELETE FROM storage.files
-WHERE id = $1;
-
 -- name: DeleteFilesByIDs :exec
 DELETE FROM storage.files
 WHERE id = ANY($1::text[]);
+

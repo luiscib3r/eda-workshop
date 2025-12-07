@@ -9,7 +9,7 @@ import (
 )
 
 type FileUploadedEvent struct {
-	id      string
+	Id      string
 	Payload *storage.FileUploadedEventData
 }
 
@@ -19,7 +19,7 @@ func NewFileUploadedEvent(
 	payload *storage.FileUploadedEventData,
 ) *FileUploadedEvent {
 	return &FileUploadedEvent{
-		id:      core.NewEventID(),
+		Id:      core.NewEventID(),
 		Payload: payload,
 	}
 }
@@ -36,7 +36,7 @@ func NewFileUploadedEventFromMessage(
 	}
 
 	event := &FileUploadedEvent{
-		id:      headers.Get("Event-ID"),
+		Id:      headers.Get("Event-ID"),
 		Payload: payload,
 	}
 
@@ -45,7 +45,7 @@ func NewFileUploadedEventFromMessage(
 
 // ID implements core.EventSpec.
 func (ev *FileUploadedEvent) ID() string {
-	return ev.id
+	return ev.Id
 }
 
 // Type implements core.EventSpec.
