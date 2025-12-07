@@ -7,7 +7,8 @@ SELECT event_id, event_type, payload, created_at
 FROM storage.outbox
 WHERE published_at IS NULL
 ORDER BY created_at
-LIMIT $1;
+LIMIT $1
+FOR UPDATE SKIP LOCKED;
 
 -- name: MarkEventAsPublished :exec
 UPDATE storage.outbox

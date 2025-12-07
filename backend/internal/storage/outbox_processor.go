@@ -65,7 +65,16 @@ func (p *OutboxProcessor) process(ctx context.Context) error {
 	)
 	defer span.End()
 
-	events, err := p.db.GetOutboxUnpublishedEvents(ctx, 100)
+	tx, err := p.pool.Begin(ctx)
+	if err != nil {
+		span.RecordError(err)
+		return err
+	}
+	defer tx.Rollback(ctx)
+
+	qtx := p.db.WithTx(tx)
+
+	events, err := qtx.GetOutboxUnpublishedEvents(ctx, 100)
 	if err != nil {
 		span.RecordError(err)
 		return err
@@ -79,12 +88,17 @@ func (p *OutboxProcessor) process(ctx context.Context) error {
 
 	successCount := 0
 	failureCount := 0
+	publishedButNotMarked := 0
 
 	for _, event := range events {
 		if err := p.publish(ctx, event); err != nil {
-			slog.ErrorContext(ctx, "failed to publish outbox event",
-				"event_id", event.EventID, "error", err)
+			span.RecordError(err)
 			failureCount++
+			continue
+		}
+		if err := qtx.MarkEventAsPublished(ctx, event.EventID); err != nil {
+			span.RecordError(err)
+			publishedButNotMarked++
 			continue
 		}
 		successCount++
@@ -93,7 +107,13 @@ func (p *OutboxProcessor) process(ctx context.Context) error {
 	span.SetAttributes(
 		attribute.Int("outbox.published_count", successCount),
 		attribute.Int("outbox.failed_count", failureCount),
+		attribute.Int("outbox.published_but_not_marked", publishedButNotMarked),
 	)
+
+	if err := tx.Commit(ctx); err != nil {
+		span.RecordError(err)
+		return err
+	}
 
 	return nil
 }
@@ -108,10 +128,6 @@ func (p *OutboxProcessor) publish(
 	}
 
 	if err := p.producer.Publish(ctx, ev); err != nil {
-		return err
-	}
-
-	if err := p.db.MarkEventAsPublished(ctx, event.EventID); err != nil {
 		return err
 	}
 

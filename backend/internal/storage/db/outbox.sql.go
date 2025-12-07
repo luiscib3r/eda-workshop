@@ -33,6 +33,7 @@ FROM storage.outbox
 WHERE published_at IS NULL
 ORDER BY created_at
 LIMIT $1
+FOR UPDATE SKIP LOCKED
 `
 
 type GetOutboxUnpublishedEventsRow struct {
