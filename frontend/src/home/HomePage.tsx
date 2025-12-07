@@ -11,9 +11,16 @@ import {
   TableHeader,
   TableHeaderCell,
   TableRow,
+  TableSelectionCell,
 } from "@fluentui/react-components";
-import { ArrowClockwiseRegular, DocumentRegular } from "@fluentui/react-icons";
+import {
+  ArrowClockwiseRegular,
+  DeleteRegular,
+  DocumentRegular,
+} from "@fluentui/react-icons";
+import { useState } from "react";
 import UploadDialog from "./components/UploadDialog";
+import { useDeleteFiles } from "./hooks/useDeleteFiles";
 import { useFiles } from "./hooks/useFiles";
 
 function HomePage() {
@@ -26,6 +33,8 @@ function HomePage() {
 
 function HomeView() {
   const { data, isLoading, setPage, error, refetch } = useFiles();
+  const { deleteFiles } = useDeleteFiles();
+  const [selected, setSelected] = useState<string[]>([]);
 
   if (isLoading) {
     return (
@@ -61,6 +70,18 @@ function HomeView() {
       <div className="flex justify-between items-center p-6 border-b">
         <h1 className="text-2xl font-semibold">Files</h1>
         <div className="flex gap-2">
+          {selected.length > 0 && (
+            <Button
+              appearance="secondary"
+              icon={<DeleteRegular />}
+              onClick={() => {
+                deleteFiles({ query: { fileKeys: selected } });
+                setSelected([]);
+              }}
+            >
+              Delete ({selected.length})
+            </Button>
+          )}
           <Button
             appearance="subtle"
             icon={<ArrowClockwiseRegular />}
@@ -74,7 +95,7 @@ function HomeView() {
 
       {/* Content */}
       <div className="flex-1 overflow-auto p-6">
-        <FilesTable data={data} />
+        <FilesTable data={data} selected={selected} setSelected={setSelected} />
       </div>
 
       {/* Pagination */}
@@ -92,19 +113,40 @@ function HomeView() {
   );
 }
 
-function FilesTable({ data }: { data: StorageGetFilesResponse }) {
+function FilesTable({
+  data,
+  selected,
+  setSelected,
+}: {
+  data: StorageGetFilesResponse;
+  selected: string[];
+  setSelected: (selected: string[]) => void;
+}) {
   const columns = [
     { columnKey: "fileName", label: "File" },
     { columnKey: "fileSize", label: "Size" },
     { columnKey: "createdAt", label: "Uploaded At" },
   ];
 
-  const items = data.files || [];
+  const items = (data.files || []).filter((item) => item.fileKey);
+
+  const toggleAllRows = () => {
+    if (selected.length === items.length) {
+      setSelected([]);
+    } else {
+      setSelected(items.map((item) => item.fileKey!));
+    }
+  };
 
   return (
     <Table>
       <TableHeader>
         <TableRow>
+          <TableSelectionCell
+            checked={selected.length === items.length && items.length > 0}
+            onClick={toggleAllRows}
+            checkboxIndicator={{ "aria-label": "Select all files" }}
+          />
           {columns.map((column) => (
             <TableHeaderCell key={column.columnKey}>
               {column.label}
@@ -114,7 +156,21 @@ function FilesTable({ data }: { data: StorageGetFilesResponse }) {
       </TableHeader>
       <TableBody>
         {items.map((item) => (
-          <TableRow key={item.fileKey}>
+          <TableRow
+            key={item.fileKey}
+            onClick={() => {
+              const isSelected = selected.includes(item.fileKey!);
+              if (isSelected) {
+                setSelected(selected.filter((key) => key !== item.fileKey));
+              } else {
+                setSelected([...selected, item.fileKey!]);
+              }
+            }}
+          >
+            <TableSelectionCell
+              checked={selected.includes(item.fileKey!)}
+              checkboxIndicator={{ "aria-label": "Select file" }}
+            />
             <TableCell>
               <TableCellLayout media={<DocumentRegular />}>
                 {item.fileName}
