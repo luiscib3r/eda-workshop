@@ -12,13 +12,13 @@ var NatsModule = fx.Module(
 	"nats",
 	fx.Provide(nats.NewNatsClient),
 	fx.Provide(nats.NewJetStreamClient),
-	fx.Provide(telegram.NewFileUploadedEventConsumer),
+	fx.Provide(telegram.NewFileUploadedConsumer),
 	fx.Invoke(SubcribeTelegramConsumers),
 )
 
 func SubcribeTelegramConsumers(
 	lc fx.Lifecycle,
-	fileUploadedConsumer *telegram.FileUploadedEventConsumer,
+	fileUploadedConsumer *telegram.FileUploadedConsumer,
 ) {
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {

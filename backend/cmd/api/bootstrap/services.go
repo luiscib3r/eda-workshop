@@ -17,6 +17,7 @@ var ServicesModule = fx.Module(
 	fx.Provide(service.AsService(func(storage *storage.StorageService) *storage.StorageService {
 		return storage
 	})),
+	fx.Provide(service.AsService(storage.NewFilesService)),
 	// Register services
 	fx.Provide(service.AsRegister(service.RegisterServices)),
 	// Create buckets on startup

@@ -9,6 +9,9 @@
       "name": "HealthService"
     },
     {
+      "name": "FilesService"
+    },
+    {
       "name": "StorageService"
     }
   ],
@@ -78,6 +81,46 @@
         ]
       }
     },
+    "/storage/files": {
+      "get": {
+        "summary": "Get Files",
+        "description": "Retrieves a paginated list of files.",
+        "operationId": "FilesService_GetFiles",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/storageGetFilesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "Files"
+        ]
+      }
+    },
     "/storage/upload-url": {
       "get": {
         "summary": "Get Upload URL",
@@ -104,6 +147,26 @@
     }
   },
   "definitions": {
+    "corePagination": {
+      "type": "object",
+      "properties": {
+        "pageNumber": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalItems": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "hasNextPage": {
+          "type": "boolean"
+        }
+      }
+    },
     "healthHealthResponse": {
       "type": "object",
       "properties": {
@@ -151,6 +214,42 @@
         },
         "bucketName": {
           "type": "string"
+        }
+      }
+    },
+    "storageFile": {
+      "type": "object",
+      "properties": {
+        "fileName": {
+          "type": "string"
+        },
+        "fileKey": {
+          "type": "string"
+        },
+        "fileSize": {
+          "type": "string",
+          "format": "int64"
+        },
+        "fileType": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string"
+        }
+      }
+    },
+    "storageGetFilesResponse": {
+      "type": "object",
+      "properties": {
+        "pagination": {
+          "$ref": "#/definitions/corePagination"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/storageFile"
+          }
         }
       }
     },

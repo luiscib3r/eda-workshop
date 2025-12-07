@@ -3,8 +3,8 @@
 import { queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { healthServiceHealth, type Options, storageServiceConfirmFileUpload, storageServiceGetUploadUrl } from '../sdk.gen';
-import type { HealthServiceHealthData, HealthServiceHealthError, HealthServiceHealthResponse, StorageServiceConfirmFileUploadData, StorageServiceConfirmFileUploadError, StorageServiceConfirmFileUploadResponse, StorageServiceGetUploadUrlData, StorageServiceGetUploadUrlError, StorageServiceGetUploadUrlResponse } from '../types.gen';
+import { filesServiceGetFiles, healthServiceHealth, type Options, storageServiceConfirmFileUpload, storageServiceGetUploadUrl } from '../sdk.gen';
+import type { FilesServiceGetFilesData, FilesServiceGetFilesError, FilesServiceGetFilesResponse, HealthServiceHealthData, HealthServiceHealthError, HealthServiceHealthResponse, StorageServiceConfirmFileUploadData, StorageServiceConfirmFileUploadError, StorageServiceConfirmFileUploadResponse, StorageServiceGetUploadUrlData, StorageServiceGetUploadUrlError, StorageServiceGetUploadUrlResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -77,6 +77,26 @@ export const storageServiceConfirmFileUploadMutation = (options?: Partial<Option
     };
     return mutationOptions;
 };
+
+export const filesServiceGetFilesQueryKey = (options?: Options<FilesServiceGetFilesData>) => createQueryKey('filesServiceGetFiles', options);
+
+/**
+ * Get Files
+ *
+ * Retrieves a paginated list of files.
+ */
+export const filesServiceGetFilesOptions = (options?: Options<FilesServiceGetFilesData>) => queryOptions<FilesServiceGetFilesResponse, FilesServiceGetFilesError, FilesServiceGetFilesResponse, ReturnType<typeof filesServiceGetFilesQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await filesServiceGetFiles({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: filesServiceGetFilesQueryKey(options)
+});
 
 export const storageServiceGetUploadUrlQueryKey = (options?: Options<StorageServiceGetUploadUrlData>) => createQueryKey('storageServiceGetUploadUrl', options);
 

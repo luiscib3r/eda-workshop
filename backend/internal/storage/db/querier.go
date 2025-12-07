@@ -13,7 +13,7 @@ type Querier interface {
 	CreateFile(ctx context.Context, arg CreateFileParams) (StorageFile, error)
 	DeleteFile(ctx context.Context, id string) error
 	GetFileByID(ctx context.Context, id string) (StorageFile, error)
-	GetFiles(ctx context.Context, arg GetFilesParams) ([]StorageFile, error)
+	GetFiles(ctx context.Context, arg GetFilesParams) ([]GetFilesRow, error)
 }
 
 var _ Querier = (*Queries)(nil)

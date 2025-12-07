@@ -8,28 +8,27 @@ import (
 	"github.com/nats-io/nats.go/jetstream"
 )
 
-type FileUploadedEventConsumer struct {
+type FileUploadedConsumer struct {
 	*nats.NatsConsumer[*storage.FileUploadedEvent]
 	bot *TelegramBot
 }
 
-func NewFileUploadedEventConsumer(
+func NewFileUploadedConsumer(
 	js jetstream.JetStream,
 	bot *TelegramBot,
-) *FileUploadedEventConsumer {
+) *FileUploadedConsumer {
 	name := "tgbot_file_uploaded_consumer"
-	channel := "storage"
-	event := "storage.file.uploaded"
+
 	numWorkers := 5
 	workerBufferSize := 10
-	consumer := &FileUploadedEventConsumer{
+	consumer := &FileUploadedConsumer{
 		bot: bot,
 	}
 
 	consumer.NatsConsumer = nats.NewNatsConsumer(
 		name,
-		channel,
-		event,
+		storage.STORAGE_CHANNEL,
+		storage.STORAGE_FILE_UPLOADED_EVENT,
 		numWorkers,
 		workerBufferSize,
 		storage.NewFileUploadedEventFromMessage,
@@ -39,14 +38,14 @@ func NewFileUploadedEventConsumer(
 			Name:          name,
 			Durable:       name,
 			Description:   "Telegram Bot File Uploaded Event Consumer",
-			FilterSubject: event,
+			FilterSubject: storage.STORAGE_FILE_UPLOADED_EVENT,
 		},
 	)
 
 	return consumer
 }
 
-func (c *FileUploadedEventConsumer) handler(
+func (c *FileUploadedConsumer) handler(
 	ctx context.Context,
 	event *storage.FileUploadedEvent,
 ) error {

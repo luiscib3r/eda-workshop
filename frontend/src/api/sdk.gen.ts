@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { HealthServiceHealthData, HealthServiceHealthErrors, HealthServiceHealthResponses, StorageServiceConfirmFileUploadData, StorageServiceConfirmFileUploadErrors, StorageServiceConfirmFileUploadResponses, StorageServiceGetUploadUrlData, StorageServiceGetUploadUrlErrors, StorageServiceGetUploadUrlResponses } from './types.gen';
+import type { FilesServiceGetFilesData, FilesServiceGetFilesErrors, FilesServiceGetFilesResponses, HealthServiceHealthData, HealthServiceHealthErrors, HealthServiceHealthResponses, StorageServiceConfirmFileUploadData, StorageServiceConfirmFileUploadErrors, StorageServiceConfirmFileUploadResponses, StorageServiceGetUploadUrlData, StorageServiceGetUploadUrlErrors, StorageServiceGetUploadUrlResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -38,6 +38,13 @@ export const storageServiceConfirmFileUpload = <ThrowOnError extends boolean = f
         ...options.headers
     }
 });
+
+/**
+ * Get Files
+ *
+ * Retrieves a paginated list of files.
+ */
+export const filesServiceGetFiles = <ThrowOnError extends boolean = false>(options?: Options<FilesServiceGetFilesData, ThrowOnError>) => (options?.client ?? client).get<FilesServiceGetFilesResponses, FilesServiceGetFilesErrors, ThrowOnError>({ url: '/storage/files', ...options });
 
 /**
  * Get Upload URL

@@ -8,6 +8,11 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
+const (
+	STORAGE_CHANNEL             string = "storage"
+	STORAGE_FILE_UPLOADED_EVENT string = "storage.file.uploaded"
+)
+
 type FileUploadedEvent struct {
 	id      string
 	Payload *storage.FileUploadedEventData

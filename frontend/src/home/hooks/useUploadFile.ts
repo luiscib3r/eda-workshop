@@ -1,17 +1,28 @@
 import {
+  filesServiceGetFilesQueryKey,
   storageServiceConfirmFileUploadMutation,
   storageServiceGetUploadUrlOptions,
 } from "@/api/@tanstack/react-query.gen";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 
 export const useUploadFile = () => {
   const [files, setFiles] = useState<FileList | null>(null);
+  const queryClient = useQueryClient();
+
   const { data, error, isLoading } = useQuery(
     storageServiceGetUploadUrlOptions()
   );
 
-  const confirm = useMutation(storageServiceConfirmFileUploadMutation());
+  const confirm = useMutation({
+    ...storageServiceConfirmFileUploadMutation(),
+    onSuccess: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      queryClient.invalidateQueries({
+        queryKey: filesServiceGetFilesQueryKey(),
+      });
+    },
+  });
 
   const upload = useMutation({
     mutationFn: async () => {

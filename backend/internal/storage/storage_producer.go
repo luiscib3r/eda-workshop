@@ -15,20 +15,20 @@ func NewStorageProducer(
 	js jetstream.JetStream,
 ) *StorageProducer {
 	name := "storage_producer"
-	channel := "storage"
+
 	return &StorageProducer{
 		NatsProducer: nats.NewNatsProducer(
 			// Producer Name
 			name,
 			// Channel Name
-			channel,
+			STORAGE_CHANNEL,
 			// JetStream Context
 			js,
 			// Stream Configuration
 			jetstream.StreamConfig{
-				Name:        nats.StreamName(channel),
+				Name:        nats.StreamName(STORAGE_CHANNEL),
 				Description: "Storage Service Event Stream",
-				Subjects:    []string{fmt.Sprintf("%s.>", channel)},
+				Subjects:    []string{fmt.Sprintf("%s.>", STORAGE_CHANNEL)},
 			},
 		),
 	}

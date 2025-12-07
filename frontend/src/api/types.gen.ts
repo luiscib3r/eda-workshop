@@ -4,6 +4,13 @@ export type ClientOptions = {
     baseUrl: string;
 };
 
+export type CorePagination = {
+    pageNumber?: number;
+    pageSize?: number;
+    totalItems?: number;
+    hasNextPage?: boolean;
+};
+
 export type HealthHealthResponse = {
     status?: string;
 };
@@ -23,6 +30,19 @@ export type StorageConfirmFileUploadRequest = {
     fileName?: string;
     fileKey?: string;
     bucketName?: string;
+};
+
+export type StorageFile = {
+    fileName?: string;
+    fileKey?: string;
+    fileSize?: string;
+    fileType?: string;
+    createdAt?: string;
+};
+
+export type StorageGetFilesResponse = {
+    pagination?: CorePagination;
+    files?: Array<StorageFile>;
 };
 
 export type StorageGetUploadUrlResponse = {
@@ -82,6 +102,34 @@ export type StorageServiceConfirmFileUploadResponses = {
 };
 
 export type StorageServiceConfirmFileUploadResponse = StorageServiceConfirmFileUploadResponses[keyof StorageServiceConfirmFileUploadResponses];
+
+export type FilesServiceGetFilesData = {
+    body?: never;
+    path?: never;
+    query?: {
+        pageNumber?: number;
+        pageSize?: number;
+    };
+    url: '/storage/files';
+};
+
+export type FilesServiceGetFilesErrors = {
+    /**
+     * An unexpected error response.
+     */
+    default: RpcStatus;
+};
+
+export type FilesServiceGetFilesError = FilesServiceGetFilesErrors[keyof FilesServiceGetFilesErrors];
+
+export type FilesServiceGetFilesResponses = {
+    /**
+     * A successful response.
+     */
+    200: StorageGetFilesResponse;
+};
+
+export type FilesServiceGetFilesResponse = FilesServiceGetFilesResponses[keyof FilesServiceGetFilesResponses];
 
 export type StorageServiceGetUploadUrlData = {
     body?: never;

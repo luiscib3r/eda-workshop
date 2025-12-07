@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package storage;
+
+import "core/pagination.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+service FilesService {
+  rpc GetFiles(GetFilesRequest) returns (GetFilesResponse) {
+    option (google.api.http) = {get: "/storage/files"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Get Files"
+      description: "Retrieves a paginated list of files."
+      tags: "Files"
+    };
+  }
+}
+
+message GetFilesRequest {
+  int32 page_number = 1;
+  int32 page_size = 2;
+}
+
+message GetFilesResponse {
+  core.Pagination pagination = 1;
+  repeated File files = 2;
+}
+
+message File {
+  string file_name = 1;
+  string file_key = 2;
+  int64 file_size = 3;
+  string file_type = 4;
+  string created_at = 5;
+}

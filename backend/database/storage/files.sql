@@ -4,7 +4,10 @@ VALUES ($1, $2, $3, $4, $5)
 RETURNING *;
 
 -- name: GetFiles :many
-SELECT * FROM storage.files
+SELECT 
+    *,
+    COUNT(*) OVER() AS total
+FROM storage.files
 ORDER BY created_at DESC
 LIMIT $1 OFFSET $2;
 

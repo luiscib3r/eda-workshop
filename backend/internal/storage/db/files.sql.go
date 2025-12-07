@@ -7,6 +7,8 @@ package storagedb
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const countFiles = `-- name: CountFiles :one
@@ -86,7 +88,10 @@ func (q *Queries) GetFileByID(ctx context.Context, id string) (StorageFile, erro
 }
 
 const getFiles = `-- name: GetFiles :many
-SELECT id, file_name, file_size, file_type, bucket_name, created_at, updated_at FROM storage.files
+SELECT 
+    id, file_name, file_size, file_type, bucket_name, created_at, updated_at,
+    COUNT(*) OVER() AS total
+FROM storage.files
 ORDER BY created_at DESC
 LIMIT $1 OFFSET $2
 `
@@ -96,15 +101,26 @@ type GetFilesParams struct {
 	Offset int32 `json:"offset"`
 }
 
-func (q *Queries) GetFiles(ctx context.Context, arg GetFilesParams) ([]StorageFile, error) {
+type GetFilesRow struct {
+	ID         string             `json:"id"`
+	FileName   string             `json:"file_name"`
+	FileSize   int64              `json:"file_size"`
+	FileType   string             `json:"file_type"`
+	BucketName string             `json:"bucket_name"`
+	CreatedAt  pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt  pgtype.Timestamptz `json:"updated_at"`
+	Total      int64              `json:"total"`
+}
+
+func (q *Queries) GetFiles(ctx context.Context, arg GetFilesParams) ([]GetFilesRow, error) {
 	rows, err := q.db.Query(ctx, getFiles, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []StorageFile
+	var items []GetFilesRow
 	for rows.Next() {
-		var i StorageFile
+		var i GetFilesRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.FileName,
@@ -113,6 +129,7 @@ func (q *Queries) GetFiles(ctx context.Context, arg GetFilesParams) ([]StorageFi
 			&i.BucketName,
 			&i.CreatedAt,
 			&i.UpdatedAt,
+			&i.Total,
 		); err != nil {
 			return nil, err
 		}

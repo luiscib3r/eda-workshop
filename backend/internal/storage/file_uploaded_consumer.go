@@ -10,32 +10,30 @@ import (
 	"github.com/nats-io/nats.go/jetstream"
 )
 
-type FileUploadedEventConsumer struct {
+type FileUploadedConsumer struct {
 	*nats.NatsConsumer[*FileUploadedEvent]
 	db storagedb.Querier
 	s3 *s3.Client
 }
 
-func NewFileUploadedEventConsumer(
+func NewFileUploadedConsumer(
 	js jetstream.JetStream,
 	db storagedb.Querier,
 	s3 *s3.Client,
-) *FileUploadedEventConsumer {
+) *FileUploadedConsumer {
 	name := "storage_file_uploaded_consumer"
-	channel := "storage"
-	event := "storage.file.uploaded"
 	numWorkers := 10
 	workerBufferSize := 10
 
-	consumer := &FileUploadedEventConsumer{
+	consumer := &FileUploadedConsumer{
 		db: db,
 		s3: s3,
 	}
 
 	consumer.NatsConsumer = nats.NewNatsConsumer(
 		name,
-		channel,
-		event,
+		STORAGE_CHANNEL,
+		STORAGE_FILE_UPLOADED_EVENT,
 		numWorkers,
 		workerBufferSize,
 		NewFileUploadedEventFromMessage,
@@ -45,14 +43,14 @@ func NewFileUploadedEventConsumer(
 			Name:          name,
 			Durable:       name,
 			Description:   "Storage File Uploaded Event Consumer",
-			FilterSubject: event,
+			FilterSubject: STORAGE_FILE_UPLOADED_EVENT,
 		},
 	)
 
 	return consumer
 }
 
-func (c *FileUploadedEventConsumer) handler(
+func (c *FileUploadedConsumer) handler(
 	ctx context.Context,
 	event *FileUploadedEvent,
 ) error {
