@@ -4,6 +4,7 @@ import (
 	"backend/gen/storage"
 	"backend/internal/infrastructure/config"
 	"backend/internal/infrastructure/service"
+	"backend/internal/storage/events"
 	"context"
 	"errors"
 	"fmt"
@@ -76,7 +77,7 @@ func (s *StorageService) ConfirmFileUpload(
 	ctx context.Context,
 	req *storage.ConfirmFileUploadRequest,
 ) (*emptypb.Empty, error) {
-	event := NewFileUploadedEvent(
+	event := events.NewFileUploadedEvent(
 		&storage.FileUploadedEventData{
 			FileName:   req.FileName,
 			FileKey:    req.FileKey,

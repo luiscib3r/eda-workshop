@@ -119,6 +119,41 @@
         "tags": [
           "Files"
         ]
+      },
+      "delete": {
+        "summary": "Delete Files",
+        "description": "Deletes multiple files by their keys.",
+        "operationId": "FilesService_DeleteFiles",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "type": "object",
+              "properties": {}
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "fileKeys",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "tags": [
+          "Files"
+        ]
       }
     },
     "/storage/upload-url": {

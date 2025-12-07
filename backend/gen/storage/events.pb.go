@@ -81,6 +81,50 @@ func (x *FileUploadedEventData) GetBucketName() string {
 	return ""
 }
 
+type FilesDeletedEventData struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	FileKeys      []string               `protobuf:"bytes,1,rep,name=file_keys,json=fileKeys,proto3" json:"file_keys,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FilesDeletedEventData) Reset() {
+	*x = FilesDeletedEventData{}
+	mi := &file_storage_events_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FilesDeletedEventData) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FilesDeletedEventData) ProtoMessage() {}
+
+func (x *FilesDeletedEventData) ProtoReflect() protoreflect.Message {
+	mi := &file_storage_events_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FilesDeletedEventData.ProtoReflect.Descriptor instead.
+func (*FilesDeletedEventData) Descriptor() ([]byte, []int) {
+	return file_storage_events_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *FilesDeletedEventData) GetFileKeys() []string {
+	if x != nil {
+		return x.FileKeys
+	}
+	return nil
+}
+
 var File_storage_events_proto protoreflect.FileDescriptor
 
 const file_storage_events_proto_rawDesc = "" +
@@ -90,7 +134,9 @@ const file_storage_events_proto_rawDesc = "" +
 	"\tfile_name\x18\x01 \x01(\tR\bfileName\x12\x19\n" +
 	"\bfile_key\x18\x02 \x01(\tR\afileKey\x12\x1f\n" +
 	"\vbucket_name\x18\x03 \x01(\tR\n" +
-	"bucketNameBk\n" +
+	"bucketName\"4\n" +
+	"\x15FilesDeletedEventData\x12\x1b\n" +
+	"\tfile_keys\x18\x01 \x03(\tR\bfileKeysBk\n" +
 	"\vcom.storageB\vEventsProtoP\x01Z\x13backend/gen/storage\xa2\x02\x03SXX\xaa\x02\aStorage\xca\x02\aStorage\xe2\x02\x13Storage\\GPBMetadata\xea\x02\aStorageb\x06proto3"
 
 var (
@@ -105,9 +151,10 @@ func file_storage_events_proto_rawDescGZIP() []byte {
 	return file_storage_events_proto_rawDescData
 }
 
-var file_storage_events_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
+var file_storage_events_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_storage_events_proto_goTypes = []any{
 	(*FileUploadedEventData)(nil), // 0: storage.FileUploadedEventData
+	(*FilesDeletedEventData)(nil), // 1: storage.FilesDeletedEventData
 }
 var file_storage_events_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -128,7 +175,7 @@ func file_storage_events_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_storage_events_proto_rawDesc), len(file_storage_events_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   1,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

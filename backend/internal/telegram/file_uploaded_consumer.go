@@ -2,14 +2,14 @@ package telegram
 
 import (
 	"backend/internal/infrastructure/nats"
-	"backend/internal/storage"
+	"backend/internal/storage/events"
 	"context"
 
 	"github.com/nats-io/nats.go/jetstream"
 )
 
 type FileUploadedConsumer struct {
-	*nats.NatsConsumer[*storage.FileUploadedEvent]
+	*nats.NatsConsumer[*events.FileUploadedEvent]
 	bot *TelegramBot
 }
 
@@ -27,18 +27,18 @@ func NewFileUploadedConsumer(
 
 	consumer.NatsConsumer = nats.NewNatsConsumer(
 		name,
-		storage.STORAGE_CHANNEL,
-		storage.STORAGE_FILE_UPLOADED_EVENT,
+		events.STORAGE_CHANNEL,
+		events.STORAGE_FILE_UPLOADED_EVENT,
 		numWorkers,
 		workerBufferSize,
-		storage.NewFileUploadedEventFromMessage,
+		events.NewFileUploadedEventFromMessage,
 		consumer.handler,
 		js,
 		jetstream.ConsumerConfig{
 			Name:          name,
 			Durable:       name,
 			Description:   "Telegram Bot File Uploaded Event Consumer",
-			FilterSubject: storage.STORAGE_FILE_UPLOADED_EVENT,
+			FilterSubject: events.STORAGE_FILE_UPLOADED_EVENT,
 		},
 	)
 
@@ -47,7 +47,7 @@ func NewFileUploadedConsumer(
 
 func (c *FileUploadedConsumer) handler(
 	ctx context.Context,
-	event *storage.FileUploadedEvent,
+	event *events.FileUploadedEvent,
 ) error {
 
 	msg := "📤 *New File Uploaded!*\n\n"

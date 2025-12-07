@@ -103,6 +103,35 @@ export type StorageServiceConfirmFileUploadResponses = {
 
 export type StorageServiceConfirmFileUploadResponse = StorageServiceConfirmFileUploadResponses[keyof StorageServiceConfirmFileUploadResponses];
 
+export type FilesServiceDeleteFilesData = {
+    body?: never;
+    path?: never;
+    query?: {
+        fileKeys?: Array<string>;
+    };
+    url: '/storage/files';
+};
+
+export type FilesServiceDeleteFilesErrors = {
+    /**
+     * An unexpected error response.
+     */
+    default: RpcStatus;
+};
+
+export type FilesServiceDeleteFilesError = FilesServiceDeleteFilesErrors[keyof FilesServiceDeleteFilesErrors];
+
+export type FilesServiceDeleteFilesResponses = {
+    /**
+     * A successful response.
+     */
+    200: {
+        [key: string]: unknown;
+    };
+};
+
+export type FilesServiceDeleteFilesResponse = FilesServiceDeleteFilesResponses[keyof FilesServiceDeleteFilesResponses];
+
 export type FilesServiceGetFilesData = {
     body?: never;
     path?: never;

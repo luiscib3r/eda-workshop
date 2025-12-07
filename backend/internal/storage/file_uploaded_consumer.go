@@ -3,6 +3,7 @@ package storage
 import (
 	"backend/internal/infrastructure/nats"
 	storagedb "backend/internal/storage/db"
+	"backend/internal/storage/events"
 	"context"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -11,7 +12,7 @@ import (
 )
 
 type FileUploadedConsumer struct {
-	*nats.NatsConsumer[*FileUploadedEvent]
+	*nats.NatsConsumer[*events.FileUploadedEvent]
 	db storagedb.Querier
 	s3 *s3.Client
 }
@@ -32,18 +33,18 @@ func NewFileUploadedConsumer(
 
 	consumer.NatsConsumer = nats.NewNatsConsumer(
 		name,
-		STORAGE_CHANNEL,
-		STORAGE_FILE_UPLOADED_EVENT,
+		events.STORAGE_CHANNEL,
+		events.STORAGE_FILE_UPLOADED_EVENT,
 		numWorkers,
 		workerBufferSize,
-		NewFileUploadedEventFromMessage,
+		events.NewFileUploadedEventFromMessage,
 		consumer.handler,
 		js,
 		jetstream.ConsumerConfig{
 			Name:          name,
 			Durable:       name,
 			Description:   "Storage File Uploaded Event Consumer",
-			FilterSubject: STORAGE_FILE_UPLOADED_EVENT,
+			FilterSubject: events.STORAGE_FILE_UPLOADED_EVENT,
 		},
 	)
 
@@ -52,7 +53,7 @@ func NewFileUploadedConsumer(
 
 func (c *FileUploadedConsumer) handler(
 	ctx context.Context,
-	event *FileUploadedEvent,
+	event *events.FileUploadedEvent,
 ) error {
 	// Get file info
 	head, err := c.s3.HeadObject(ctx, &s3.HeadObjectInput{

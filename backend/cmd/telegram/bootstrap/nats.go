@@ -13,19 +13,28 @@ var NatsModule = fx.Module(
 	fx.Provide(nats.NewNatsClient),
 	fx.Provide(nats.NewJetStreamClient),
 	fx.Provide(telegram.NewFileUploadedConsumer),
+	fx.Provide(telegram.NewFilesDeletedConsumer),
 	fx.Invoke(SubcribeTelegramConsumers),
 )
 
 func SubcribeTelegramConsumers(
 	lc fx.Lifecycle,
 	fileUploadedConsumer *telegram.FileUploadedConsumer,
+	filesDeletedConsumer *telegram.FilesDeletedConsumer,
 ) {
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
-			return fileUploadedConsumer.Subscribe(ctx)
+			if err := fileUploadedConsumer.Subscribe(ctx); err != nil {
+				return err
+			}
+			if err := filesDeletedConsumer.Subscribe(ctx); err != nil {
+				return err
+			}
+			return nil
 		},
 		OnStop: func(ctx context.Context) error {
 			fileUploadedConsumer.Stop()
+			filesDeletedConsumer.Stop()
 			return nil
 		},
 	})

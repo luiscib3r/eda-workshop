@@ -6,3 +6,7 @@ message FileUploadedEventData {
   string file_key = 2;
   string bucket_name = 3;
 }
+
+message FilesDeletedEventData {
+  repeated string file_keys = 1;
+}

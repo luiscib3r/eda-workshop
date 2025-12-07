@@ -14,6 +14,7 @@ var NatsModule = fx.Module(
 	fx.Provide(nats.NewJetStreamClient),
 	fx.Provide(storage.NewStorageProducer),
 	fx.Provide(storage.NewFileUploadedConsumer),
+	fx.Provide(storage.NewFilesDeletedConsumer),
 	fx.Invoke(CreateStorageChannel),
 	fx.Invoke(SubcribeStorageConsumers),
 )
@@ -32,13 +33,21 @@ func CreateStorageChannel(
 func SubcribeStorageConsumers(
 	lc fx.Lifecycle,
 	fileUploadedConsumer *storage.FileUploadedConsumer,
+	filesDeletedConsumer *storage.FilesDeletedConsumer,
 ) {
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
-			return fileUploadedConsumer.Subscribe(ctx)
+			if err := fileUploadedConsumer.Subscribe(ctx); err != nil {
+				return err
+			}
+			if err := filesDeletedConsumer.Subscribe(ctx); err != nil {
+				return err
+			}
+			return nil
 		},
 		OnStop: func(ctx context.Context) error {
 			fileUploadedConsumer.Stop()
+			filesDeletedConsumer.Stop()
 			return nil
 		},
 	})

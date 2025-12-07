@@ -67,6 +67,16 @@ func (q *Queries) DeleteFile(ctx context.Context, id string) error {
 	return err
 }
 
+const deleteFilesByIDs = `-- name: DeleteFilesByIDs :exec
+DELETE FROM storage.files
+WHERE id = ANY($1::text[])
+`
+
+func (q *Queries) DeleteFilesByIDs(ctx context.Context, dollar_1 []string) error {
+	_, err := q.db.Exec(ctx, deleteFilesByIDs, dollar_1)
+	return err
+}
+
 const getFileByID = `-- name: GetFileByID :one
 SELECT id, file_name, file_size, file_type, bucket_name, created_at, updated_at FROM storage.files
 WHERE id = $1

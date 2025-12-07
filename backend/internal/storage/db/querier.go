@@ -12,6 +12,7 @@ type Querier interface {
 	CountFiles(ctx context.Context) (int64, error)
 	CreateFile(ctx context.Context, arg CreateFileParams) (StorageFile, error)
 	DeleteFile(ctx context.Context, id string) error
+	DeleteFilesByIDs(ctx context.Context, dollar_1 []string) error
 	GetFileByID(ctx context.Context, id string) (StorageFile, error)
 	GetFiles(ctx context.Context, arg GetFilesParams) ([]GetFilesRow, error)
 }

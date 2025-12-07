@@ -3,8 +3,8 @@
 import { queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { filesServiceGetFiles, healthServiceHealth, type Options, storageServiceConfirmFileUpload, storageServiceGetUploadUrl } from '../sdk.gen';
-import type { FilesServiceGetFilesData, FilesServiceGetFilesError, FilesServiceGetFilesResponse, HealthServiceHealthData, HealthServiceHealthError, HealthServiceHealthResponse, StorageServiceConfirmFileUploadData, StorageServiceConfirmFileUploadError, StorageServiceConfirmFileUploadResponse, StorageServiceGetUploadUrlData, StorageServiceGetUploadUrlError, StorageServiceGetUploadUrlResponse } from '../types.gen';
+import { filesServiceDeleteFiles, filesServiceGetFiles, healthServiceHealth, type Options, storageServiceConfirmFileUpload, storageServiceGetUploadUrl } from '../sdk.gen';
+import type { FilesServiceDeleteFilesData, FilesServiceDeleteFilesError, FilesServiceDeleteFilesResponse, FilesServiceGetFilesData, FilesServiceGetFilesError, FilesServiceGetFilesResponse, HealthServiceHealthData, HealthServiceHealthError, HealthServiceHealthResponse, StorageServiceConfirmFileUploadData, StorageServiceConfirmFileUploadError, StorageServiceConfirmFileUploadResponse, StorageServiceGetUploadUrlData, StorageServiceGetUploadUrlError, StorageServiceGetUploadUrlResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -68,6 +68,25 @@ export const storageServiceConfirmFileUploadMutation = (options?: Partial<Option
     const mutationOptions: UseMutationOptions<StorageServiceConfirmFileUploadResponse, StorageServiceConfirmFileUploadError, Options<StorageServiceConfirmFileUploadData>> = {
         mutationFn: async (fnOptions) => {
             const { data } = await storageServiceConfirmFileUpload({
+                ...options,
+                ...fnOptions,
+                throwOnError: true
+            });
+            return data;
+        }
+    };
+    return mutationOptions;
+};
+
+/**
+ * Delete Files
+ *
+ * Deletes multiple files by their keys.
+ */
+export const filesServiceDeleteFilesMutation = (options?: Partial<Options<FilesServiceDeleteFilesData>>): UseMutationOptions<FilesServiceDeleteFilesResponse, FilesServiceDeleteFilesError, Options<FilesServiceDeleteFilesData>> => {
+    const mutationOptions: UseMutationOptions<FilesServiceDeleteFilesResponse, FilesServiceDeleteFilesError, Options<FilesServiceDeleteFilesData>> = {
+        mutationFn: async (fnOptions) => {
+            const { data } = await filesServiceDeleteFiles({
                 ...options,
                 ...fnOptions,
                 throwOnError: true

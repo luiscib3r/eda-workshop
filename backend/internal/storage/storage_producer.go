@@ -2,6 +2,7 @@ package storage
 
 import (
 	"backend/internal/infrastructure/nats"
+	"backend/internal/storage/events"
 	"fmt"
 
 	"github.com/nats-io/nats.go/jetstream"
@@ -21,14 +22,14 @@ func NewStorageProducer(
 			// Producer Name
 			name,
 			// Channel Name
-			STORAGE_CHANNEL,
+			events.STORAGE_CHANNEL,
 			// JetStream Context
 			js,
 			// Stream Configuration
 			jetstream.StreamConfig{
-				Name:        nats.StreamName(STORAGE_CHANNEL),
+				Name:        nats.StreamName(events.STORAGE_CHANNEL),
 				Description: "Storage Service Event Stream",
-				Subjects:    []string{fmt.Sprintf("%s.>", STORAGE_CHANNEL)},
+				Subjects:    []string{fmt.Sprintf("%s.>", events.STORAGE_CHANNEL)},
 			},
 		),
 	}

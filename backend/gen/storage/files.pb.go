@@ -12,6 +12,7 @@ import (
 	_ "google.golang.org/genproto/googleapis/api/annotations"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -128,6 +129,50 @@ func (x *GetFilesResponse) GetFiles() []*File {
 	return nil
 }
 
+type DeleteFilesRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	FileKeys      []string               `protobuf:"bytes,1,rep,name=file_keys,json=fileKeys,proto3" json:"file_keys,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteFilesRequest) Reset() {
+	*x = DeleteFilesRequest{}
+	mi := &file_storage_files_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteFilesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteFilesRequest) ProtoMessage() {}
+
+func (x *DeleteFilesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_storage_files_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteFilesRequest.ProtoReflect.Descriptor instead.
+func (*DeleteFilesRequest) Descriptor() ([]byte, []int) {
+	return file_storage_files_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *DeleteFilesRequest) GetFileKeys() []string {
+	if x != nil {
+		return x.FileKeys
+	}
+	return nil
+}
+
 type File struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	FileName      string                 `protobuf:"bytes,1,opt,name=file_name,json=fileName,proto3" json:"file_name,omitempty"`
@@ -141,7 +186,7 @@ type File struct {
 
 func (x *File) Reset() {
 	*x = File{}
-	mi := &file_storage_files_proto_msgTypes[2]
+	mi := &file_storage_files_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -153,7 +198,7 @@ func (x *File) String() string {
 func (*File) ProtoMessage() {}
 
 func (x *File) ProtoReflect() protoreflect.Message {
-	mi := &file_storage_files_proto_msgTypes[2]
+	mi := &file_storage_files_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -166,7 +211,7 @@ func (x *File) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use File.ProtoReflect.Descriptor instead.
 func (*File) Descriptor() ([]byte, []int) {
-	return file_storage_files_proto_rawDescGZIP(), []int{2}
+	return file_storage_files_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *File) GetFileName() string {
@@ -208,7 +253,7 @@ var File_storage_files_proto protoreflect.FileDescriptor
 
 const file_storage_files_proto_rawDesc = "" +
 	"\n" +
-	"\x13storage/files.proto\x12\astorage\x1a\x15core/pagination.proto\x1a\x1cgoogle/api/annotations.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"O\n" +
+	"\x13storage/files.proto\x12\astorage\x1a\x15core/pagination.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"O\n" +
 	"\x0fGetFilesRequest\x12\x1f\n" +
 	"\vpage_number\x18\x01 \x01(\x05R\n" +
 	"pageNumber\x12\x1b\n" +
@@ -217,17 +262,21 @@ const file_storage_files_proto_rawDesc = "" +
 	"\n" +
 	"pagination\x18\x01 \x01(\v2\x10.core.PaginationR\n" +
 	"pagination\x12#\n" +
-	"\x05files\x18\x02 \x03(\v2\r.storage.FileR\x05files\"\x97\x01\n" +
+	"\x05files\x18\x02 \x03(\v2\r.storage.FileR\x05files\"1\n" +
+	"\x12DeleteFilesRequest\x12\x1b\n" +
+	"\tfile_keys\x18\x01 \x03(\tR\bfileKeys\"\x97\x01\n" +
 	"\x04File\x12\x1b\n" +
 	"\tfile_name\x18\x01 \x01(\tR\bfileName\x12\x19\n" +
 	"\bfile_key\x18\x02 \x01(\tR\afileKey\x12\x1b\n" +
 	"\tfile_size\x18\x03 \x01(\x03R\bfileSize\x12\x1b\n" +
 	"\tfile_type\x18\x04 \x01(\tR\bfileType\x12\x1d\n" +
 	"\n" +
-	"created_at\x18\x05 \x01(\tR\tcreatedAt2\xa3\x01\n" +
+	"created_at\x18\x05 \x01(\tR\tcreatedAt2\xbf\x02\n" +
 	"\fFilesService\x12\x92\x01\n" +
 	"\bGetFiles\x12\x18.storage.GetFilesRequest\x1a\x19.storage.GetFilesResponse\"Q\x92A8\n" +
-	"\x05Files\x12\tGet Files\x1a$Retrieves a paginated list of files.\x82\xd3\xe4\x93\x02\x10\x12\x0e/storage/filesBj\n" +
+	"\x05Files\x12\tGet Files\x1a$Retrieves a paginated list of files.\x82\xd3\xe4\x93\x02\x10\x12\x0e/storage/files\x12\x99\x01\n" +
+	"\vDeleteFiles\x12\x1b.storage.DeleteFilesRequest\x1a\x16.google.protobuf.Empty\"U\x92A<\n" +
+	"\x05Files\x12\fDelete Files\x1a%Deletes multiple files by their keys.\x82\xd3\xe4\x93\x02\x10*\x0e/storage/filesBj\n" +
 	"\vcom.storageB\n" +
 	"FilesProtoP\x01Z\x13backend/gen/storage\xa2\x02\x03SXX\xaa\x02\aStorage\xca\x02\aStorage\xe2\x02\x13Storage\\GPBMetadata\xea\x02\aStorageb\x06proto3"
 
@@ -243,20 +292,24 @@ func file_storage_files_proto_rawDescGZIP() []byte {
 	return file_storage_files_proto_rawDescData
 }
 
-var file_storage_files_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_storage_files_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_storage_files_proto_goTypes = []any{
-	(*GetFilesRequest)(nil),  // 0: storage.GetFilesRequest
-	(*GetFilesResponse)(nil), // 1: storage.GetFilesResponse
-	(*File)(nil),             // 2: storage.File
-	(*core.Pagination)(nil),  // 3: core.Pagination
+	(*GetFilesRequest)(nil),    // 0: storage.GetFilesRequest
+	(*GetFilesResponse)(nil),   // 1: storage.GetFilesResponse
+	(*DeleteFilesRequest)(nil), // 2: storage.DeleteFilesRequest
+	(*File)(nil),               // 3: storage.File
+	(*core.Pagination)(nil),    // 4: core.Pagination
+	(*emptypb.Empty)(nil),      // 5: google.protobuf.Empty
 }
 var file_storage_files_proto_depIdxs = []int32{
-	3, // 0: storage.GetFilesResponse.pagination:type_name -> core.Pagination
-	2, // 1: storage.GetFilesResponse.files:type_name -> storage.File
+	4, // 0: storage.GetFilesResponse.pagination:type_name -> core.Pagination
+	3, // 1: storage.GetFilesResponse.files:type_name -> storage.File
 	0, // 2: storage.FilesService.GetFiles:input_type -> storage.GetFilesRequest
-	1, // 3: storage.FilesService.GetFiles:output_type -> storage.GetFilesResponse
-	3, // [3:4] is the sub-list for method output_type
-	2, // [2:3] is the sub-list for method input_type
+	2, // 3: storage.FilesService.DeleteFiles:input_type -> storage.DeleteFilesRequest
+	1, // 4: storage.FilesService.GetFiles:output_type -> storage.GetFilesResponse
+	5, // 5: storage.FilesService.DeleteFiles:output_type -> google.protobuf.Empty
+	4, // [4:6] is the sub-list for method output_type
+	2, // [2:4] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
 	2, // [2:2] is the sub-list for extension extendee
 	0, // [0:2] is the sub-list for field type_name
@@ -273,7 +326,7 @@ func file_storage_files_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_storage_files_proto_rawDesc), len(file_storage_files_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

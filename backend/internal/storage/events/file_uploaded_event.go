@@ -1,4 +1,4 @@
-package storage
+package events
 
 import (
 	"backend/gen/storage"
@@ -6,11 +6,6 @@ import (
 
 	"github.com/nats-io/nats.go/jetstream"
 	"google.golang.org/protobuf/proto"
-)
-
-const (
-	STORAGE_CHANNEL             string = "storage"
-	STORAGE_FILE_UPLOADED_EVENT string = "storage.file.uploaded"
 )
 
 type FileUploadedEvent struct {
@@ -55,7 +50,7 @@ func (ev *FileUploadedEvent) ID() string {
 
 // Type implements core.EventSpec.
 func (ev *FileUploadedEvent) Type() string {
-	return "storage.file.uploaded"
+	return STORAGE_FILE_UPLOADED_EVENT
 }
 
 // Data implements core.EventSpec.

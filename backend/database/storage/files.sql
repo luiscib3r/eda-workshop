@@ -21,3 +21,7 @@ WHERE id = $1;
 -- name: DeleteFile :exec
 DELETE FROM storage.files
 WHERE id = $1;
+
+-- name: DeleteFilesByIDs :exec
+DELETE FROM storage.files
+WHERE id = ANY($1::text[]);

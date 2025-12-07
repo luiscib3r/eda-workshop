@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { FilesServiceGetFilesData, FilesServiceGetFilesErrors, FilesServiceGetFilesResponses, HealthServiceHealthData, HealthServiceHealthErrors, HealthServiceHealthResponses, StorageServiceConfirmFileUploadData, StorageServiceConfirmFileUploadErrors, StorageServiceConfirmFileUploadResponses, StorageServiceGetUploadUrlData, StorageServiceGetUploadUrlErrors, StorageServiceGetUploadUrlResponses } from './types.gen';
+import type { FilesServiceDeleteFilesData, FilesServiceDeleteFilesErrors, FilesServiceDeleteFilesResponses, FilesServiceGetFilesData, FilesServiceGetFilesErrors, FilesServiceGetFilesResponses, HealthServiceHealthData, HealthServiceHealthErrors, HealthServiceHealthResponses, StorageServiceConfirmFileUploadData, StorageServiceConfirmFileUploadErrors, StorageServiceConfirmFileUploadResponses, StorageServiceGetUploadUrlData, StorageServiceGetUploadUrlErrors, StorageServiceGetUploadUrlResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -38,6 +38,13 @@ export const storageServiceConfirmFileUpload = <ThrowOnError extends boolean = f
         ...options.headers
     }
 });
+
+/**
+ * Delete Files
+ *
+ * Deletes multiple files by their keys.
+ */
+export const filesServiceDeleteFiles = <ThrowOnError extends boolean = false>(options?: Options<FilesServiceDeleteFilesData, ThrowOnError>) => (options?.client ?? client).delete<FilesServiceDeleteFilesResponses, FilesServiceDeleteFilesErrors, ThrowOnError>({ url: '/storage/files', ...options });
 
 /**
  * Get Files
