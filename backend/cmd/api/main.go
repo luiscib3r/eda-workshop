@@ -9,7 +9,7 @@ import (
 func main() {
 	app := fx.New(
 		fx.StopTimeout(0),
-		fx.NopLogger,
+		// fx.NopLogger,
 		bootstrap.ConfigModule,
 		bootstrap.OtelModule,
 		bootstrap.PostgresModule,

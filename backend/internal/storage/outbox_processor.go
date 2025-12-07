@@ -7,8 +7,6 @@ import (
 	"backend/internal/storage/events"
 	"context"
 	"fmt"
-	"log/slog"
-	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"go.opentelemetry.io/otel"
@@ -21,7 +19,6 @@ type OutboxProcessor struct {
 	pool     *pgxpool.Pool
 	db       *storagedb.Queries
 	producer *StorageProducer
-	interval time.Duration
 }
 
 func NewOutboxProcessor(
@@ -33,23 +30,46 @@ func NewOutboxProcessor(
 		pool:     pool,
 		db:       db,
 		producer: producer,
-		// This could be made configurable later
-		interval: 5 * time.Second,
 	}
 }
 
 func (p *OutboxProcessor) Start(
 	ctx context.Context,
 ) error {
-	ticker := time.NewTicker(p.interval)
-	defer ticker.Stop()
+	conn, err := p.pool.Acquire(ctx)
+	if err != nil {
+		return err
+	}
+	defer conn.Release()
+
+	// Listen to outbox notifications
+	_, err = conn.Exec(ctx, "LISTEN storage_outbox_channel")
+	if err != nil {
+		return err
+	}
+
+	// Outbox notifications channel
+	notifyChan := make(chan struct{})
+	go func() {
+		for {
+			_, err := conn.Conn().WaitForNotification(ctx)
+			if err != nil {
+				if ctx.Err() != nil {
+					return // Context canceled, exit
+				}
+				continue // Ignore errors and continue listening
+			}
+			notifyChan <- struct{}{}
+		}
+	}()
+
+	// Initial backlog
+	p.process(ctx)
 
 	for {
 		select {
-		case <-ticker.C:
-			if err := p.process(ctx); err != nil {
-				slog.ErrorContext(ctx, "failed to process outbox", "error", err)
-			}
+		case <-notifyChan:
+			p.process(ctx)
 		case <-ctx.Done():
 			return ctx.Err()
 		}
