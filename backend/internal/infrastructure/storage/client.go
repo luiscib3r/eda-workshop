@@ -11,6 +11,8 @@ import (
 	"go.opentelemetry.io/contrib/instrumentation/github.com/aws/aws-sdk-go-v2/otelaws"
 )
 
+const BUCKET_NAME = "files"
+
 func NewClient(
 	cfg *config.AppConfig,
 ) (*s3.Client, error) {

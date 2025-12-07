@@ -6,15 +6,17 @@ package storagedb
 
 import (
 	"context"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Querier interface {
 	CreateFile(ctx context.Context, arg CreateFileParams) (StorageFile, error)
 	CreateOutboxEvent(ctx context.Context, arg CreateOutboxEventParams) error
-	DeleteFilesByIDs(ctx context.Context, dollar_1 []string) error
+	DeleteFilesByIDs(ctx context.Context, dollar_1 []pgtype.UUID) error
 	GetFiles(ctx context.Context, arg GetFilesParams) ([]GetFilesRow, error)
 	GetOutboxUnpublishedEvents(ctx context.Context, limit int32) ([]GetOutboxUnpublishedEventsRow, error)
-	MarkEventAsPublished(ctx context.Context, eventID string) error
+	MarkEventAsPublished(ctx context.Context, eventID pgtype.UUID) error
 }
 
 var _ Querier = (*Queries)(nil)

@@ -88,7 +88,7 @@ func (p *NatsProducer) Publish(
 	}
 
 	headers := nats.Header{}
-	headers.Set("Event-ID", event.ID())
+	headers.Set(core.EVENT_ID_HEADER, event.ID())
 	headers.Set("Event-Type", event.Type())
 	headers.Set("Content-Type", "application/protobuf")
 

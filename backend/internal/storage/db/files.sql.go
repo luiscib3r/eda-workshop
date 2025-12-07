@@ -18,10 +18,10 @@ RETURNING id, file_name, file_size, file_type, created_at, updated_at
 `
 
 type CreateFileParams struct {
-	ID       string `json:"id"`
-	FileName string `json:"file_name"`
-	FileSize int64  `json:"file_size"`
-	FileType string `json:"file_type"`
+	ID       pgtype.UUID `json:"id"`
+	FileName string      `json:"file_name"`
+	FileSize int64       `json:"file_size"`
+	FileType string      `json:"file_type"`
 }
 
 func (q *Queries) CreateFile(ctx context.Context, arg CreateFileParams) (StorageFile, error) {
@@ -45,10 +45,10 @@ func (q *Queries) CreateFile(ctx context.Context, arg CreateFileParams) (Storage
 
 const deleteFilesByIDs = `-- name: DeleteFilesByIDs :exec
 DELETE FROM storage.files
-WHERE id = ANY($1::text[])
+WHERE id = ANY($1::uuid[])
 `
 
-func (q *Queries) DeleteFilesByIDs(ctx context.Context, dollar_1 []string) error {
+func (q *Queries) DeleteFilesByIDs(ctx context.Context, dollar_1 []pgtype.UUID) error {
 	_, err := q.db.Exec(ctx, deleteFilesByIDs, dollar_1)
 	return err
 }
@@ -68,7 +68,7 @@ type GetFilesParams struct {
 }
 
 type GetFilesRow struct {
-	ID        string             `json:"id"`
+	ID        pgtype.UUID        `json:"id"`
 	FileName  string             `json:"file_name"`
 	FileSize  int64              `json:"file_size"`
 	FileType  string             `json:"file_type"`

@@ -2,13 +2,16 @@ package storage
 
 import (
 	"backend/internal/infrastructure/nats"
+	"backend/internal/infrastructure/storage"
 	storagedb "backend/internal/storage/db"
 	"backend/internal/storage/events"
 	"context"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/nats-io/nats.go/jetstream"
+	"github.com/oklog/ulid/v2"
 )
 
 type FileUploadedConsumer struct {
@@ -56,9 +59,8 @@ func (c *FileUploadedConsumer) handler(
 	event *events.FileUploadedEvent,
 ) error {
 	// Get file info
-	bucket := "files"
 	head, err := c.s3.HeadObject(ctx, &s3.HeadObjectInput{
-		Bucket: aws.String(bucket),
+		Bucket: aws.String(storage.BUCKET_NAME),
 		Key:    aws.String(event.Payload.FileKey),
 	})
 
@@ -76,8 +78,16 @@ func (c *FileUploadedConsumer) handler(
 	}
 
 	// Create file record
+	id, err := ulid.Parse(event.Payload.FileKey)
+	if err != nil {
+		return err
+	}
+
 	if _, err := c.db.CreateFile(ctx, storagedb.CreateFileParams{
-		ID:       event.Payload.FileKey,
+		ID: pgtype.UUID{
+			Bytes: id,
+			Valid: true,
+		},
 		FileName: event.Payload.FileName,
 		FileSize: size,
 		FileType: fileType,

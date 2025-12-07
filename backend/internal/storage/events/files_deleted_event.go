@@ -5,11 +5,12 @@ import (
 	"backend/internal/core"
 
 	"github.com/nats-io/nats.go/jetstream"
+	"github.com/oklog/ulid/v2"
 	"google.golang.org/protobuf/proto"
 )
 
 type FilesDeletedEvent struct {
-	Id      string
+	Id      ulid.ULID
 	Payload *storage.FilesDeletedEventData
 }
 
@@ -35,8 +36,13 @@ func NewFilesDeletedEventFromMessage(
 		return nil, err
 	}
 
+	id, err := ulid.Parse(headers.Get(core.EVENT_ID_HEADER))
+	if err != nil {
+		return nil, err
+	}
+
 	event := &FilesDeletedEvent{
-		Id:      headers.Get("Event-ID"),
+		Id:      id,
 		Payload: payload,
 	}
 
@@ -45,7 +51,7 @@ func NewFilesDeletedEventFromMessage(
 
 // ID implements core.EventSpec.
 func (ev *FilesDeletedEvent) ID() string {
-	return ev.Id
+	return ev.Id.String()
 }
 
 // Type implements core.EventSpec.

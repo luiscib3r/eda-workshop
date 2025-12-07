@@ -13,5 +13,5 @@ LIMIT $1 OFFSET $2;
 
 -- name: DeleteFilesByIDs :exec
 DELETE FROM storage.files
-WHERE id = ANY($1::text[]);
+WHERE id = ANY($1::uuid[]);
 

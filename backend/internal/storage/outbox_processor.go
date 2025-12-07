@@ -170,7 +170,7 @@ func (p *OutboxProcessor) event(
 			return nil, err
 		}
 		return &events.FileUploadedEvent{
-			Id:      event.EventID,
+			Id:      event.EventID.Bytes,
 			Payload: data,
 		}, nil
 	case events.STORAGE_FILES_DELETED_EVENT:
@@ -179,7 +179,7 @@ func (p *OutboxProcessor) event(
 			return nil, err
 		}
 		return &events.FilesDeletedEvent{
-			Id:      event.EventID,
+			Id:      event.EventID.Bytes,
 			Payload: data,
 		}, nil
 	}

@@ -3,6 +3,7 @@ package ocr
 import (
 	"backend/gen/ocr"
 	"backend/internal/infrastructure/nats"
+	"backend/internal/infrastructure/storage"
 	ocrev "backend/internal/ocr/events"
 	"backend/internal/storage/events"
 	"bytes"
@@ -73,11 +74,10 @@ func (c *FileUploadedConsumer) handler(
 	)
 	defer span.End()
 
-	bucket := "files"
 	// Download the file from S3 using the provided S3 client
 	result, err := c.s3.GetObject(ctx, &s3.GetObjectInput{
 		Key:    &event.Payload.FileKey,
-		Bucket: aws.String(bucket),
+		Bucket: aws.String(storage.BUCKET_NAME),
 	})
 	if err != nil {
 		return err
@@ -117,7 +117,7 @@ func (c *FileUploadedConsumer) handler(
 		pageImageKey := PageImageKey(event.Payload.FileKey, key)
 
 		if _, err = c.s3.PutObject(ctx, &s3.PutObjectInput{
-			Bucket:      aws.String(bucket),
+			Bucket:      aws.String(storage.BUCKET_NAME),
 			Key:         aws.String(pageImageKey),
 			Body:        bytes.NewReader(buf.Bytes()),
 			ContentType: aws.String("image/png"),

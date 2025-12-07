@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS storage.files (
-    id VARCHAR(26) PRIMARY KEY,
+    id uuid PRIMARY KEY,
     file_name TEXT NOT NULL,
     file_size BIGINT NOT NULL,
     file_type TEXT NOT NULL,

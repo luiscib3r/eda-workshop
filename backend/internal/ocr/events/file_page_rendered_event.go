@@ -5,11 +5,12 @@ import (
 	"backend/internal/core"
 
 	"github.com/nats-io/nats.go/jetstream"
+	"github.com/oklog/ulid/v2"
 	"google.golang.org/protobuf/proto"
 )
 
 type FilePageRenderedEvent struct {
-	Id      string
+	Id      ulid.ULID
 	Payload *ocr.FilePageRenderedEventData
 }
 
@@ -35,8 +36,13 @@ func NewFilePageRenderedEventFromMessage(
 		return nil, err
 	}
 
+	id, err := ulid.Parse(headers.Get(core.EVENT_ID_HEADER))
+	if err != nil {
+		return nil, err
+	}
+
 	event := &FilePageRenderedEvent{
-		Id:      headers.Get("Event-ID"),
+		Id:      id,
 		Payload: payload,
 	}
 
@@ -45,7 +51,7 @@ func NewFilePageRenderedEventFromMessage(
 
 // ID implements core.EventSpec.
 func (ev *FilePageRenderedEvent) ID() string {
-	return ev.Id
+	return ev.Id.String()
 }
 
 // Type implements core.EventSpec.

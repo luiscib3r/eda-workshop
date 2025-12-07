@@ -1,7 +1,7 @@
 CREATE OR REPLACE FUNCTION storage.notify_outbox_event()
 RETURNS TRIGGER AS $$
 BEGIN
-    PERFORM pg_notify('storage_outbox_channel', NEW.event_id);
+    PERFORM pg_notify('storage_outbox_channel', NEW.event_id::text);
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql;

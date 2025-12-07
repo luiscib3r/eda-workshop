@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS storage.outbox (
-    event_id VARCHAR(26) PRIMARY KEY,
+    event_id uuid PRIMARY KEY,
     event_type VARCHAR(255) NOT NULL,
     payload JSONB NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),

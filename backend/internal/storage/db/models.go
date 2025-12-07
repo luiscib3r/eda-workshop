@@ -9,7 +9,7 @@ import (
 )
 
 type StorageFile struct {
-	ID        string             `json:"id"`
+	ID        pgtype.UUID        `json:"id"`
 	FileName  string             `json:"file_name"`
 	FileSize  int64              `json:"file_size"`
 	FileType  string             `json:"file_type"`
@@ -18,7 +18,7 @@ type StorageFile struct {
 }
 
 type StorageOutbox struct {
-	EventID     string             `json:"event_id"`
+	EventID     pgtype.UUID        `json:"event_id"`
 	EventType   string             `json:"event_type"`
 	Payload     []byte             `json:"payload"`
 	CreatedAt   pgtype.Timestamptz `json:"created_at"`

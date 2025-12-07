@@ -11,8 +11,11 @@ import (
 
 	"google.golang.org/protobuf/encoding/protojson"
 
+	"github.com/google/uuid"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/samber/lo"
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
@@ -57,7 +60,7 @@ func (f *FilesService) GetFiles(
 	files := make([]*storage.File, len(result))
 	for i, file := range result {
 		files[i] = &storage.File{
-			FileKey:   file.ID,
+			FileKey:   file.ID.String(),
 			FileName:  file.FileName,
 			FileType:  file.FileType,
 			FileSize:  file.FileSize,
@@ -98,7 +101,25 @@ func (f *FilesService) DeleteFiles(
 
 	qtx := f.db.WithTx(tx)
 
-	err = qtx.DeleteFilesByIDs(ctx, req.FileKeys)
+	ids := lo.Map(req.FileKeys, func(key string, _ int) pgtype.UUID {
+		id, err := uuid.Parse(key)
+		if err != nil {
+			return pgtype.UUID{
+				Valid: false,
+			}
+		}
+
+		return pgtype.UUID{
+			Bytes: id,
+			Valid: true,
+		}
+	})
+
+	ids = lo.Filter(ids, func(id pgtype.UUID, _ int) bool {
+		return id.Valid
+	})
+
+	err = qtx.DeleteFilesByIDs(ctx, ids)
 	if err != nil {
 		return nil, err
 	}
@@ -109,7 +130,7 @@ func (f *FilesService) DeleteFiles(
 		},
 	)
 
-	eventId := event.ID()
+	eventId := event.Id
 	eventType := event.Type()
 	payload, err := protojson.Marshal(event.Data())
 	if err != nil {
@@ -117,7 +138,10 @@ func (f *FilesService) DeleteFiles(
 	}
 
 	err = qtx.CreateOutboxEvent(ctx, storagedb.CreateOutboxEventParams{
-		EventID:   eventId,
+		EventID: pgtype.UUID{
+			Bytes: eventId,
+			Valid: true,
+		},
 		EventType: eventType,
 		Payload:   payload,
 	})

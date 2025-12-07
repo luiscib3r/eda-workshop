@@ -4,6 +4,7 @@ import (
 	"backend/gen/storage"
 	"backend/internal/infrastructure/config"
 	"backend/internal/infrastructure/service"
+	stg "backend/internal/infrastructure/storage"
 	"backend/internal/storage/events"
 	"context"
 	"errors"
@@ -50,7 +51,6 @@ func (s *StorageService) GetUploadUrl(
 	req *emptypb.Empty,
 ) (*storage.GetUploadUrlResponse, error) {
 	// Generate random object key
-	bucket := "files"
 	key := ulid.MustNew(
 		ulid.Timestamp(time.Now()),
 		ulid.DefaultEntropy(),
@@ -59,7 +59,7 @@ func (s *StorageService) GetUploadUrl(
 	// Generate presigned URL
 	result, err := s.presign.PresignPutObject(ctx, &s3.PutObjectInput{
 		Key:    &key,
-		Bucket: aws.String(bucket),
+		Bucket: aws.String(stg.BUCKET_NAME),
 	})
 	if err != nil {
 		return nil, err
@@ -97,7 +97,7 @@ func (s *StorageService) Register(ctx context.Context, mux *runtime.ServeMux) {
 }
 
 func (s *StorageService) CreateBuckets(ctx context.Context) error {
-	buckets := []string{"files"}
+	buckets := []string{stg.BUCKET_NAME}
 
 	for _, bucket := range buckets {
 		_, err := s.client.HeadBucket(ctx, &s3.HeadBucketInput{

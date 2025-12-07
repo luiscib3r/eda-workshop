@@ -17,9 +17,9 @@ VALUES ($1, $2, $3)
 `
 
 type CreateOutboxEventParams struct {
-	EventID   string `json:"event_id"`
-	EventType string `json:"event_type"`
-	Payload   []byte `json:"payload"`
+	EventID   pgtype.UUID `json:"event_id"`
+	EventType string      `json:"event_type"`
+	Payload   []byte      `json:"payload"`
 }
 
 func (q *Queries) CreateOutboxEvent(ctx context.Context, arg CreateOutboxEventParams) error {
@@ -37,7 +37,7 @@ FOR UPDATE SKIP LOCKED
 `
 
 type GetOutboxUnpublishedEventsRow struct {
-	EventID   string             `json:"event_id"`
+	EventID   pgtype.UUID        `json:"event_id"`
 	EventType string             `json:"event_type"`
 	Payload   []byte             `json:"payload"`
 	CreatedAt pgtype.Timestamptz `json:"created_at"`
@@ -74,7 +74,7 @@ SET published_at = NOW()
 WHERE event_id = $1
 `
 
-func (q *Queries) MarkEventAsPublished(ctx context.Context, eventID string) error {
+func (q *Queries) MarkEventAsPublished(ctx context.Context, eventID pgtype.UUID) error {
 	_, err := q.db.Exec(ctx, markEventAsPublished, eventID)
 	return err
 }

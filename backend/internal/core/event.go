@@ -9,17 +9,19 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
+const EVENT_ID_HEADER = "Event-ID"
+
 type EventSpec interface {
 	ID() string
 	Type() string
 	Data() proto.Message
 }
 
-func NewEventID() string {
+func NewEventID() ulid.ULID {
 	return ulid.MustNew(
 		ulid.Timestamp(time.Now()),
 		ulid.DefaultEntropy(),
-	).String()
+	)
 }
 
 type EventBuilder[T EventSpec] func(msg jetstream.Msg) (T, error)
