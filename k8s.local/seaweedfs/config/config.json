@@ -1,0 +1,14 @@
+{
+  "identities": [
+    {
+      "name": "backend-service",
+      "credentials": [
+        {
+          "accessKey": "BACKEND_ACCESS_KEY_123",
+          "secretKey": "BACKEND_SECRET_KEY_CHANGE_THIS_IN_PROD"
+        }
+      ],
+      "actions": ["Admin", "Read", "Write", "List"]
+    }
+  ]
+}

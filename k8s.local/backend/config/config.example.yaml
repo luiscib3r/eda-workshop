@@ -1,0 +1,25 @@
+server:
+  port: 8080
+
+storage:
+  endpoint: http://seaweedfs-s3
+  public_endpoint: http://localhost:8333
+  region: us-east-1
+  access_key: BACKEND_ACCESS_KEY_123
+  secret_key: BACKEND_SECRET_KEY_CHANGE_THIS_IN_PROD
+  use_path_style: true
+
+cors:
+  allowed_origins:
+    - http://localhost:5173
+
+nats:
+  uri: nats://nats:4222
+
+telegram:
+  bot_token: use your own bot token here
+  chat_id: use your own chat id here
+
+postgres:
+  uri: postgres://developer:devpassword@postgres:5432/eda_workshop?sslmode=disable
+  dsn: pgx5://developer:devpassword@postgres:5432/eda_workshop?sslmode=disable

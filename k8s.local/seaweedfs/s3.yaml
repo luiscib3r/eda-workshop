@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: seaweedfs-s3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: seaweedfs-s3
+  template:
+    metadata:
+      labels:
+        app: seaweedfs-s3
+    spec:
+      enableServiceLinks: false
+      shareProcessNamespace: true
+      containers:
+        - name: s3
+          image: chrislusf/seaweedfs:4.00
+          ports:
+            - containerPort: 8333
+            - containerPort: 9327
+          args:
+            [
+              "s3",
+              "-filer=seaweedfs-filer:8888",
+              "-ip.bind=0.0.0.0",
+              "-metricsPort=9327",
+              "-config=/etc/seaweedfs/config.json",
+            ]
+          volumeMounts:
+            - name: seaweed-config
+              mountPath: /etc/seaweedfs
+              readOnly: true
+        - name: api-instrumentation
+          image: otel/autoinstrumentation-go
+          env:
+            - name: OTEL_GO_AUTO_TARGET_EXE
+              value: /usr/bin/weed
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://jaeger:4318"
+            - name: OTEL_SERVICE_NAME
+              value: "s3"
+          securityContext:
+            runAsUser: 0
+            privileged: true
+      volumes:
+        - name: seaweed-config
+          configMap:
+            name: seaweed-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: seaweedfs-s3
+spec:
+  selector:
+    app: seaweedfs-s3
+  ports:
+    - port: 80
+      targetPort: 8333

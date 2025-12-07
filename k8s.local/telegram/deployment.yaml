@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: telegram
+spec:
+  selector:
+    matchLabels:
+      app: telegram
+  template:
+    metadata:
+      labels:
+        app: telegram
+    spec:
+      containers:
+        - name: telegram
+          image: telegram
+          volumeMounts:
+            - name: config
+              mountPath: /app/config.yaml
+              subPath: config.yaml
+          envFrom:
+            - configMapRef:
+                name: otel
+          env:
+            - name: OTEL_SERVICE_NAME
+              value: "telegram"
+            - name: OTEL_SERVICE_VERSION
+              value: "0.0.0"
+            - name: OTEL_CAPTURE_BODIES
+              value: "true"
+      volumes:
+        - name: config
+          configMap:
+            name: backend-config

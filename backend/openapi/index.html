@@ -1,0 +1,69 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EDA Workshop</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <!-- Load the Script -->
+    <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
+    <!-- Initialize the Scalar API Reference -->
+    <script>
+      Scalar.createApiReference("#app", {
+        url: "/docs/api.swagger.json",
+        defaultHttpClient: {
+          targetKey: "shell",
+          clientKey: "curl",
+        },
+        showToolbar: "never",
+        defaultOpenAllTags: true,
+        hideClientButton: true,
+        hiddenClients: {
+          // C
+          c: ["libcurl"],
+          // Clojure
+          clojure: ["clj_http"],
+          // C#
+          csharp: ["httpclient", "restsharp"],
+          // Dart
+          dart: ["http"],
+          // F#
+          fsharp: ["httpclient"],
+          // Go
+          go: ["native"],
+          // HTTP
+          http: ["http1.1"],
+          // Java
+          java: ["asynchttp", "nethttp", "okhttp", "unirest"],
+          // JavaScript
+          js: ["axios", "fetch", "jquery", "ofetch", "xhr"],
+          // Kotlin
+          kotlin: ["okhttp"],
+          // Node.js
+          node: ["axios", "fetch", "ofetch", "undici"],
+          // Objective-C
+          objc: ["nsurlsession"],
+          // OCaml
+          ocaml: ["cohttp"],
+          // PHP
+          php: ["curl", "guzzle"],
+          // PowerShell
+          powershell: ["restmethod", "webrequest"],
+          // Python
+          python: ["httpx_async", "httpx_sync", "python3", "requests"],
+          // R
+          r: ["httr"],
+          // Ruby
+          ruby: ["native"],
+          // Rust
+          rust: ["reqwest"],
+          // Shell
+          shell: ["httpie", "wget"],
+          // Swift
+          swift: ["nsurlsession"],
+        },
+      });
+    </script>
+  </body>
+</html>

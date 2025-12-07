@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+spec:
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: backend
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: config
+              mountPath: /app/config.yaml
+              subPath: config.yaml
+          envFrom:
+            - configMapRef:
+                name: otel
+          env:
+            - name: OTEL_SERVICE_NAME
+              value: "backend"
+            - name: OTEL_SERVICE_VERSION
+              value: "0.0.0"
+            - name: OTEL_CAPTURE_BODIES
+              value: "true"
+      volumes:
+        - name: config
+          configMap:
+            name: backend-config

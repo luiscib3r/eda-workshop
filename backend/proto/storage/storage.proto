@@ -1,0 +1,41 @@
+syntax = "proto3";
+package storage;
+
+import "google/api/annotations.proto";
+import "google/protobuf/empty.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+service StorageService {
+  rpc GetUploadUrl(google.protobuf.Empty) returns (GetUploadUrlResponse) {
+    option (google.api.http) = {get: "/storage/upload-url"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Get Upload URL"
+      description: "Generates a pre-signed URL for uploading files."
+      tags: "Storage"
+    };
+  }
+
+  rpc ConfirmFileUpload(ConfirmFileUploadRequest) returns (google.protobuf.Empty) {
+    option (google.api.http) = {
+      post: "/storage/confirm-upload"
+      body: "*"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Confirm File Upload"
+      description: "Confirms that a file has been uploaded."
+      tags: "Storage"
+    };
+  }
+}
+
+message GetUploadUrlResponse {
+  string upload_url = 1;
+  string bucket_name = 3;
+  string file_key = 2;
+}
+
+message ConfirmFileUploadRequest {
+  string file_name = 1;
+  string file_key = 2;
+  string bucket_name = 3;
+}

@@ -1,0 +1,63 @@
+{
+  "folders": [
+    {
+      "name": "💻 Workspace",
+      "path": "."
+    },
+    {
+      "name": "📱 Frontend",
+      "path": "frontend"
+    },
+    {
+      "name": "🚀 Backend",
+      "path": "backend"
+    },
+    {
+      "name": "🕸️ k8s.local",
+      "path": "k8s.local"
+    }
+  ],
+  "settings": {
+    "makefile.configureOnOpen": false,
+    "vs-kubernetes": {
+      "disable-linters": ["resource-limits"]
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "usernamehw.errorlens",
+      "golang.go",
+      "XiaoXuxxxx.gogo-codelens",
+      "fill-labs.dependi",
+      "bufbuild.vscode-buf",
+      "tilt-dev.tiltfile",
+      "docker.docker",
+      "ms-azuretools.vscode-docker",
+      "ms-kubernetes-tools.vscode-kubernetes-tools",
+      "mongodb.mongodb-vscode"
+    ]
+  },
+  "launch": {
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "🚀 Backend",
+        "type": "go",
+        "request": "attach",
+        "mode": "remote",
+        "remotePath": "${workspaceFolder:🚀 Backend}",
+        "port": 40000,
+        "host": "localhost"
+      },
+      {
+        "name": "🚀 Telegram",
+        "type": "go",
+        "request": "attach",
+        "mode": "remote",
+        "remotePath": "${workspaceFolder:🚀 Backend}",
+        "port": 40001,
+        "host": "localhost"
+      }
+    ]
+  }
+}

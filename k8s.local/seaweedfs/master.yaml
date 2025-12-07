@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: seaweedfs-master
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: seaweedfs-master
+  template:
+    metadata:
+      labels:
+        app: seaweedfs-master
+    spec:
+      containers:
+        - name: master
+          image: chrislusf/seaweedfs:4.00
+          ports:
+            - containerPort: 9333
+              name: master-port
+            - containerPort: 19333
+              name: master-ssl-port
+            - containerPort: 9324
+              name: metrics-port
+          args:
+            [
+              "master",
+              "-ip=seaweedfs-master",
+              "-ip.bind=0.0.0.0",
+              "-metricsPort=9324",
+            ]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: seaweedfs-master
+spec:
+  selector:
+    app: seaweedfs-master
+  ports:
+    - port: 9333
+      targetPort: 9333
+      name: master-port
+    - port: 19333
+      targetPort: 19333
+      name: master-ssl-port
+    - port: 9324
+      targetPort: 9324
+      name: metrics-port

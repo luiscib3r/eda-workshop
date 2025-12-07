@@ -1,0 +1,10 @@
+apiVersion: v1
+data:
+  01-init-databases.sql: |-
+    -- Begin eda_workshop Database
+    CREATE USER developer WITH ENCRYPTED PASSWORD 'devpassword';
+    CREATE DATABASE eda_workshop OWNER developer;
+    -- End of eda_workshop Database
+kind: ConfigMap
+metadata:
+  name: postgres-scripts

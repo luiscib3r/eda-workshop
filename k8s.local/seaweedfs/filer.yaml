@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: seaweedfs-filer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: seaweedfs-filer
+  template:
+    metadata:
+      labels:
+        app: seaweedfs-filer
+    spec:
+      containers:
+        - name: filer
+          image: chrislusf/seaweedfs:4.00
+          ports:
+            - containerPort: 8888
+              name: filer
+            - containerPort: 18888
+              name: filer-admin
+            - containerPort: 9326
+              name: metrics
+          args:
+            [
+              "filer",
+              "-master=seaweedfs-master:9333",
+              "-ip.bind=0.0.0.0",
+              "-metricsPort=9326",
+            ]
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: seaweedfs-filer
+spec:
+  selector:
+    app: seaweedfs-filer
+  ports:
+    - port: 8888
+      targetPort: 8888
+      name: filer
+    - port: 18888
+      targetPort: 18888
+      name: filer-admin
