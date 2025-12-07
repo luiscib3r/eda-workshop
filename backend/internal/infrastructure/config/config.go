@@ -13,6 +13,7 @@ type AppConfig struct {
 	Nats     NatsConfig     `mapstructure:"nats"`
 	Telegram TelegramConfig `mapstructure:"telegram"`
 	Postgres PostgresConfig `mapstructure:"postgres"`
+	LLM      LLMConfig      `mapstructure:"llm"`
 }
 
 type ServerConfig struct {
@@ -44,6 +45,11 @@ type TelegramConfig struct {
 type PostgresConfig struct {
 	Uri string `mapstructure:"uri"`
 	Dsn string `mapstructure:"dsn"`
+}
+
+type LLMConfig struct {
+	BaseUrl string `mapstructure:"base_url"`
+	ApiKey  string `mapstructure:"api_key"`
 }
 
 func LoadAppConfig() (*AppConfig, error) {

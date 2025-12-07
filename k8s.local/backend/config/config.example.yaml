@@ -23,3 +23,7 @@ telegram:
 postgres:
   uri: postgres://developer:devpassword@postgres:5432/eda_workshop?sslmode=disable
   dsn: pgx5://developer:devpassword@postgres:5432/eda_workshop?sslmode=disable
+
+llm:
+  base_url: https://openrouter.ai/api/v1
+  api_key: use your own api key here

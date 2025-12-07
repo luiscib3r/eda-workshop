@@ -29,7 +29,6 @@ export type RpcStatus = {
 export type StorageConfirmFileUploadRequest = {
     fileName?: string;
     fileKey?: string;
-    bucketName?: string;
 };
 
 export type StorageFile = {
@@ -47,7 +46,6 @@ export type StorageGetFilesResponse = {
 
 export type StorageGetUploadUrlResponse = {
     uploadUrl?: string;
-    bucketName?: string;
     fileKey?: string;
 };
 

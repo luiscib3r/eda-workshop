@@ -53,7 +53,6 @@ func (c *FileUploadedConsumer) handler(
 	msg := "📤 *New File Uploaded!*\n\n"
 	msg += "😎 *File Name: " + event.Payload.FileName + "*\n"
 	msg += "📄 *File Key:* `" + event.Payload.FileKey + "`\n"
-	msg += "🗂️ *Bucket Name:* `" + event.Payload.BucketName + "`\n"
 	msg += "\n✅ Upload completed successfully!"
 
 	if err := c.bot.SendMessage(msg); err != nil {

@@ -41,7 +41,6 @@ export const useUploadFile = () => {
         body: {
           fileName: files?.[0].name,
           fileKey: data!.fileKey,
-          bucketName: data!.bucketName,
         },
       });
     },

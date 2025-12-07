@@ -4,7 +4,6 @@ package storage;
 message FileUploadedEventData {
   string file_name = 1;
   string file_key = 2;
-  string bucket_name = 3;
 }
 
 message FilesDeletedEventData {

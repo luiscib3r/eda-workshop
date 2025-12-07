@@ -1,0 +1,33 @@
+FROM golang:1.25-trixie AS builder
+
+# Instalar dependencias de compilación
+RUN apt-get update && apt-get install -y \
+    libmupdf-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY . .
+
+RUN CGO_ENABLED=1 GOOS=linux go build -o ocr ./cmd/ocr-image
+
+FROM debian:trixie-slim AS prod
+
+RUN apt-get update && apt-get install -y \
+    libmupdf-dev \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY --from=builder /app/ocr .
+
+RUN useradd -r -u 1001 appuser && \
+    chown -R appuser:appuser /app
+
+USER appuser
+
+CMD ["/app/ocr"]

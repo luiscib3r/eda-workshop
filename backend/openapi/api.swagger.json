@@ -246,9 +246,6 @@
         },
         "fileKey": {
           "type": "string"
-        },
-        "bucketName": {
-          "type": "string"
         }
       }
     },
@@ -292,9 +289,6 @@
       "type": "object",
       "properties": {
         "uploadUrl": {
-          "type": "string"
-        },
-        "bucketName": {
           "type": "string"
         },
         "fileKey": {

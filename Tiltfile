@@ -146,6 +146,18 @@ deploy_service(
     service_name='telegram',
     main_path='./backend/cmd/telegram',
     port_forwards=['40001:40000'],
-    resource_deps=['nats'],
+    resource_deps=['backend', 'ocr-image'],
     labels=['backend']
 )
+
+# ===========================================================
+# OCR Service
+# ===========================================================
+docker_build(
+    'ocr-image',
+    context='./backend',
+    dockerfile='k8s.local/Dockerfile.ocr',
+)
+
+k8s_yaml('k8s.local/ocr-image/deployment.yaml')
+k8s_resource('ocr-image', labels='backend', resource_deps=['backend'])

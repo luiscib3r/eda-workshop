@@ -12,17 +12,16 @@ import (
 )
 
 const createFile = `-- name: CreateFile :one
-INSERT INTO storage.files (id, file_name, file_size, file_type, bucket_name)
-VALUES ($1, $2, $3, $4, $5)
-RETURNING id, file_name, file_size, file_type, bucket_name, created_at, updated_at
+INSERT INTO storage.files (id, file_name, file_size, file_type)
+VALUES ($1, $2, $3, $4)
+RETURNING id, file_name, file_size, file_type, created_at, updated_at
 `
 
 type CreateFileParams struct {
-	ID         string `json:"id"`
-	FileName   string `json:"file_name"`
-	FileSize   int64  `json:"file_size"`
-	FileType   string `json:"file_type"`
-	BucketName string `json:"bucket_name"`
+	ID       string `json:"id"`
+	FileName string `json:"file_name"`
+	FileSize int64  `json:"file_size"`
+	FileType string `json:"file_type"`
 }
 
 func (q *Queries) CreateFile(ctx context.Context, arg CreateFileParams) (StorageFile, error) {
@@ -31,7 +30,6 @@ func (q *Queries) CreateFile(ctx context.Context, arg CreateFileParams) (Storage
 		arg.FileName,
 		arg.FileSize,
 		arg.FileType,
-		arg.BucketName,
 	)
 	var i StorageFile
 	err := row.Scan(
@@ -39,7 +37,6 @@ func (q *Queries) CreateFile(ctx context.Context, arg CreateFileParams) (Storage
 		&i.FileName,
 		&i.FileSize,
 		&i.FileType,
-		&i.BucketName,
 		&i.CreatedAt,
 		&i.UpdatedAt,
 	)
@@ -58,7 +55,7 @@ func (q *Queries) DeleteFilesByIDs(ctx context.Context, dollar_1 []string) error
 
 const getFiles = `-- name: GetFiles :many
 SELECT 
-    id, file_name, file_size, file_type, bucket_name, created_at, updated_at,
+    id, file_name, file_size, file_type, created_at, updated_at,
     COUNT(*) OVER() AS total
 FROM storage.files
 ORDER BY created_at DESC
@@ -71,14 +68,13 @@ type GetFilesParams struct {
 }
 
 type GetFilesRow struct {
-	ID         string             `json:"id"`
-	FileName   string             `json:"file_name"`
-	FileSize   int64              `json:"file_size"`
-	FileType   string             `json:"file_type"`
-	BucketName string             `json:"bucket_name"`
-	CreatedAt  pgtype.Timestamptz `json:"created_at"`
-	UpdatedAt  pgtype.Timestamptz `json:"updated_at"`
-	Total      int64              `json:"total"`
+	ID        string             `json:"id"`
+	FileName  string             `json:"file_name"`
+	FileSize  int64              `json:"file_size"`
+	FileType  string             `json:"file_type"`
+	CreatedAt pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
+	Total     int64              `json:"total"`
 }
 
 func (q *Queries) GetFiles(ctx context.Context, arg GetFilesParams) ([]GetFilesRow, error) {
@@ -95,7 +91,6 @@ func (q *Queries) GetFiles(ctx context.Context, arg GetFilesParams) ([]GetFilesR
 			&i.FileName,
 			&i.FileSize,
 			&i.FileType,
-			&i.BucketName,
 			&i.CreatedAt,
 			&i.UpdatedAt,
 			&i.Total,

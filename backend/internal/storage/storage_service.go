@@ -66,9 +66,8 @@ func (s *StorageService) GetUploadUrl(
 	}
 
 	return &storage.GetUploadUrlResponse{
-		UploadUrl:  result.URL,
-		BucketName: bucket,
-		FileKey:    key,
+		UploadUrl: result.URL,
+		FileKey:   key,
 	}, nil
 }
 
@@ -79,9 +78,8 @@ func (s *StorageService) ConfirmFileUpload(
 ) (*emptypb.Empty, error) {
 	event := events.NewFileUploadedEvent(
 		&storage.FileUploadedEventData{
-			FileName:   req.FileName,
-			FileKey:    req.FileKey,
-			BucketName: req.BucketName,
+			FileName: req.FileName,
+			FileKey:  req.FileKey,
 		},
 	)
 

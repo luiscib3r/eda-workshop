@@ -25,7 +25,6 @@ type FileUploadedEventData struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	FileName      string                 `protobuf:"bytes,1,opt,name=file_name,json=fileName,proto3" json:"file_name,omitempty"`
 	FileKey       string                 `protobuf:"bytes,2,opt,name=file_key,json=fileKey,proto3" json:"file_key,omitempty"`
-	BucketName    string                 `protobuf:"bytes,3,opt,name=bucket_name,json=bucketName,proto3" json:"bucket_name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -70,13 +69,6 @@ func (x *FileUploadedEventData) GetFileName() string {
 func (x *FileUploadedEventData) GetFileKey() string {
 	if x != nil {
 		return x.FileKey
-	}
-	return ""
-}
-
-func (x *FileUploadedEventData) GetBucketName() string {
-	if x != nil {
-		return x.BucketName
 	}
 	return ""
 }
@@ -129,12 +121,10 @@ var File_storage_events_proto protoreflect.FileDescriptor
 
 const file_storage_events_proto_rawDesc = "" +
 	"\n" +
-	"\x14storage/events.proto\x12\astorage\"p\n" +
+	"\x14storage/events.proto\x12\astorage\"O\n" +
 	"\x15FileUploadedEventData\x12\x1b\n" +
 	"\tfile_name\x18\x01 \x01(\tR\bfileName\x12\x19\n" +
-	"\bfile_key\x18\x02 \x01(\tR\afileKey\x12\x1f\n" +
-	"\vbucket_name\x18\x03 \x01(\tR\n" +
-	"bucketName\"4\n" +
+	"\bfile_key\x18\x02 \x01(\tR\afileKey\"4\n" +
 	"\x15FilesDeletedEventData\x12\x1b\n" +
 	"\tfile_keys\x18\x01 \x03(\tR\bfileKeysBk\n" +
 	"\vcom.storageB\vEventsProtoP\x01Z\x13backend/gen/storage\xa2\x02\x03SXX\xaa\x02\aStorage\xca\x02\aStorage\xe2\x02\x13Storage\\GPBMetadata\xea\x02\aStorageb\x06proto3"

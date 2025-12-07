@@ -27,7 +27,6 @@ const (
 type GetUploadUrlResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	UploadUrl     string                 `protobuf:"bytes,1,opt,name=upload_url,json=uploadUrl,proto3" json:"upload_url,omitempty"`
-	BucketName    string                 `protobuf:"bytes,3,opt,name=bucket_name,json=bucketName,proto3" json:"bucket_name,omitempty"`
 	FileKey       string                 `protobuf:"bytes,2,opt,name=file_key,json=fileKey,proto3" json:"file_key,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -70,13 +69,6 @@ func (x *GetUploadUrlResponse) GetUploadUrl() string {
 	return ""
 }
 
-func (x *GetUploadUrlResponse) GetBucketName() string {
-	if x != nil {
-		return x.BucketName
-	}
-	return ""
-}
-
 func (x *GetUploadUrlResponse) GetFileKey() string {
 	if x != nil {
 		return x.FileKey
@@ -88,7 +80,6 @@ type ConfirmFileUploadRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	FileName      string                 `protobuf:"bytes,1,opt,name=file_name,json=fileName,proto3" json:"file_name,omitempty"`
 	FileKey       string                 `protobuf:"bytes,2,opt,name=file_key,json=fileKey,proto3" json:"file_key,omitempty"`
-	BucketName    string                 `protobuf:"bytes,3,opt,name=bucket_name,json=bucketName,proto3" json:"bucket_name,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -137,29 +128,18 @@ func (x *ConfirmFileUploadRequest) GetFileKey() string {
 	return ""
 }
 
-func (x *ConfirmFileUploadRequest) GetBucketName() string {
-	if x != nil {
-		return x.BucketName
-	}
-	return ""
-}
-
 var File_storage_storage_proto protoreflect.FileDescriptor
 
 const file_storage_storage_proto_rawDesc = "" +
 	"\n" +
-	"\x15storage/storage.proto\x12\astorage\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"q\n" +
+	"\x15storage/storage.proto\x12\astorage\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"P\n" +
 	"\x14GetUploadUrlResponse\x12\x1d\n" +
 	"\n" +
-	"upload_url\x18\x01 \x01(\tR\tuploadUrl\x12\x1f\n" +
-	"\vbucket_name\x18\x03 \x01(\tR\n" +
-	"bucketName\x12\x19\n" +
-	"\bfile_key\x18\x02 \x01(\tR\afileKey\"s\n" +
+	"upload_url\x18\x01 \x01(\tR\tuploadUrl\x12\x19\n" +
+	"\bfile_key\x18\x02 \x01(\tR\afileKey\"R\n" +
 	"\x18ConfirmFileUploadRequest\x12\x1b\n" +
 	"\tfile_name\x18\x01 \x01(\tR\bfileName\x12\x19\n" +
-	"\bfile_key\x18\x02 \x01(\tR\afileKey\x12\x1f\n" +
-	"\vbucket_name\x18\x03 \x01(\tR\n" +
-	"bucketName2\x81\x03\n" +
+	"\bfile_key\x18\x02 \x01(\tR\afileKey2\x81\x03\n" +
 	"\x0eStorageService\x12\xaf\x01\n" +
 	"\fGetUploadUrl\x12\x16.google.protobuf.Empty\x1a\x1d.storage.GetUploadUrlResponse\"h\x92AJ\n" +
 	"\aStorage\x12\x0eGet Upload URL\x1a/Generates a pre-signed URL for uploading files.\x82\xd3\xe4\x93\x02\x15\x12\x13/storage/upload-url\x12\xbc\x01\n" +

@@ -9,13 +9,12 @@ import (
 )
 
 type StorageFile struct {
-	ID         string             `json:"id"`
-	FileName   string             `json:"file_name"`
-	FileSize   int64              `json:"file_size"`
-	FileType   string             `json:"file_type"`
-	BucketName string             `json:"bucket_name"`
-	CreatedAt  pgtype.Timestamptz `json:"created_at"`
-	UpdatedAt  pgtype.Timestamptz `json:"updated_at"`
+	ID        string             `json:"id"`
+	FileName  string             `json:"file_name"`
+	FileSize  int64              `json:"file_size"`
+	FileType  string             `json:"file_type"`
+	CreatedAt pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt pgtype.Timestamptz `json:"updated_at"`
 }
 
 type StorageOutbox struct {

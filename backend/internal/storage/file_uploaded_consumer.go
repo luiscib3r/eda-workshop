@@ -56,8 +56,9 @@ func (c *FileUploadedConsumer) handler(
 	event *events.FileUploadedEvent,
 ) error {
 	// Get file info
+	bucket := "files"
 	head, err := c.s3.HeadObject(ctx, &s3.HeadObjectInput{
-		Bucket: aws.String(event.Payload.BucketName),
+		Bucket: aws.String(bucket),
 		Key:    aws.String(event.Payload.FileKey),
 	})
 
@@ -76,11 +77,10 @@ func (c *FileUploadedConsumer) handler(
 
 	// Create file record
 	if _, err := c.db.CreateFile(ctx, storagedb.CreateFileParams{
-		ID:         event.Payload.FileKey,
-		FileName:   event.Payload.FileName,
-		BucketName: event.Payload.BucketName,
-		FileSize:   size,
-		FileType:   fileType,
+		ID:       event.Payload.FileKey,
+		FileName: event.Payload.FileName,
+		FileSize: size,
+		FileType: fileType,
 	}); err != nil {
 		return err
 	}

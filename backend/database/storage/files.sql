@@ -1,6 +1,6 @@
 -- name: CreateFile :one
-INSERT INTO storage.files (id, file_name, file_size, file_type, bucket_name)
-VALUES ($1, $2, $3, $4, $5)
+INSERT INTO storage.files (id, file_name, file_size, file_type)
+VALUES ($1, $2, $3, $4)
 RETURNING *;
 
 -- name: GetFiles :many
