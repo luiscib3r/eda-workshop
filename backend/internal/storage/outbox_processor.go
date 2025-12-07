@@ -7,6 +7,7 @@ import (
 	"backend/internal/storage/events"
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"go.opentelemetry.io/otel"
@@ -66,9 +67,14 @@ func (p *OutboxProcessor) Start(
 	// Initial backlog
 	p.process(ctx)
 
+	ticker := time.NewTicker(30 * time.Second)
+	defer ticker.Stop()
+
 	for {
 		select {
 		case <-notifyChan:
+			p.process(ctx)
+		case <-ticker.C:
 			p.process(ctx)
 		case <-ctx.Done():
 			return ctx.Err()
