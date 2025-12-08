@@ -157,8 +157,7 @@ docker_build(
     'ocr-image',
     context='./backend',
     dockerfile='k8s.local/Dockerfile.ocr',
-    ignore=['./backend'],
 )
 
 k8s_yaml('k8s.local/ocr-image/deployment.yaml')
-k8s_resource('ocr-image', labels='backend', resource_deps=['backend'])
+k8s_resource('ocr-image', labels='backend', resource_deps=['nats', 'nginx'])

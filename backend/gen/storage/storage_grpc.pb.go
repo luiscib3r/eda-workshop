@@ -22,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion9
 const (
 	StorageService_GetUploadUrl_FullMethodName      = "/storage.StorageService/GetUploadUrl"
 	StorageService_ConfirmFileUpload_FullMethodName = "/storage.StorageService/ConfirmFileUpload"
+	StorageService_GetFileUrl_FullMethodName        = "/storage.StorageService/GetFileUrl"
 )
 
 // StorageServiceClient is the client API for StorageService service.
@@ -30,6 +31,7 @@ const (
 type StorageServiceClient interface {
 	GetUploadUrl(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*GetUploadUrlResponse, error)
 	ConfirmFileUpload(ctx context.Context, in *ConfirmFileUploadRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	GetFileUrl(ctx context.Context, in *GetFileUrlRequest, opts ...grpc.CallOption) (*GetFileUrlResponse, error)
 }
 
 type storageServiceClient struct {
@@ -60,12 +62,23 @@ func (c *storageServiceClient) ConfirmFileUpload(ctx context.Context, in *Confir
 	return out, nil
 }
 
+func (c *storageServiceClient) GetFileUrl(ctx context.Context, in *GetFileUrlRequest, opts ...grpc.CallOption) (*GetFileUrlResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetFileUrlResponse)
+	err := c.cc.Invoke(ctx, StorageService_GetFileUrl_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // StorageServiceServer is the server API for StorageService service.
 // All implementations must embed UnimplementedStorageServiceServer
 // for forward compatibility.
 type StorageServiceServer interface {
 	GetUploadUrl(context.Context, *emptypb.Empty) (*GetUploadUrlResponse, error)
 	ConfirmFileUpload(context.Context, *ConfirmFileUploadRequest) (*emptypb.Empty, error)
+	GetFileUrl(context.Context, *GetFileUrlRequest) (*GetFileUrlResponse, error)
 	mustEmbedUnimplementedStorageServiceServer()
 }
 
@@ -81,6 +94,9 @@ func (UnimplementedStorageServiceServer) GetUploadUrl(context.Context, *emptypb.
 }
 func (UnimplementedStorageServiceServer) ConfirmFileUpload(context.Context, *ConfirmFileUploadRequest) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method ConfirmFileUpload not implemented")
+}
+func (UnimplementedStorageServiceServer) GetFileUrl(context.Context, *GetFileUrlRequest) (*GetFileUrlResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetFileUrl not implemented")
 }
 func (UnimplementedStorageServiceServer) mustEmbedUnimplementedStorageServiceServer() {}
 func (UnimplementedStorageServiceServer) testEmbeddedByValue()                        {}
@@ -139,6 +155,24 @@ func _StorageService_ConfirmFileUpload_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
+func _StorageService_GetFileUrl_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFileUrlRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StorageServiceServer).GetFileUrl(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: StorageService_GetFileUrl_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StorageServiceServer).GetFileUrl(ctx, req.(*GetFileUrlRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // StorageService_ServiceDesc is the grpc.ServiceDesc for StorageService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -153,6 +187,10 @@ var StorageService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ConfirmFileUpload",
 			Handler:    _StorageService_ConfirmFileUpload_Handler,
+		},
+		{
+			MethodName: "GetFileUrl",
+			Handler:    _StorageService_GetFileUrl_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

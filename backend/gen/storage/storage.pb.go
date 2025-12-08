@@ -128,6 +128,94 @@ func (x *ConfirmFileUploadRequest) GetFileKey() string {
 	return ""
 }
 
+type GetFileUrlRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	FileKey       string                 `protobuf:"bytes,1,opt,name=file_key,json=fileKey,proto3" json:"file_key,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetFileUrlRequest) Reset() {
+	*x = GetFileUrlRequest{}
+	mi := &file_storage_storage_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetFileUrlRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetFileUrlRequest) ProtoMessage() {}
+
+func (x *GetFileUrlRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_storage_storage_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetFileUrlRequest.ProtoReflect.Descriptor instead.
+func (*GetFileUrlRequest) Descriptor() ([]byte, []int) {
+	return file_storage_storage_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *GetFileUrlRequest) GetFileKey() string {
+	if x != nil {
+		return x.FileKey
+	}
+	return ""
+}
+
+type GetFileUrlResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	FileUrl       string                 `protobuf:"bytes,1,opt,name=file_url,json=fileUrl,proto3" json:"file_url,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetFileUrlResponse) Reset() {
+	*x = GetFileUrlResponse{}
+	mi := &file_storage_storage_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetFileUrlResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetFileUrlResponse) ProtoMessage() {}
+
+func (x *GetFileUrlResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_storage_storage_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetFileUrlResponse.ProtoReflect.Descriptor instead.
+func (*GetFileUrlResponse) Descriptor() ([]byte, []int) {
+	return file_storage_storage_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *GetFileUrlResponse) GetFileUrl() string {
+	if x != nil {
+		return x.FileUrl
+	}
+	return ""
+}
+
 var File_storage_storage_proto protoreflect.FileDescriptor
 
 const file_storage_storage_proto_rawDesc = "" +
@@ -139,12 +227,19 @@ const file_storage_storage_proto_rawDesc = "" +
 	"\bfile_key\x18\x02 \x01(\tR\afileKey\"R\n" +
 	"\x18ConfirmFileUploadRequest\x12\x1b\n" +
 	"\tfile_name\x18\x01 \x01(\tR\bfileName\x12\x19\n" +
-	"\bfile_key\x18\x02 \x01(\tR\afileKey2\x81\x03\n" +
+	"\bfile_key\x18\x02 \x01(\tR\afileKey\".\n" +
+	"\x11GetFileUrlRequest\x12\x19\n" +
+	"\bfile_key\x18\x01 \x01(\tR\afileKey\"/\n" +
+	"\x12GetFileUrlResponse\x12\x19\n" +
+	"\bfile_url\x18\x01 \x01(\tR\afileUrl2\xbd\x04\n" +
 	"\x0eStorageService\x12\xaf\x01\n" +
 	"\fGetUploadUrl\x12\x16.google.protobuf.Empty\x1a\x1d.storage.GetUploadUrlResponse\"h\x92AJ\n" +
 	"\aStorage\x12\x0eGet Upload URL\x1a/Generates a pre-signed URL for uploading files.\x82\xd3\xe4\x93\x02\x15\x12\x13/storage/upload-url\x12\xbc\x01\n" +
 	"\x11ConfirmFileUpload\x12!.storage.ConfirmFileUploadRequest\x1a\x16.google.protobuf.Empty\"l\x92AG\n" +
-	"\aStorage\x12\x13Confirm File Upload\x1a'Confirms that a file has been uploaded.\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/storage/confirm-uploadBl\n" +
+	"\aStorage\x12\x13Confirm File Upload\x1a'Confirms that a file has been uploaded.\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/storage/confirm-upload\x12\xb9\x01\n" +
+	"\n" +
+	"GetFileUrl\x12\x1a.storage.GetFileUrlRequest\x1a\x1b.storage.GetFileUrlResponse\"r\x92AK\n" +
+	"\aStorage\x12\fGet File URL\x1a2Retrieves a pre-signed URL for downloading a file.\x82\xd3\xe4\x93\x02\x1e\x12\x1c/storage/file-url/{file_key}Bl\n" +
 	"\vcom.storageB\fStorageProtoP\x01Z\x13backend/gen/storage\xa2\x02\x03SXX\xaa\x02\aStorage\xca\x02\aStorage\xe2\x02\x13Storage\\GPBMetadata\xea\x02\aStorageb\x06proto3"
 
 var (
@@ -159,19 +254,23 @@ func file_storage_storage_proto_rawDescGZIP() []byte {
 	return file_storage_storage_proto_rawDescData
 }
 
-var file_storage_storage_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_storage_storage_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_storage_storage_proto_goTypes = []any{
 	(*GetUploadUrlResponse)(nil),     // 0: storage.GetUploadUrlResponse
 	(*ConfirmFileUploadRequest)(nil), // 1: storage.ConfirmFileUploadRequest
-	(*emptypb.Empty)(nil),            // 2: google.protobuf.Empty
+	(*GetFileUrlRequest)(nil),        // 2: storage.GetFileUrlRequest
+	(*GetFileUrlResponse)(nil),       // 3: storage.GetFileUrlResponse
+	(*emptypb.Empty)(nil),            // 4: google.protobuf.Empty
 }
 var file_storage_storage_proto_depIdxs = []int32{
-	2, // 0: storage.StorageService.GetUploadUrl:input_type -> google.protobuf.Empty
+	4, // 0: storage.StorageService.GetUploadUrl:input_type -> google.protobuf.Empty
 	1, // 1: storage.StorageService.ConfirmFileUpload:input_type -> storage.ConfirmFileUploadRequest
-	0, // 2: storage.StorageService.GetUploadUrl:output_type -> storage.GetUploadUrlResponse
-	2, // 3: storage.StorageService.ConfirmFileUpload:output_type -> google.protobuf.Empty
-	2, // [2:4] is the sub-list for method output_type
-	0, // [0:2] is the sub-list for method input_type
+	2, // 2: storage.StorageService.GetFileUrl:input_type -> storage.GetFileUrlRequest
+	0, // 3: storage.StorageService.GetUploadUrl:output_type -> storage.GetUploadUrlResponse
+	4, // 4: storage.StorageService.ConfirmFileUpload:output_type -> google.protobuf.Empty
+	3, // 5: storage.StorageService.GetFileUrl:output_type -> storage.GetFileUrlResponse
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
 	0, // [0:0] is the sub-list for extension extendee
 	0, // [0:0] is the sub-list for field type_name
@@ -188,7 +287,7 @@ func file_storage_storage_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_storage_storage_proto_rawDesc), len(file_storage_storage_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

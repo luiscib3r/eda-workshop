@@ -3,8 +3,8 @@
 import { queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { filesServiceDeleteFiles, filesServiceGetFiles, healthServiceHealth, type Options, storageServiceConfirmFileUpload, storageServiceGetUploadUrl } from '../sdk.gen';
-import type { FilesServiceDeleteFilesData, FilesServiceDeleteFilesError, FilesServiceDeleteFilesResponse, FilesServiceGetFilesData, FilesServiceGetFilesError, FilesServiceGetFilesResponse, HealthServiceHealthData, HealthServiceHealthError, HealthServiceHealthResponse, StorageServiceConfirmFileUploadData, StorageServiceConfirmFileUploadError, StorageServiceConfirmFileUploadResponse, StorageServiceGetUploadUrlData, StorageServiceGetUploadUrlError, StorageServiceGetUploadUrlResponse } from '../types.gen';
+import { filesServiceDeleteFiles, filesServiceGetFiles, healthServiceHealth, type Options, storageServiceConfirmFileUpload, storageServiceGetFileUrl, storageServiceGetUploadUrl } from '../sdk.gen';
+import type { FilesServiceDeleteFilesData, FilesServiceDeleteFilesError, FilesServiceDeleteFilesResponse, FilesServiceGetFilesData, FilesServiceGetFilesError, FilesServiceGetFilesResponse, HealthServiceHealthData, HealthServiceHealthError, HealthServiceHealthResponse, StorageServiceConfirmFileUploadData, StorageServiceConfirmFileUploadError, StorageServiceConfirmFileUploadResponse, StorageServiceGetFileUrlData, StorageServiceGetFileUrlError, StorageServiceGetFileUrlResponse, StorageServiceGetUploadUrlData, StorageServiceGetUploadUrlError, StorageServiceGetUploadUrlResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -77,6 +77,26 @@ export const storageServiceConfirmFileUploadMutation = (options?: Partial<Option
     };
     return mutationOptions;
 };
+
+export const storageServiceGetFileUrlQueryKey = (options: Options<StorageServiceGetFileUrlData>) => createQueryKey('storageServiceGetFileUrl', options);
+
+/**
+ * Get File URL
+ *
+ * Retrieves a pre-signed URL for downloading a file.
+ */
+export const storageServiceGetFileUrlOptions = (options: Options<StorageServiceGetFileUrlData>) => queryOptions<StorageServiceGetFileUrlResponse, StorageServiceGetFileUrlError, StorageServiceGetFileUrlResponse, ReturnType<typeof storageServiceGetFileUrlQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await storageServiceGetFileUrl({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: storageServiceGetFileUrlQueryKey(options)
+});
 
 /**
  * Delete Files

@@ -81,6 +81,38 @@
         ]
       }
     },
+    "/storage/file-url/{fileKey}": {
+      "get": {
+        "summary": "Get File URL",
+        "description": "Retrieves a pre-signed URL for downloading a file.",
+        "operationId": "StorageService_GetFileUrl",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/storageGetFileUrlResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "fileKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Storage"
+        ]
+      }
+    },
     "/storage/files": {
       "get": {
         "summary": "Get Files",
@@ -266,6 +298,14 @@
           "type": "string"
         },
         "createdAt": {
+          "type": "string"
+        }
+      }
+    },
+    "storageGetFileUrlResponse": {
+      "type": "object",
+      "properties": {
+        "fileUrl": {
           "type": "string"
         }
       }

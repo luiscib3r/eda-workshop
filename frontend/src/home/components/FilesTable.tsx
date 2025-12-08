@@ -1,6 +1,7 @@
-import type { StorageGetFilesResponse } from "@/api";
+import { storageServiceGetFileUrl, type StorageGetFilesResponse } from "@/api";
 import { formatFileSize } from "@/ui/tools";
 import {
+  Button,
   Table,
   TableBody,
   TableCell,
@@ -9,8 +10,9 @@ import {
   TableHeaderCell,
   TableRow,
   TableSelectionCell,
+  Tooltip,
 } from "@fluentui/react-components";
-import { DocumentRegular } from "@fluentui/react-icons";
+import { DocumentRegular, EyeRegular } from "@fluentui/react-icons";
 
 interface FilesTableProps {
   data: StorageGetFilesResponse;
@@ -23,6 +25,7 @@ function FilesTable({ data, selected, setSelected }: FilesTableProps) {
     { columnKey: "fileName", label: "File" },
     { columnKey: "fileSize", label: "Size" },
     { columnKey: "createdAt", label: "Uploaded At" },
+    { columnKey: "actions", label: "Actions" },
   ];
 
   const items = (data.files || []).filter((item) => item.fileKey);
@@ -78,6 +81,28 @@ function FilesTable({ data, selected, setSelected }: FilesTableProps) {
             {/* Created At formatted */}
             <TableCell>
               {new Date(item.createdAt ?? "").toLocaleString()}
+            </TableCell>
+            <TableCell>
+              <Tooltip content="Show file" relationship="label">
+                <Button
+                  appearance="subtle"
+                  size="small"
+                  icon={<EyeRegular />}
+                  onClick={
+                    item.fileKey
+                      ? async (e) => {
+                          e.stopPropagation();
+                          const { data } = await storageServiceGetFileUrl({
+                            path: { fileKey: item.fileKey! },
+                          });
+                          if (data?.fileUrl) {
+                            window.open(data.fileUrl, "_blank");
+                          }
+                        }
+                      : undefined
+                  }
+                />
+              </Tooltip>
             </TableCell>
           </TableRow>
         ))}

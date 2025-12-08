@@ -39,6 +39,10 @@ export type StorageFile = {
     createdAt?: string;
 };
 
+export type StorageGetFileUrlResponse = {
+    fileUrl?: string;
+};
+
 export type StorageGetFilesResponse = {
     pagination?: CorePagination;
     files?: Array<StorageFile>;
@@ -100,6 +104,33 @@ export type StorageServiceConfirmFileUploadResponses = {
 };
 
 export type StorageServiceConfirmFileUploadResponse = StorageServiceConfirmFileUploadResponses[keyof StorageServiceConfirmFileUploadResponses];
+
+export type StorageServiceGetFileUrlData = {
+    body?: never;
+    path: {
+        fileKey: string;
+    };
+    query?: never;
+    url: '/storage/file-url/{fileKey}';
+};
+
+export type StorageServiceGetFileUrlErrors = {
+    /**
+     * An unexpected error response.
+     */
+    default: RpcStatus;
+};
+
+export type StorageServiceGetFileUrlError = StorageServiceGetFileUrlErrors[keyof StorageServiceGetFileUrlErrors];
+
+export type StorageServiceGetFileUrlResponses = {
+    /**
+     * A successful response.
+     */
+    200: StorageGetFileUrlResponse;
+};
+
+export type StorageServiceGetFileUrlResponse = StorageServiceGetFileUrlResponses[keyof StorageServiceGetFileUrlResponses];
 
 export type FilesServiceDeleteFilesData = {
     body?: never;

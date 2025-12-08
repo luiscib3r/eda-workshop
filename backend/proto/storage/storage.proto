@@ -26,6 +26,15 @@ service StorageService {
       tags: "Storage"
     };
   }
+
+  rpc GetFileUrl(GetFileUrlRequest) returns (GetFileUrlResponse) {
+    option (google.api.http) = {get: "/storage/file-url/{file_key}"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Get File URL"
+      description: "Retrieves a pre-signed URL for downloading a file."
+      tags: "Storage"
+    };
+  }
 }
 
 message GetUploadUrlResponse {
@@ -36,4 +45,12 @@ message GetUploadUrlResponse {
 message ConfirmFileUploadRequest {
   string file_name = 1;
   string file_key = 2;
+}
+
+message GetFileUrlRequest {
+  string file_key = 1;
+}
+
+message GetFileUrlResponse {
+  string file_url = 1;
 }

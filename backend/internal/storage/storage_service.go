@@ -15,6 +15,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
+	"github.com/google/uuid"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/oklog/ulid/v2"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -89,6 +90,30 @@ func (s *StorageService) ConfirmFileUpload(
 	}
 
 	return &emptypb.Empty{}, nil
+}
+
+// GetFileUrl implements storage.StorageServiceServer.
+func (s *StorageService) GetFileUrl(
+	ctx context.Context,
+	req *storage.GetFileUrlRequest,
+) (*storage.GetFileUrlResponse, error) {
+	id, err := uuid.Parse(req.FileKey)
+	if err != nil {
+		return nil, fmt.Errorf("invalid file key: %w", err)
+	}
+
+	fileKey := ulid.ULID(id).String()
+	result, err := s.presign.PresignGetObject(ctx, &s3.GetObjectInput{
+		Key:    &fileKey,
+		Bucket: aws.String(stg.BUCKET_NAME),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &storage.GetFileUrlResponse{
+		FileUrl: result.URL,
+	}, nil
 }
 
 // Register implements service.Service.
