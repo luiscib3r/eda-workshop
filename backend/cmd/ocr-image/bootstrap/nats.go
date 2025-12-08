@@ -3,6 +3,7 @@ package bootstrap
 import (
 	"backend/internal/infrastructure/nats"
 	"backend/internal/ocr"
+	ocrimage "backend/internal/ocr-image"
 	"context"
 
 	"go.uber.org/fx"
@@ -13,25 +14,13 @@ var NatsModule = fx.Module(
 	fx.Provide(nats.NewNatsClient),
 	fx.Provide(nats.NewJetStreamClient),
 	fx.Provide(ocr.NewOcrProducer),
-	fx.Provide(ocr.NewFileUploadedConsumer),
-	fx.Invoke(CreateOcrChannel),
-	fx.Invoke(SubscribeOcrConsumers),
+	fx.Provide(ocrimage.NewFileUploadedConsumer),
+	fx.Invoke(SubscribeOcrImageConsumers),
 )
 
-func CreateOcrChannel(
+func SubscribeOcrImageConsumers(
 	lc fx.Lifecycle,
-	ocrProducer *ocr.OcrProducer,
-) {
-	lc.Append(fx.Hook{
-		OnStart: func(ctx context.Context) error {
-			return ocrProducer.CreateChannel(ctx)
-		},
-	})
-}
-
-func SubscribeOcrConsumers(
-	lc fx.Lifecycle,
-	fileUploadedConsumer *ocr.FileUploadedConsumer,
+	fileUploadedConsumer *ocrimage.FileUploadedConsumer,
 ) {
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {

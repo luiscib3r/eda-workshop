@@ -3,7 +3,7 @@ package bootstrap
 import (
 	"backend/internal/infrastructure/config"
 	"backend/internal/infrastructure/postgres"
-	storagedb "backend/internal/storage/db"
+	orcdb "backend/internal/ocr/db"
 	"backend/migrations"
 	"context"
 	"fmt"
@@ -18,19 +18,19 @@ import (
 var PostgresModule = fx.Module(
 	"postgres",
 	fx.Provide(postgres.NewPool),
-	fx.Provide(func(pool *pgxpool.Pool) *storagedb.Queries {
-		return storagedb.New(pool)
+	fx.Provide(func(pool *pgxpool.Pool) *orcdb.Queries {
+		return orcdb.New(pool)
 	}),
-	fx.Invoke(RunStorageMigrations),
+	fx.Invoke(RunOcrMigrations),
 )
 
-func RunStorageMigrations(
+func RunOcrMigrations(
 	lc fx.Lifecycle,
 	cfg *config.AppConfig,
 ) {
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
-			source, err := iofs.New(migrations.MigrationsFS, "storage")
+			source, err := iofs.New(migrations.MigrationsFS, "ocr")
 			if err != nil {
 				return err
 			}
@@ -38,7 +38,7 @@ func RunStorageMigrations(
 			m, err := migrate.NewWithSourceInstance(
 				"iofs",
 				source,
-				fmt.Sprintf("%s&x-migrations-table=storage_schema_migrations", cfg.Postgres.Dsn),
+				fmt.Sprintf("%s&x-migrations-table=ocr_schema_migrations", cfg.Postgres.Dsn),
 			)
 			if err != nil {
 				return err

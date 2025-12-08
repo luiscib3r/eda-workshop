@@ -4,5 +4,13 @@ package ocr;
 message FilePageRenderedEventData {
   string file_key = 1;
   string page_image_key = 2;
+  string page_key = 4;
   int32 page_number = 3;
+}
+
+message FilePageRegisteredEventData {
+  string id = 1;
+  string file_id = 2;
+  int32 page_number = 3;
+  string page_image_key = 4;
 }

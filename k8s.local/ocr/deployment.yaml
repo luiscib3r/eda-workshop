@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ocr
+spec:
+  selector:
+    matchLabels:
+      app: ocr
+  template:
+    metadata:
+      labels:
+        app: ocr
+    spec:
+      containers:
+        - name: ocr
+          image: ocr
+          volumeMounts:
+            - name: config
+              mountPath: /app/config.yaml
+              subPath: config.yaml
+          envFrom:
+            - configMapRef:
+                name: otel
+          env:
+            - name: OTEL_SERVICE_NAME
+              value: "ocr"
+            - name: OTEL_SERVICE_VERSION
+              value: "0.0.0"
+            - name: OTEL_CAPTURE_BODIES
+              value: "true"
+      volumes:
+        - name: config
+          configMap:
+            name: backend-config

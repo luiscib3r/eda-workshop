@@ -1,9 +1,10 @@
-package ocr
+package ocrimage
 
 import (
-	"backend/gen/ocr"
+	ocrpb "backend/gen/ocr"
 	"backend/internal/infrastructure/nats"
 	"backend/internal/infrastructure/storage"
+	"backend/internal/ocr"
 	ocrev "backend/internal/ocr/events"
 	"backend/internal/storage/events"
 	"bytes"
@@ -23,13 +24,13 @@ import (
 type FileUploadedConsumer struct {
 	*nats.NatsConsumer[*events.FileUploadedEvent]
 	s3       *s3.Client
-	producer *OcrProducer
+	producer *ocr.OcrProducer
 }
 
 func NewFileUploadedConsumer(
 	js jetstream.JetStream,
 	s3 *s3.Client,
-	producer *OcrProducer,
+	producer *ocr.OcrProducer,
 ) *FileUploadedConsumer {
 	name := "ocr_file_uploaded_consumer"
 
@@ -114,7 +115,7 @@ func (c *FileUploadedConsumer) handler(
 			ulid.Timestamp(time.Now()),
 			ulid.DefaultEntropy(),
 		).String()
-		pageImageKey := PageImageKey(event.Payload.FileKey, key)
+		pageImageKey := ocr.PageImageKey(event.Payload.FileKey, key)
 
 		if _, err = c.s3.PutObject(ctx, &s3.PutObjectInput{
 			Bucket:      aws.String(storage.BUCKET_NAME),
@@ -127,7 +128,8 @@ func (c *FileUploadedConsumer) handler(
 		}
 
 		// Publish FilePageRenderedEvent
-		event := ocrev.NewFilePageRenderedEvent(&ocr.FilePageRenderedEventData{
+		event := ocrev.NewFilePageRenderedEvent(&ocrpb.FilePageRenderedEventData{
+			PageKey:      key,
 			FileKey:      event.Payload.FileKey,
 			PageImageKey: pageImageKey,
 			PageNumber:   int32(pageNum),
