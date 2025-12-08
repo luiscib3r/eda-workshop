@@ -78,7 +78,7 @@ k8s_resource('frontend', port_forwards=['5173:5173'], labels='frontend')
 #=======================================================================
 # Go Service Deployment Function
 #=======================================================================
-def deploy_service(service_name, main_path, port_forwards, resource_deps=[], labels=[]):
+def deploy_service(service_name, main_path, port_forwards, resource_deps=[], labels=[], build_deps=[]):
     build_name = '{}-build'.format(service_name)
     build_cmd = 'CGO_ENABLED=0 GOOS=linux go build -o ./build/{} -gcflags "-N -l" {}'.format(
         service_name, 
@@ -92,7 +92,7 @@ def deploy_service(service_name, main_path, port_forwards, resource_deps=[], lab
         build_name, 
         build_cmd, 
         labels=labels,
-        deps=['./backend'], 
+        deps=build_deps, 
     )
 
     docker_build_with_restart(
@@ -137,7 +137,8 @@ deploy_service(
     service_name='backend',
     main_path='./backend/cmd/api',
     port_forwards=['40000:40000', '8080:8080'],
-    resource_deps=['nats', 'postgres', 'nginx']
+    resource_deps=['nats', 'postgres', 'nginx'],
+    build_deps=['./backend/internal/storage', './backend/cmd/api']
 )
 # ===========================================================
 # Telegram Notifier Service
@@ -147,7 +148,8 @@ deploy_service(
     main_path='./backend/cmd/telegram',
     port_forwards=['40001:40000'],
     resource_deps=['backend', 'ocr', 'ocr-image'],
-    labels=['backend']
+    labels=['backend'],
+    build_deps=['./backend/internal/telegram', './backend/cmd/telegram']
 )
 
 # ===========================================================
@@ -158,7 +160,8 @@ deploy_service(
     main_path='./backend/cmd/ocr',
     port_forwards=['40002:40000'],
     resource_deps=['backend'],
-    labels=['backend']
+    labels=['backend'],
+    build_deps=['./backend/internal/ocr', './backend/cmd/ocr']
 )
 
 # ===========================================================

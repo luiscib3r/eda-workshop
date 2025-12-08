@@ -15,8 +15,10 @@ var NatsModule = fx.Module(
 	fx.Provide(ocr.NewOcrProducer),
 	fx.Provide(ocr.NewFilePageRenderedConsumer),
 	fx.Provide(ocr.NewFilesDeletedConsumer),
+	fx.Provide(ocr.NewOutboxProcessor),
 	fx.Invoke(CreateOcrChannel),
 	fx.Invoke(SubcribeOcrConsumers),
+	fx.Invoke(RunOutboxProcessor),
 )
 
 func CreateOcrChannel(
@@ -48,6 +50,25 @@ func SubcribeOcrConsumers(
 		OnStop: func(ctx context.Context) error {
 			filePageRenderedConsumer.Stop()
 			filesDeletedConsumer.Stop()
+			return nil
+		},
+	})
+}
+
+func RunOutboxProcessor(
+	lc fx.Lifecycle,
+	processor *ocr.OutboxProcessor,
+) {
+	ctx := context.Background()
+	ctx, cancel := context.WithCancel(ctx)
+
+	lc.Append(fx.Hook{
+		OnStart: func(_ context.Context) error {
+			go processor.Start(ctx)
+			return nil
+		},
+		OnStop: func(_ context.Context) error {
+			cancel()
 			return nil
 		},
 	})
