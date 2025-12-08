@@ -14,6 +14,7 @@ var NatsModule = fx.Module(
 	fx.Provide(nats.NewJetStreamClient),
 	fx.Provide(ocr.NewOcrProducer),
 	fx.Provide(ocr.NewFilePageRenderedConsumer),
+	fx.Provide(ocr.NewFilesDeletedConsumer),
 	fx.Invoke(CreateOcrChannel),
 	fx.Invoke(SubcribeOcrConsumers),
 )
@@ -32,16 +33,21 @@ func CreateOcrChannel(
 func SubcribeOcrConsumers(
 	lc fx.Lifecycle,
 	filePageRenderedConsumer *ocr.FilePageRenderedConsumer,
+	filesDeletedConsumer *ocr.FilesDeletedConsumer,
 ) {
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			if err := filePageRenderedConsumer.Subscribe(ctx); err != nil {
 				return err
 			}
+			if err := filesDeletedConsumer.Subscribe(ctx); err != nil {
+				return err
+			}
 			return nil
 		},
 		OnStop: func(ctx context.Context) error {
 			filePageRenderedConsumer.Stop()
+			filesDeletedConsumer.Stop()
 			return nil
 		},
 	})
