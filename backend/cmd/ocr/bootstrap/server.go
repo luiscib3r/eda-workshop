@@ -13,7 +13,7 @@ import (
 var ServerModule = fx.Module(
 	"server",
 	fx.Provide(server.NewGatewayServeMux),
-	fx.Provide(server.NewServeMux),
+	fx.Provide(http.NewServeMux),
 	fx.Provide(server.NewHttpServer),
 	fx.Invoke(RunServer),
 )
