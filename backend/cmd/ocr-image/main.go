@@ -12,6 +12,8 @@ func main() {
 		bootstrap.OtelModule,
 		bootstrap.StorageModule,
 		bootstrap.NatsModule,
+		bootstrap.ServicesModule,
+		bootstrap.ServerModule,
 	)
 
 	app.Run()

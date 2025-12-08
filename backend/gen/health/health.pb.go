@@ -74,10 +74,11 @@ const file_health_health_proto_rawDesc = "" +
 	"\n" +
 	"\x13health/health.proto\x12\x06health\x1a\x1cgoogle/api/annotations.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a.protoc-gen-openapiv2/options/annotations.proto\"(\n" +
 	"\x0eHealthResponse\x12\x16\n" +
-	"\x06status\x18\x01 \x01(\tR\x06status2\x9f\x01\n" +
-	"\rHealthService\x12\x8d\x01\n" +
-	"\x06Health\x12\x16.google.protobuf.Empty\x1a\x16.health.HealthResponse\"S\x92AA\n" +
-	"\x06Health\x12\fHealth check\x1a)Returns the health status of the service.\x82\xd3\xe4\x93\x02\t\x12\a/healthBe\n" +
+	"\x06status\x18\x01 \x01(\tR\x06status2\xa0\x01\n" +
+	"\rHealthService\x12\x8e\x01\n" +
+	"\x06Health\x12\x16.google.protobuf.Empty\x1a\x16.health.HealthResponse\"T\x92AA\n" +
+	"\x06Health\x12\fHealth check\x1a)Returns the health status of the service.\x82\xd3\xe4\x93\x02\n" +
+	"\x12\b/healthzBe\n" +
 	"\n" +
 	"com.healthB\vHealthProtoP\x01Z\x12backend/gen/health\xa2\x02\x03HXX\xaa\x02\x06Health\xca\x02\x06Health\xe2\x02\x12Health\\GPBMetadata\xea\x02\x06Healthb\x06proto3"
 

@@ -14,6 +14,8 @@ func main() {
 		bootstrap.PostgresModule,
 		bootstrap.NatsModule,
 		bootstrap.LlmModule,
+		bootstrap.ServicesModule,
+		bootstrap.ServerModule,
 	)
 
 	app.Run()

@@ -13,6 +13,8 @@ func main() {
 		bootstrap.OtelModule,
 		bootstrap.TelegramModule,
 		bootstrap.NatsModule,
+		bootstrap.ServicesModule,
+		bootstrap.ServerModule,
 	)
 
 	app.Run()

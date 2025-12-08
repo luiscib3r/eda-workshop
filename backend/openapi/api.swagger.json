@@ -22,7 +22,7 @@
     "application/json"
   ],
   "paths": {
-    "/health": {
+    "/healthz": {
       "get": {
         "summary": "Health check",
         "description": "Returns the health status of the service.",
