@@ -3,6 +3,7 @@ package bootstrap
 import (
 	"backend/internal/infrastructure/config"
 	"backend/internal/infrastructure/postgres"
+	ocrdb "backend/internal/ocr/db"
 	storagedb "backend/internal/storage/db"
 	"backend/migrations"
 	"context"
@@ -20,6 +21,9 @@ var PostgresModule = fx.Module(
 	fx.Provide(postgres.NewPool),
 	fx.Provide(func(pool *pgxpool.Pool) *storagedb.Queries {
 		return storagedb.New(pool)
+	}),
+	fx.Provide(func(pool *pgxpool.Pool) *ocrdb.Queries {
+		return ocrdb.New(pool)
 	}),
 	fx.Invoke(RunStorageMigrations),
 )

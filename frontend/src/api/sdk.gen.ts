@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { FilesServiceDeleteFilesData, FilesServiceDeleteFilesErrors, FilesServiceDeleteFilesResponses, FilesServiceGetFilesData, FilesServiceGetFilesErrors, FilesServiceGetFilesResponses, HealthServiceHealthData, HealthServiceHealthErrors, HealthServiceHealthResponses, StorageServiceConfirmFileUploadData, StorageServiceConfirmFileUploadErrors, StorageServiceConfirmFileUploadResponses, StorageServiceGetFileUrlData, StorageServiceGetFileUrlErrors, StorageServiceGetFileUrlResponses, StorageServiceGetUploadUrlData, StorageServiceGetUploadUrlErrors, StorageServiceGetUploadUrlResponses } from './types.gen';
+import type { FilePagesServiceGetFilePagesData, FilePagesServiceGetFilePagesErrors, FilePagesServiceGetFilePagesResponses, FilesServiceDeleteFilesData, FilesServiceDeleteFilesErrors, FilesServiceDeleteFilesResponses, FilesServiceGetFilesData, FilesServiceGetFilesErrors, FilesServiceGetFilesResponses, HealthServiceHealthData, HealthServiceHealthErrors, HealthServiceHealthResponses, StorageServiceConfirmFileUploadData, StorageServiceConfirmFileUploadErrors, StorageServiceConfirmFileUploadResponses, StorageServiceGetFileUrlData, StorageServiceGetFileUrlErrors, StorageServiceGetFileUrlResponses, StorageServiceGetUploadUrlData, StorageServiceGetUploadUrlErrors, StorageServiceGetUploadUrlResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -23,7 +23,7 @@ export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends 
  *
  * Returns the health status of the service.
  */
-export const healthServiceHealth = <ThrowOnError extends boolean = false>(options?: Options<HealthServiceHealthData, ThrowOnError>) => (options?.client ?? client).get<HealthServiceHealthResponses, HealthServiceHealthErrors, ThrowOnError>({ url: '/health', ...options });
+export const healthServiceHealth = <ThrowOnError extends boolean = false>(options?: Options<HealthServiceHealthData, ThrowOnError>) => (options?.client ?? client).get<HealthServiceHealthResponses, HealthServiceHealthErrors, ThrowOnError>({ url: '/healthz', ...options });
 
 /**
  * Confirm File Upload
@@ -59,6 +59,13 @@ export const filesServiceDeleteFiles = <ThrowOnError extends boolean = false>(op
  * Retrieves a paginated list of files.
  */
 export const filesServiceGetFiles = <ThrowOnError extends boolean = false>(options?: Options<FilesServiceGetFilesData, ThrowOnError>) => (options?.client ?? client).get<FilesServiceGetFilesResponses, FilesServiceGetFilesErrors, ThrowOnError>({ url: '/storage/files', ...options });
+
+/**
+ * Get File Pages
+ *
+ * Retrieve pages of a file by file key
+ */
+export const filePagesServiceGetFilePages = <ThrowOnError extends boolean = false>(options: Options<FilePagesServiceGetFilePagesData, ThrowOnError>) => (options.client ?? client).get<FilePagesServiceGetFilePagesResponses, FilePagesServiceGetFilePagesErrors, ThrowOnError>({ url: '/storage/files/{fileKey}/pages', ...options });
 
 /**
  * Get Upload URL

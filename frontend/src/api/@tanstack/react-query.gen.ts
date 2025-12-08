@@ -3,8 +3,8 @@
 import { queryOptions, type UseMutationOptions } from '@tanstack/react-query';
 
 import { client } from '../client.gen';
-import { filesServiceDeleteFiles, filesServiceGetFiles, healthServiceHealth, type Options, storageServiceConfirmFileUpload, storageServiceGetFileUrl, storageServiceGetUploadUrl } from '../sdk.gen';
-import type { FilesServiceDeleteFilesData, FilesServiceDeleteFilesError, FilesServiceDeleteFilesResponse, FilesServiceGetFilesData, FilesServiceGetFilesError, FilesServiceGetFilesResponse, HealthServiceHealthData, HealthServiceHealthError, HealthServiceHealthResponse, StorageServiceConfirmFileUploadData, StorageServiceConfirmFileUploadError, StorageServiceConfirmFileUploadResponse, StorageServiceGetFileUrlData, StorageServiceGetFileUrlError, StorageServiceGetFileUrlResponse, StorageServiceGetUploadUrlData, StorageServiceGetUploadUrlError, StorageServiceGetUploadUrlResponse } from '../types.gen';
+import { filePagesServiceGetFilePages, filesServiceDeleteFiles, filesServiceGetFiles, healthServiceHealth, type Options, storageServiceConfirmFileUpload, storageServiceGetFileUrl, storageServiceGetUploadUrl } from '../sdk.gen';
+import type { FilePagesServiceGetFilePagesData, FilePagesServiceGetFilePagesError, FilePagesServiceGetFilePagesResponse, FilesServiceDeleteFilesData, FilesServiceDeleteFilesError, FilesServiceDeleteFilesResponse, FilesServiceGetFilesData, FilesServiceGetFilesError, FilesServiceGetFilesResponse, HealthServiceHealthData, HealthServiceHealthError, HealthServiceHealthResponse, StorageServiceConfirmFileUploadData, StorageServiceConfirmFileUploadError, StorageServiceConfirmFileUploadResponse, StorageServiceGetFileUrlData, StorageServiceGetFileUrlError, StorageServiceGetFileUrlResponse, StorageServiceGetUploadUrlData, StorageServiceGetUploadUrlError, StorageServiceGetUploadUrlResponse } from '../types.gen';
 
 export type QueryKey<TOptions extends Options> = [
     Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
@@ -135,6 +135,26 @@ export const filesServiceGetFilesOptions = (options?: Options<FilesServiceGetFil
         return data;
     },
     queryKey: filesServiceGetFilesQueryKey(options)
+});
+
+export const filePagesServiceGetFilePagesQueryKey = (options: Options<FilePagesServiceGetFilePagesData>) => createQueryKey('filePagesServiceGetFilePages', options);
+
+/**
+ * Get File Pages
+ *
+ * Retrieve pages of a file by file key
+ */
+export const filePagesServiceGetFilePagesOptions = (options: Options<FilePagesServiceGetFilePagesData>) => queryOptions<FilePagesServiceGetFilePagesResponse, FilePagesServiceGetFilePagesError, FilePagesServiceGetFilePagesResponse, ReturnType<typeof filePagesServiceGetFilePagesQueryKey>>({
+    queryFn: async ({ queryKey, signal }) => {
+        const { data } = await filePagesServiceGetFilePages({
+            ...options,
+            ...queryKey[0],
+            signal,
+            throwOnError: true
+        });
+        return data;
+    },
+    queryKey: filePagesServiceGetFilePagesQueryKey(options)
 });
 
 export const storageServiceGetUploadUrlQueryKey = (options?: Options<StorageServiceGetUploadUrlData>) => createQueryKey('storageServiceGetUploadUrl', options);

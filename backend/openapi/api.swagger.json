@@ -9,6 +9,9 @@
       "name": "HealthService"
     },
     {
+      "name": "FilePagesService"
+    },
+    {
       "name": "FilesService"
     },
     {
@@ -188,6 +191,52 @@
         ]
       }
     },
+    "/storage/files/{fileKey}/pages": {
+      "get": {
+        "summary": "Get File Pages",
+        "description": "Retrieve pages of a file by file key",
+        "operationId": "FilePagesService_GetFilePages",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ocrGetFilePagesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "fileKey",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "Files"
+        ]
+      }
+    },
     "/storage/upload-url": {
       "get": {
         "summary": "Get Upload URL",
@@ -239,6 +288,33 @@
       "properties": {
         "status": {
           "type": "string"
+        }
+      }
+    },
+    "ocrFilePage": {
+      "type": "object",
+      "properties": {
+        "pageNumber": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "imageUrl": {
+          "type": "string"
+        }
+      }
+    },
+    "ocrGetFilePagesResponse": {
+      "type": "object",
+      "properties": {
+        "pagination": {
+          "$ref": "#/definitions/corePagination"
+        },
+        "pages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/ocrFilePage"
+          }
         }
       }
     },

@@ -8,6 +8,7 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router";
 import { client } from "./api/client.gen";
+import FilePagesPage from "./file_pages/FilePagesPage";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ createRoot(document.getElementById("root")!).render(
         <Routes>
           <Route element={<App />}>
             <Route path={Router.HOME} element={<HomePage />} />
+            <Route path={Router.FILE_PAGES} element={<FilePagesPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

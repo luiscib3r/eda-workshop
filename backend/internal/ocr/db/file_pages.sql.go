@@ -44,21 +44,42 @@ func (q *Queries) DeleteFilePagesByFileID(ctx context.Context, fileID pgtype.UUI
 }
 
 const getFilePagesByFileID = `-- name: GetFilePagesByFileID :many
-SELECT id, file_id, page_image_key, page_number, text_content, error_message, created_at, updated_at
+SELECT 
+    id, file_id, page_image_key, page_number, text_content, error_message, created_at, updated_at,
+    COUNT(*) OVER() AS total
 FROM ocr.file_pages
 WHERE file_id = $1
 ORDER BY page_number ASC
+LIMIT $2 OFFSET $3
 `
 
-func (q *Queries) GetFilePagesByFileID(ctx context.Context, fileID pgtype.UUID) ([]OcrFilePage, error) {
-	rows, err := q.db.Query(ctx, getFilePagesByFileID, fileID)
+type GetFilePagesByFileIDParams struct {
+	FileID pgtype.UUID `json:"file_id"`
+	Limit  int32       `json:"limit"`
+	Offset int32       `json:"offset"`
+}
+
+type GetFilePagesByFileIDRow struct {
+	ID           pgtype.UUID        `json:"id"`
+	FileID       pgtype.UUID        `json:"file_id"`
+	PageImageKey string             `json:"page_image_key"`
+	PageNumber   int32              `json:"page_number"`
+	TextContent  *string            `json:"text_content"`
+	ErrorMessage *string            `json:"error_message"`
+	CreatedAt    pgtype.Timestamptz `json:"created_at"`
+	UpdatedAt    pgtype.Timestamptz `json:"updated_at"`
+	Total        int64              `json:"total"`
+}
+
+func (q *Queries) GetFilePagesByFileID(ctx context.Context, arg GetFilePagesByFileIDParams) ([]GetFilePagesByFileIDRow, error) {
+	rows, err := q.db.Query(ctx, getFilePagesByFileID, arg.FileID, arg.Limit, arg.Offset)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	var items []OcrFilePage
+	var items []GetFilePagesByFileIDRow
 	for rows.Next() {
-		var i OcrFilePage
+		var i GetFilePagesByFileIDRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.FileID,
@@ -68,6 +89,7 @@ func (q *Queries) GetFilePagesByFileID(ctx context.Context, fileID pgtype.UUID) 
 			&i.ErrorMessage,
 			&i.CreatedAt,
 			&i.UpdatedAt,
+			&i.Total,
 		); err != nil {
 			return nil, err
 		}

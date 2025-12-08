@@ -3,6 +3,7 @@ package bootstrap
 import (
 	"backend/internal/health"
 	"backend/internal/infrastructure/service"
+	"backend/internal/ocr"
 	"backend/internal/storage"
 	"context"
 
@@ -12,12 +13,16 @@ import (
 var ServicesModule = fx.Module(
 	"services",
 	// Provide services
+	// Health
 	fx.Provide(service.AsService(health.NewHealthService)),
+	// Storage
 	fx.Provide(storage.NewStorageService),
 	fx.Provide(service.AsService(func(storage *storage.StorageService) *storage.StorageService {
 		return storage
 	})),
 	fx.Provide(service.AsService(storage.NewFilesService)),
+	// Ocr
+	fx.Provide(service.AsService(ocr.NewFilesService)),
 	// Register services
 	fx.Provide(service.AsRegister(service.RegisterServices)),
 	// Create buckets on startup

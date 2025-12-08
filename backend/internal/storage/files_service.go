@@ -74,10 +74,11 @@ func (f *FilesService) GetFiles(
 	}
 
 	pageNumber := max(req.PageNumber, 1)
+	pageSize := int32(min(len(result), int(limit)))
 
 	pagination := &core.Pagination{
 		PageNumber:  pageNumber,
-		PageSize:    limit,
+		PageSize:    pageSize,
 		TotalItems:  totalItems,
 		HasNextPage: int32(pageNumber*limit) < totalItems,
 	}

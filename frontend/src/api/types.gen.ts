@@ -15,6 +15,16 @@ export type HealthHealthResponse = {
     status?: string;
 };
 
+export type OcrFilePage = {
+    pageNumber?: number;
+    imageUrl?: string;
+};
+
+export type OcrGetFilePagesResponse = {
+    pagination?: CorePagination;
+    pages?: Array<OcrFilePage>;
+};
+
 export type ProtobufAny = {
     '@type'?: string;
     [key: string]: unknown | string | undefined;
@@ -57,7 +67,7 @@ export type HealthServiceHealthData = {
     body?: never;
     path?: never;
     query?: never;
-    url: '/health';
+    url: '/healthz';
 };
 
 export type HealthServiceHealthErrors = {
@@ -188,6 +198,36 @@ export type FilesServiceGetFilesResponses = {
 };
 
 export type FilesServiceGetFilesResponse = FilesServiceGetFilesResponses[keyof FilesServiceGetFilesResponses];
+
+export type FilePagesServiceGetFilePagesData = {
+    body?: never;
+    path: {
+        fileKey: string;
+    };
+    query?: {
+        pageNumber?: number;
+        pageSize?: number;
+    };
+    url: '/storage/files/{fileKey}/pages';
+};
+
+export type FilePagesServiceGetFilePagesErrors = {
+    /**
+     * An unexpected error response.
+     */
+    default: RpcStatus;
+};
+
+export type FilePagesServiceGetFilePagesError = FilePagesServiceGetFilePagesErrors[keyof FilePagesServiceGetFilePagesErrors];
+
+export type FilePagesServiceGetFilePagesResponses = {
+    /**
+     * A successful response.
+     */
+    200: OcrGetFilePagesResponse;
+};
+
+export type FilePagesServiceGetFilePagesResponse = FilePagesServiceGetFilePagesResponses[keyof FilePagesServiceGetFilePagesResponses];
 
 export type StorageServiceGetUploadUrlData = {
     body?: never;

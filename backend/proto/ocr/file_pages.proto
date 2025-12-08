@@ -1,0 +1,33 @@
+syntax = "proto3";
+package ocr;
+
+import "core/pagination.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+service FilePagesService {
+  rpc GetFilePages(GetFilePagesRequest) returns (GetFilePagesResponse) {
+    option (google.api.http) = {get: "/storage/files/{file_key}/pages"};
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      summary: "Get File Pages"
+      description: "Retrieve pages of a file by file key"
+      tags: "Files"
+    };
+  }
+}
+
+message GetFilePagesRequest {
+  string file_key = 1;
+  int32 page_number = 2;
+  int32 page_size = 3;
+}
+
+message GetFilePagesResponse {
+  core.Pagination pagination = 1;
+  repeated FilePage pages = 2;
+}
+
+message FilePage {
+  int32 page_number = 1;
+  string image_url = 2;
+}

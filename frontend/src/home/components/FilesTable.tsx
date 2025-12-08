@@ -12,7 +12,12 @@ import {
   TableSelectionCell,
   Tooltip,
 } from "@fluentui/react-components";
-import { DocumentRegular, EyeRegular } from "@fluentui/react-icons";
+import {
+  DocumentOnePageSparkleRegular,
+  DocumentRegular,
+  EyeRegular,
+} from "@fluentui/react-icons";
+import { useNavigate } from "react-router";
 
 interface FilesTableProps {
   data: StorageGetFilesResponse;
@@ -21,6 +26,8 @@ interface FilesTableProps {
 }
 
 function FilesTable({ data, selected, setSelected }: FilesTableProps) {
+  const navigate = useNavigate();
+
   const columns = [
     { columnKey: "fileName", label: "File" },
     { columnKey: "fileSize", label: "Size" },
@@ -101,6 +108,14 @@ function FilesTable({ data, selected, setSelected }: FilesTableProps) {
                         }
                       : undefined
                   }
+                />
+              </Tooltip>
+              <Tooltip content="Show pages" relationship="label">
+                <Button
+                  appearance="subtle"
+                  size="small"
+                  icon={<DocumentOnePageSparkleRegular />}
+                  onClick={() => navigate(`/file/${item.fileKey}/pages`)}
                 />
               </Tooltip>
             </TableCell>
