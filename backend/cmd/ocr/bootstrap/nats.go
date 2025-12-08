@@ -15,6 +15,7 @@ var NatsModule = fx.Module(
 	fx.Provide(ocr.NewOcrProducer),
 	fx.Provide(ocr.NewFilePageRenderedConsumer),
 	fx.Provide(ocr.NewFilesDeletedConsumer),
+	fx.Provide(ocr.NewFilePagesDeletedConsumer),
 	fx.Provide(ocr.NewOutboxProcessor),
 	fx.Invoke(CreateOcrChannel),
 	fx.Invoke(SubcribeOcrConsumers),
@@ -36,6 +37,7 @@ func SubcribeOcrConsumers(
 	lc fx.Lifecycle,
 	filePageRenderedConsumer *ocr.FilePageRenderedConsumer,
 	filesDeletedConsumer *ocr.FilesDeletedConsumer,
+	filePagesDeletedConsumer *ocr.FilePagesDeletedConsumer,
 ) {
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
@@ -45,11 +47,15 @@ func SubcribeOcrConsumers(
 			if err := filesDeletedConsumer.Subscribe(ctx); err != nil {
 				return err
 			}
+			if err := filePagesDeletedConsumer.Subscribe(ctx); err != nil {
+				return err
+			}
 			return nil
 		},
 		OnStop: func(ctx context.Context) error {
 			filePageRenderedConsumer.Stop()
 			filesDeletedConsumer.Stop()
+			filePagesDeletedConsumer.Stop()
 			return nil
 		},
 	})

@@ -8,7 +8,6 @@ import (
 	"backend/internal/storage/events"
 	"context"
 
-	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -21,14 +20,12 @@ import (
 
 type FilesDeletedConsumer struct {
 	*nats.NatsConsumer[*events.FilesDeletedEvent]
-	s3   *s3.Client
 	db   *ocrdb.Queries
 	pool *pgxpool.Pool
 }
 
 func NewFilesDeletedConsumer(
 	js jetstream.JetStream,
-	s3 *s3.Client,
 	db *ocrdb.Queries,
 	pool *pgxpool.Pool,
 ) *FilesDeletedConsumer {
@@ -37,7 +34,6 @@ func NewFilesDeletedConsumer(
 	workerBufferSize := 10
 
 	consumer := &FilesDeletedConsumer{
-		s3:   s3,
 		db:   db,
 		pool: pool,
 	}

@@ -7,7 +7,6 @@ import (
 	"backend/internal/ocr/events"
 	"context"
 
-	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/jackc/pgx/v5/pgtype"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/nats-io/nats.go/jetstream"
@@ -18,14 +17,13 @@ import (
 
 type FilePageRenderedConsumer struct {
 	*nats.NatsConsumer[*events.FilePageRenderedEvent]
-	s3   *s3.Client
+
 	db   *ocrdb.Queries
 	pool *pgxpool.Pool
 }
 
 func NewFilePageRenderedConsumer(
 	js jetstream.JetStream,
-	s3 *s3.Client,
 	db *ocrdb.Queries,
 	pool *pgxpool.Pool,
 ) *FilePageRenderedConsumer {
@@ -34,7 +32,6 @@ func NewFilePageRenderedConsumer(
 	workerBufferSize := 10
 
 	consumer := &FilePageRenderedConsumer{
-		s3:   s3,
 		db:   db,
 		pool: pool,
 	}
@@ -117,7 +114,7 @@ func (c *FilePageRenderedConsumer) handler(
 			PageImageKey: event.Payload.PageImageKey,
 		},
 	)
-	
+
 	eventId := event.Id
 	eventType := ev.Type()
 	payload, err := protojson.Marshal(ev.Payload)
