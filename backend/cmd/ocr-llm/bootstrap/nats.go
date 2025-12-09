@@ -1,6 +1,7 @@
 package bootstrap
 
 import (
+	"backend/internal/infrastructure/llm"
 	"backend/internal/infrastructure/nats"
 	ocrllm "backend/internal/ocr-llm"
 	"context"
@@ -13,6 +14,7 @@ var NatsModule = fx.Module(
 	fx.Provide(nats.NewNatsClient),
 	fx.Provide(nats.NewJetStreamClient),
 	fx.Provide(ocrllm.NewFilePageRegisteredConsumer),
+	fx.Provide(llm.NewLlmCache),
 	fx.Invoke(SubcribeOcrLlmConsumers),
 )
 
