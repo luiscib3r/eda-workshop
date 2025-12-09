@@ -1,0 +1,117 @@
+---
+id: FileProcessing
+name: Procesamiento de Archivos PDF
+version: 1.0.0
+summary: Flujo completo desde la subida de un archivo PDF hasta la generación de OCR mediante IA.
+steps:
+  - id: user_upload
+    title: Usuario sube archivo
+    summary: El usuario selecciona un archivo PDF y lo sube a través del Frontend.
+    actor:
+      name: Usuario
+    next_step:
+      id: storage_service
+      label: Solicita URL de subida
+
+  - id: storage_service
+    title: Storage Service
+    service:
+      id: StorageService
+      version: 0.0.1
+    next_step:
+      id: s3_upload
+      label: Genera Presigned URL
+
+  - id: s3_upload
+    title: AWS S3
+    externalSystem:
+      name: AWS S3
+      summary: Object Storage
+      url: https://aws.amazon.com/s3/
+    next_step:
+      id: file_uploaded_event
+      label: Archivo almacenado exitosamente
+
+  - id: file_uploaded_event
+    title: Archivo Subido
+    message:
+      id: FileUploadedEvent
+      version: 1.0.0
+    next_step:
+      id: ocr_image_service
+      label: Notifica a los consumidores
+
+  - id: ocr_image_service
+    title: OCR Image Service
+    service:
+      id: OCRImageService
+      version: 0.0.1
+    next_step:
+      id: file_page_rendered_event
+      label: Renderiza páginas a imágenes
+
+  - id: file_page_rendered_event
+    title: Página Renderizada
+    message:
+      id: FilePageRenderedEvent
+      version: 1.0.0
+    next_step:
+      id: ocr_service
+      label: Procesa cada página
+
+  - id: ocr_service
+    title: OCR Service
+    service:
+      id: OCRService
+      version: 0.0.1
+    next_step:
+      id: file_page_registered_event
+      label: Registra página (Outbox)
+
+  - id: file_page_registered_event
+    title: Página Registrada
+    message:
+      id: FilePageRegisteredEvent
+      version: 1.0.0
+    next_step:
+      id: ocr_llm_service
+      label: Lista para OCR
+
+  - id: ocr_llm_service
+    title: OCR LLM Service
+    service:
+      id: OCRLLMService
+      version: 0.0.1
+    next_step:
+      id: openai_api
+      label: Envía imagen a IA
+
+  - id: openai_api
+    title: OpenAI API
+    externalSystem:
+      name: OpenAI
+      summary: LLM Provider (GPT-4o)
+      url: https://openai.com/
+    next_step:
+      id: file_page_ocr_generated_event
+      label: Retorna texto extraído
+
+  - id: file_page_ocr_generated_event
+    title: OCR Generado
+    message:
+      id: FilePageOcrGeneratedEvent
+      version: 1.0.0
+---
+
+## Descripción General
+
+Este flujo representa el "Happy Path" del sistema de procesamiento de documentos. Muestra cómo un archivo viaja a través de los diferentes microservicios, transformándose de un PDF crudo a texto estructurado.
+
+### Puntos Clave
+
+1.  **Ingesta:** El archivo entra por el `StorageService` y se guarda en S3.
+2.  **Transformación:** `OCRImageService` divide el PDF en imágenes.
+3.  **Orquestación:** `OCRService` coordina el estado y asegura la consistencia.
+4.  **Inteligencia:** `OCRLLMService` aplica IA para extraer el contenido.
+
+<NodeGraph />

@@ -1,0 +1,78 @@
+---
+id: Notification
+name: Notificaciones de Usuario
+version: 1.0.0
+summary: Flujo de notificaciones en tiempo real vía Telegram para mantener al usuario informado.
+steps:
+  - id: system_events
+    title: Eventos del Sistema
+    summary: Cualquier evento de cambio de estado en el sistema.
+    next_steps:
+      - id: file_uploaded_event
+        label: Ocurre subida
+      - id: file_page_rendered_event
+        label: Ocurre renderizado
+      - id: file_page_ocr_generated_event
+        label: Ocurre generación OCR
+
+  - id: file_uploaded_event
+    title: Archivo Subido
+    message:
+      id: FileUploadedEvent
+      version: 1.0.0
+    next_step:
+      id: telegram_service
+      label: Consumido por
+
+  - id: file_page_rendered_event
+    title: Página Renderizada
+    message:
+      id: FilePageRenderedEvent
+      version: 1.0.0
+    next_step:
+      id: telegram_service
+      label: Consumido por
+
+  - id: file_page_ocr_generated_event
+    title: OCR Generado
+    message:
+      id: FilePageOcrGeneratedEvent
+      version: 1.0.0
+    next_step:
+      id: telegram_service
+      label: Consumido por
+
+  - id: telegram_service
+    title: Telegram Service
+    service:
+      id: TelegramService
+      version: 0.0.1
+    next_step:
+      id: telegram_api
+      label: Envía mensaje
+
+  - id: telegram_api
+    title: Telegram API
+    externalSystem:
+      name: Telegram
+      summary: Messaging Platform
+      url: https://telegram.org/
+    next_step:
+      id: user_notification
+      label: Entrega notificación
+
+  - id: user_notification
+    title: Usuario Notificado
+    actor:
+      name: Usuario
+---
+
+## Descripción General
+
+Este flujo ilustra cómo el sistema mantiene informado al usuario sobre el progreso de sus archivos sin acoplar la lógica de notificación a los servicios principales.
+
+### Patrón Fan-Out
+
+El `TelegramService` actúa como un observador pasivo que se suscribe a múltiples eventos. Esto permite agregar notificaciones sin modificar el código de `OCRService` o `StorageService`.
+
+<NodeGraph />
