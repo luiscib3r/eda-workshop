@@ -34,7 +34,9 @@ func (t *bodyCapturingTransport) RoundTrip(req *http.Request) (*http.Response, e
 			req.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
 
 			if len(bodyBytes) > 0 && isTextContent(req.Header.Get("Content-Type")) {
-				span.SetAttributes(attribute.String("http.request.body", string(bodyBytes)))
+				bodyString := string(bodyBytes)
+				bodyString = strings.TrimSpace(bodyString)
+				span.SetAttributes(attribute.String("http.request.body", bodyString))
 			}
 		}
 	}
@@ -58,7 +60,9 @@ func (t *bodyCapturingTransport) RoundTrip(req *http.Request) (*http.Response, e
 			resp.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
 
 			if len(bodyBytes) > 0 && isTextContent(resp.Header.Get("Content-Type")) {
-				span.SetAttributes(attribute.String("http.response.body", string(bodyBytes)))
+				bodyString := string(bodyBytes)
+				bodyString = strings.TrimSpace(bodyString)
+				span.SetAttributes(attribute.String("http.response.body", bodyString))
 			}
 		}
 	}
