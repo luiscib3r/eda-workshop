@@ -101,6 +101,62 @@ Gracias a NATS y los grupos de consumidores (Consumer Groups), podemos levantar 
 - **Infraestructura:** Kubernetes (k8s), Tilt
 - **Observabilidad:** OpenTelemetry, Jaeger
 
+## 📋 Prerrequisitos
+
+Para ejecutar este proyecto, necesitas un entorno de Kubernetes local y la herramienta Tilt.
+
+### 1. Kubernetes Cluster
+
+El proyecto requiere un clúster de Kubernetes activo. Aquí tienes algunas recomendaciones según tu sistema operativo:
+
+- **General (Windows/Linux/Mac):** [Rancher Desktop](https://rancherdesktop.io/) es una excelente opción todo en uno.
+- **macOS:** [OrbStack](https://orbstack.dev/) es altamente recomendado por su ligereza y velocidad.
+- **Linux (Sin interfaz gráfica / Servidores):** [K3D](https://k3d.io/) es ideal.
+  - _Importante:_ Crea el clúster con un registry local para que Tilt funcione correctamente:
+    ```bash
+    k3d cluster create kubedev --registry-create kubedev-registry
+    ```
+
+### 2. Tilt
+
+[Tilt](https://tilt.dev/) es la herramienta que utilizamos para orquestar el desarrollo de microservicios en Kubernetes. Se encarga de construir las imágenes, desplegarlas y mostrar los logs en tiempo real.
+
+- Consulta la documentación oficial en [tilt.dev](https://tilt.dev/) para instalarlo.
+
+## ⚙️ Configuración
+
+Antes de levantar el proyecto, es necesario configurar algunas credenciales y parámetros.
+
+### 1. Backend Config
+
+El servicio de backend necesita credenciales para Telegram y el proveedor de LLM.
+
+1.  Navega a `k8s.local/backend/config/`.
+2.  Copia el archivo de ejemplo:
+    ```bash
+    cp k8s.local/backend/config/config.example.yaml k8s.local/backend/config/config.yaml
+    ```
+3.  Edita `k8s.local/backend/config/config.yaml` y establece los siguientes valores:
+    - `telegram.bot_token`: Tu token de bot de Telegram.
+    - `telegram.chat_id`: El ID del chat donde quieres recibir notificaciones.
+    - `llm.api_key`: Tu API Key de OpenRouter (o proveedor compatible).
+4.  Genera el ConfigMap de Kubernetes:
+    ```bash
+    cd k8s.local/backend
+    make config
+    ```
+
+### 2. OCR LLM Config (Opcional)
+
+Puedes personalizar los prompts y el modelo utilizado para el OCR.
+
+1.  Edita el archivo `k8s.local/ocr-llm/config/prompts.yaml` si deseas cambiar el modelo (por defecto `qwen/qwen3-vl-8b-instruct`) o las instrucciones del sistema.
+2.  Si realizas cambios, regenera el ConfigMap:
+    ```bash
+    cd k8s.local/ocr-llm
+    make config
+    ```
+
 ## 🚀 Cómo Ejecutar
 
 El proyecto incluye un `Makefile` para facilitar la gestión del ciclo de vida de la aplicación.
