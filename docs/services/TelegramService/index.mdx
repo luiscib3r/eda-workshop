@@ -1,0 +1,30 @@
+---
+id: TelegramService
+name: Telegram Service
+version: 0.0.1
+summary: |
+  Servicio de notificaciones que envía actualizaciones de estado a un chat de Telegram.
+
+receives:
+  - id: FileUploadedEvent
+    version: 1.0.0
+  - id: FilePageRenderedEvent
+    version: 1.0.0
+  - id: FilePageOcrGeneratedEvent
+    version: 1.0.0
+---
+
+## Overview
+
+El **Telegram Service** es un componente auxiliar diseñado para mejorar la observabilidad y la experiencia del usuario. Escucha los eventos clave del sistema y envía notificaciones en tiempo real a un chat de Telegram configurado.
+
+### Funcionalidades
+
+- **Notificación de Subida:** Informa cuando un nuevo archivo ha sido recibido.
+- **Progreso de Renderizado:** Notifica cuando una página ha sido convertida a imagen.
+- **Finalización de OCR:** Avisa cuando el texto de una página ha sido extraído exitosamente.
+- **Eliminación de Archivos:** Confirma cuando se han eliminado archivos del sistema.
+
+Este servicio demuestra cómo la arquitectura orientada a eventos permite agregar nuevas funcionalidades (como notificaciones) sin modificar los servicios existentes, simplemente suscribiéndose a los eventos que ya fluyen por el sistema.
+
+<NodeGraph />
