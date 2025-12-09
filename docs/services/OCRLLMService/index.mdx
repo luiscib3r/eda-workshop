@@ -1,0 +1,22 @@
+---
+name: OCR LLM Service
+summary: Servicio de IA para extracción de texto.
+owners:
+  - LuisCiber
+domain: OCR
+consumes:
+  - FilePageRegisteredEvent
+publishes:
+  - FilePageOcrGeneratedEvent
+---
+
+El **OCR LLM Service** es el encargado de la inteligencia del sistema. Utiliza modelos de lenguaje (como GPT-4o) para analizar la imagen de la página y extraer el texto con alta precisión, corrigiendo posibles errores de formato.
+
+### Flujo
+
+1. Escucha `FilePageRegisteredEvent`.
+2. Descarga la imagen de la página desde S3.
+3. Envía la imagen al proveedor de LLM (OpenAI).
+4. Recibe el texto extraído.
+5. Guarda el texto en la base de datos.
+6. Publica `FilePageOcrGeneratedEvent`.

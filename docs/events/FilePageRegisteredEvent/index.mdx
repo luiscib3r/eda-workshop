@@ -1,0 +1,21 @@
+---
+name: FilePageRegisteredEvent
+version: 1.0.0
+summary: Evento emitido cuando una página ha sido registrada en la base de datos y está lista para OCR.
+domain: OCR
+producers:
+  - OCR Service
+consumers:
+  - OCR LLM Service
+---
+
+### Schema
+
+```protobuf
+message FilePageRegisteredEventData {
+  string id = 1;
+  string file_id = 2;
+  int32 page_number = 3;
+  string page_image_key = 4;
+}
+```

@@ -1,0 +1,21 @@
+---
+name: FilePageOcrGeneratedEvent
+version: 1.0.0
+summary: Evento emitido cuando el texto de una página ha sido extraído exitosamente.
+domain: OCR
+producers:
+  - OCR LLM Service
+consumers:
+  - None
+---
+
+### Schema
+
+```protobuf
+message FilePageOcrGeneratedEventData {
+  string id = 1;
+  string file_id = 2;
+  int32 page_number = 3;
+  string page_image_key = 4;
+}
+```

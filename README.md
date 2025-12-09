@@ -103,16 +103,31 @@ Gracias a NATS y los grupos de consumidores (Consumer Groups), podemos levantar 
 
 ## 🚀 Cómo Ejecutar
 
-El proyecto está configurado para ejecutarse localmente utilizando **Tilt**, que orquesta todo el entorno en un clúster de Kubernetes local (como Docker Desktop o Kind).
+El proyecto incluye un `Makefile` para facilitar la gestión del ciclo de vida de la aplicación.
+
+### Comandos Disponibles
+
+- **`make setup`**: Ejecuta scripts de configuración inicial (si es necesario).
+- **`make up`**: Levanta todo el entorno utilizando **Tilt**. Crea el namespace `eda-workshop` si no existe.
+  ```bash
+  make up
+  ```
+- **`make stop`**: Detiene los servicios pero mantiene los volúmenes de datos (PVCs).
+  ```bash
+  make stop
+  ```
+- **`make down`**: ⚠️ **Destruye todo**, incluyendo los volúmenes de datos y el namespace. Úsalo para limpiar completamente el entorno.
+  ```bash
+  make down
+  ```
+- **`make clean`**: Limpia el sistema de Docker (imágenes no usadas, volúmenes huérfanos, etc.).
+
+### Ejecución Típica
+
+Para iniciar el taller, simplemente ejecuta:
 
 ```bash
-tilt up
+make up
 ```
 
-Esto levantará:
-
-- Base de datos PostgreSQL
-- NATS
-- Servicios de Backend
-- Frontend
-- Infraestructura de Observabilidad
+Esto abrirá la interfaz de Tilt en tu navegador, donde podrás ver el estado de todos los servicios.

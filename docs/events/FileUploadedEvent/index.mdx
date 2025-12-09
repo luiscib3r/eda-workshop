@@ -1,0 +1,19 @@
+---
+name: FileUploadedEvent
+version: 1.0.0
+summary: Evento emitido cuando un archivo se ha subido correctamente a S3.
+domain: Storage
+producers:
+  - Storage Service
+consumers:
+  - OCR Image Service
+---
+
+### Schema
+
+```protobuf
+message FileUploadedEventData {
+  string file_name = 1;
+  string file_key = 2;
+}
+```
