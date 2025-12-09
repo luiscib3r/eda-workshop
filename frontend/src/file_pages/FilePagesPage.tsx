@@ -13,12 +13,17 @@ import { useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import ImageViewer from "./components/ImageViewer";
 import PageGallery from "./components/PageGallery";
+import TextViewer from "./components/TextViewer";
 import { useFilePages } from "./hooks/useFilePages";
 
 function FilePagesPage() {
   const { fileId } = useParams();
   const navigate = useNavigate();
-  const [selectedPage, setSelectedPage] = useState<OcrFilePage | null>(null);
+  const [selectedImagePage, setSelectedImagePage] =
+    useState<OcrFilePage | null>(null);
+  const [selectedTextPage, setSelectedTextPage] = useState<OcrFilePage | null>(
+    null
+  );
 
   if (!fileId) {
     return (
@@ -97,7 +102,8 @@ function FilePagesPage() {
       <div className="flex-1 overflow-auto p-6">
         <PageGallery
           pages={data.pages || []}
-          onPageClick={(page) => setSelectedPage(page)}
+          onImageClick={(page) => setSelectedImagePage(page)}
+          onTextClick={(page) => setSelectedTextPage(page)}
         />
       </div>
 
@@ -115,9 +121,16 @@ function FilePagesPage() {
 
       {/* Image Viewer Modal */}
       <ImageViewer
-        page={selectedPage}
+        page={selectedImagePage}
         pages={data.pages || []}
-        onClose={() => setSelectedPage(null)}
+        onClose={() => setSelectedImagePage(null)}
+      />
+
+      {/* Text Viewer Modal */}
+      <TextViewer
+        page={selectedTextPage}
+        pages={data.pages || []}
+        onClose={() => setSelectedTextPage(null)}
       />
     </div>
   );

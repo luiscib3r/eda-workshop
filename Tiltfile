@@ -146,7 +146,7 @@ deploy_service(
     service_name='telegram',
     main_path='./backend/cmd/telegram',
     port_forwards=['40001:40000'],
-    resource_deps=['backend', 'ocr', 'ocr-image', 'ocr-llm'],
+    resource_deps=['backend', 'ocr'],
     labels=['backend'],
     build_deps=['./backend/internal/telegram', './backend/cmd/telegram']
 )
@@ -186,4 +186,9 @@ docker_build(
 )
 
 k8s_yaml('k8s.local/ocr-image/deployment.yaml')
-k8s_resource('ocr-image', labels='backend', resource_deps=['ocr'])
+k8s_resource(
+    'ocr-image', 
+    labels='backend', 
+    resource_deps=['ocr'], 
+    trigger_mode=TRIGGER_MODE_MANUAL,
+)
