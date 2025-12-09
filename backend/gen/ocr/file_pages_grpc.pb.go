@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	FilePagesService_GetFilePages_FullMethodName = "/ocr.FilePagesService/GetFilePages"
+	FilePagesService_GetFilePages_FullMethodName       = "/ocr.FilePagesService/GetFilePages"
+	FilePagesService_GetFilePageContent_FullMethodName = "/ocr.FilePagesService/GetFilePageContent"
 )
 
 // FilePagesServiceClient is the client API for FilePagesService service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type FilePagesServiceClient interface {
 	GetFilePages(ctx context.Context, in *GetFilePagesRequest, opts ...grpc.CallOption) (*GetFilePagesResponse, error)
+	GetFilePageContent(ctx context.Context, in *GetFilePageContentRequest, opts ...grpc.CallOption) (*GetFilePageContentResponse, error)
 }
 
 type filePagesServiceClient struct {
@@ -47,11 +49,22 @@ func (c *filePagesServiceClient) GetFilePages(ctx context.Context, in *GetFilePa
 	return out, nil
 }
 
+func (c *filePagesServiceClient) GetFilePageContent(ctx context.Context, in *GetFilePageContentRequest, opts ...grpc.CallOption) (*GetFilePageContentResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetFilePageContentResponse)
+	err := c.cc.Invoke(ctx, FilePagesService_GetFilePageContent_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // FilePagesServiceServer is the server API for FilePagesService service.
 // All implementations must embed UnimplementedFilePagesServiceServer
 // for forward compatibility.
 type FilePagesServiceServer interface {
 	GetFilePages(context.Context, *GetFilePagesRequest) (*GetFilePagesResponse, error)
+	GetFilePageContent(context.Context, *GetFilePageContentRequest) (*GetFilePageContentResponse, error)
 	mustEmbedUnimplementedFilePagesServiceServer()
 }
 
@@ -64,6 +77,9 @@ type UnimplementedFilePagesServiceServer struct{}
 
 func (UnimplementedFilePagesServiceServer) GetFilePages(context.Context, *GetFilePagesRequest) (*GetFilePagesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetFilePages not implemented")
+}
+func (UnimplementedFilePagesServiceServer) GetFilePageContent(context.Context, *GetFilePageContentRequest) (*GetFilePageContentResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetFilePageContent not implemented")
 }
 func (UnimplementedFilePagesServiceServer) mustEmbedUnimplementedFilePagesServiceServer() {}
 func (UnimplementedFilePagesServiceServer) testEmbeddedByValue()                          {}
@@ -104,6 +120,24 @@ func _FilePagesService_GetFilePages_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _FilePagesService_GetFilePageContent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFilePageContentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(FilePagesServiceServer).GetFilePageContent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: FilePagesService_GetFilePageContent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(FilePagesServiceServer).GetFilePageContent(ctx, req.(*GetFilePageContentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // FilePagesService_ServiceDesc is the grpc.ServiceDesc for FilePagesService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -114,6 +148,10 @@ var FilePagesService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetFilePages",
 			Handler:    _FilePagesService_GetFilePages_Handler,
+		},
+		{
+			MethodName: "GetFilePageContent",
+			Handler:    _FilePagesService_GetFilePageContent_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

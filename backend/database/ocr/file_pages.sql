@@ -19,3 +19,8 @@ WHERE file_id = $1;
 UPDATE ocr.file_pages
 SET text_content = $2
 WHERE id = $1;
+
+-- name: GetFilePageContentByID :one
+SELECT text_content
+FROM ocr.file_pages
+WHERE id = $1;

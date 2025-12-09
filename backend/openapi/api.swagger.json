@@ -117,6 +117,38 @@
         ]
       }
     },
+    "/storage/file-pages/{id}/content": {
+      "get": {
+        "summary": "Get File Page Content",
+        "description": "Retrieve the content of a specific file page by its ID",
+        "operationId": "FilePagesService_GetFilePageContent",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ocrGetFilePageContentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Files"
+        ]
+      }
+    },
     "/storage/file-url/{fileKey}": {
       "get": {
         "summary": "Get File URL",
@@ -327,11 +359,22 @@
     "ocrFilePage": {
       "type": "object",
       "properties": {
+        "id": {
+          "type": "string"
+        },
         "pageNumber": {
           "type": "integer",
           "format": "int32"
         },
         "imageUrl": {
+          "type": "string"
+        }
+      }
+    },
+    "ocrGetFilePageContentResponse": {
+      "type": "object",
+      "properties": {
+        "content": {
           "type": "string"
         }
       }

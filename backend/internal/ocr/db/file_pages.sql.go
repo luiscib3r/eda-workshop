@@ -43,6 +43,19 @@ func (q *Queries) DeleteFilePagesByFileID(ctx context.Context, fileID pgtype.UUI
 	return err
 }
 
+const getFilePageContentByID = `-- name: GetFilePageContentByID :one
+SELECT text_content
+FROM ocr.file_pages
+WHERE id = $1
+`
+
+func (q *Queries) GetFilePageContentByID(ctx context.Context, id pgtype.UUID) (*string, error) {
+	row := q.db.QueryRow(ctx, getFilePageContentByID, id)
+	var text_content *string
+	err := row.Scan(&text_content)
+	return text_content, err
+}
+
 const getFilePagesByFileID = `-- name: GetFilePagesByFileID :many
 SELECT 
     id, file_id, page_image_key, page_number, text_content, error_message, created_at, updated_at,

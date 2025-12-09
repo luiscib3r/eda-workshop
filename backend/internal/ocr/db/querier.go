@@ -14,6 +14,7 @@ type Querier interface {
 	CreateFilePage(ctx context.Context, arg CreateFilePageParams) error
 	CreateOutboxEvent(ctx context.Context, arg CreateOutboxEventParams) error
 	DeleteFilePagesByFileID(ctx context.Context, fileID pgtype.UUID) error
+	GetFilePageContentByID(ctx context.Context, id pgtype.UUID) (*string, error)
 	GetFilePagesByFileID(ctx context.Context, arg GetFilePagesByFileIDParams) ([]GetFilePagesByFileIDRow, error)
 	GetOutboxUnpublishedEvents(ctx context.Context, limit int32) ([]GetOutboxUnpublishedEventsRow, error)
 	MarkEventAsPublished(ctx context.Context, eventID pgtype.UUID) error

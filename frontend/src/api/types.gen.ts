@@ -16,13 +16,22 @@ export type HealthHealthResponse = {
 };
 
 export type OcrFilePage = {
+    id?: string;
     pageNumber?: number;
     imageUrl?: string;
+};
+
+export type OcrGetFilePageContentResponse = {
+    content?: string;
 };
 
 export type OcrGetFilePagesResponse = {
     pagination?: CorePagination;
     pages?: Array<OcrFilePage>;
+};
+
+export type OcrGetOcrResponse = {
+    ocrText?: string;
 };
 
 export type ProtobufAny = {
@@ -62,6 +71,33 @@ export type StorageGetUploadUrlResponse = {
     uploadUrl?: string;
     fileKey?: string;
 };
+
+export type LlmDebugServiceGetOcrData = {
+    body?: never;
+    path?: never;
+    query?: {
+        pageKey?: string;
+    };
+    url: '/_internal/llm/ocr';
+};
+
+export type LlmDebugServiceGetOcrErrors = {
+    /**
+     * An unexpected error response.
+     */
+    default: RpcStatus;
+};
+
+export type LlmDebugServiceGetOcrError = LlmDebugServiceGetOcrErrors[keyof LlmDebugServiceGetOcrErrors];
+
+export type LlmDebugServiceGetOcrResponses = {
+    /**
+     * A successful response.
+     */
+    200: OcrGetOcrResponse;
+};
+
+export type LlmDebugServiceGetOcrResponse = LlmDebugServiceGetOcrResponses[keyof LlmDebugServiceGetOcrResponses];
 
 export type HealthServiceHealthData = {
     body?: never;
@@ -114,6 +150,33 @@ export type StorageServiceConfirmFileUploadResponses = {
 };
 
 export type StorageServiceConfirmFileUploadResponse = StorageServiceConfirmFileUploadResponses[keyof StorageServiceConfirmFileUploadResponses];
+
+export type FilePagesServiceGetFilePageContentData = {
+    body?: never;
+    path: {
+        id: string;
+    };
+    query?: never;
+    url: '/storage/file-pages/{id}/content';
+};
+
+export type FilePagesServiceGetFilePageContentErrors = {
+    /**
+     * An unexpected error response.
+     */
+    default: RpcStatus;
+};
+
+export type FilePagesServiceGetFilePageContentError = FilePagesServiceGetFilePageContentErrors[keyof FilePagesServiceGetFilePageContentErrors];
+
+export type FilePagesServiceGetFilePageContentResponses = {
+    /**
+     * A successful response.
+     */
+    200: OcrGetFilePageContentResponse;
+};
+
+export type FilePagesServiceGetFilePageContentResponse = FilePagesServiceGetFilePageContentResponses[keyof FilePagesServiceGetFilePageContentResponses];
 
 export type StorageServiceGetFileUrlData = {
     body?: never;

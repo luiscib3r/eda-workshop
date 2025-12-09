@@ -138,8 +138,9 @@ func (x *GetFilePagesResponse) GetPages() []*FilePage {
 
 type FilePage struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	PageNumber    int32                  `protobuf:"varint,1,opt,name=page_number,json=pageNumber,proto3" json:"page_number,omitempty"`
-	ImageUrl      string                 `protobuf:"bytes,2,opt,name=image_url,json=imageUrl,proto3" json:"image_url,omitempty"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	PageNumber    int32                  `protobuf:"varint,2,opt,name=page_number,json=pageNumber,proto3" json:"page_number,omitempty"`
+	ImageUrl      string                 `protobuf:"bytes,3,opt,name=image_url,json=imageUrl,proto3" json:"image_url,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -174,6 +175,13 @@ func (*FilePage) Descriptor() ([]byte, []int) {
 	return file_ocr_file_pages_proto_rawDescGZIP(), []int{2}
 }
 
+func (x *FilePage) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
 func (x *FilePage) GetPageNumber() int32 {
 	if x != nil {
 		return x.PageNumber
@@ -184,6 +192,94 @@ func (x *FilePage) GetPageNumber() int32 {
 func (x *FilePage) GetImageUrl() string {
 	if x != nil {
 		return x.ImageUrl
+	}
+	return ""
+}
+
+type GetFilePageContentRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetFilePageContentRequest) Reset() {
+	*x = GetFilePageContentRequest{}
+	mi := &file_ocr_file_pages_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetFilePageContentRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetFilePageContentRequest) ProtoMessage() {}
+
+func (x *GetFilePageContentRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_ocr_file_pages_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetFilePageContentRequest.ProtoReflect.Descriptor instead.
+func (*GetFilePageContentRequest) Descriptor() ([]byte, []int) {
+	return file_ocr_file_pages_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *GetFilePageContentRequest) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+type GetFilePageContentResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Content       string                 `protobuf:"bytes,1,opt,name=content,proto3" json:"content,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetFilePageContentResponse) Reset() {
+	*x = GetFilePageContentResponse{}
+	mi := &file_ocr_file_pages_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetFilePageContentResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetFilePageContentResponse) ProtoMessage() {}
+
+func (x *GetFilePageContentResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_ocr_file_pages_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetFilePageContentResponse.ProtoReflect.Descriptor instead.
+func (*GetFilePageContentResponse) Descriptor() ([]byte, []int) {
+	return file_ocr_file_pages_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *GetFilePageContentResponse) GetContent() string {
+	if x != nil {
+		return x.Content
 	}
 	return ""
 }
@@ -202,14 +298,21 @@ const file_ocr_file_pages_proto_rawDesc = "" +
 	"\n" +
 	"pagination\x18\x01 \x01(\v2\x10.core.PaginationR\n" +
 	"pagination\x12#\n" +
-	"\x05pages\x18\x02 \x03(\v2\r.ocr.FilePageR\x05pages\"H\n" +
-	"\bFilePage\x12\x1f\n" +
-	"\vpage_number\x18\x01 \x01(\x05R\n" +
+	"\x05pages\x18\x02 \x03(\v2\r.ocr.FilePageR\x05pages\"X\n" +
+	"\bFilePage\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x1f\n" +
+	"\vpage_number\x18\x02 \x01(\x05R\n" +
 	"pageNumber\x12\x1b\n" +
-	"\timage_url\x18\x02 \x01(\tR\bimageUrl2\xc1\x01\n" +
+	"\timage_url\x18\x03 \x01(\tR\bimageUrl\"+\n" +
+	"\x19GetFilePageContentRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\"6\n" +
+	"\x1aGetFilePageContentResponse\x12\x18\n" +
+	"\acontent\x18\x01 \x01(\tR\acontent2\x9d\x03\n" +
 	"\x10FilePagesService\x12\xac\x01\n" +
 	"\fGetFilePages\x12\x18.ocr.GetFilePagesRequest\x1a\x19.ocr.GetFilePagesResponse\"g\x92A=\n" +
-	"\x05Files\x12\x0eGet File Pages\x1a$Retrieve pages of a file by file key\x82\xd3\xe4\x93\x02!\x12\x1f/storage/files/{file_key}/pagesBV\n" +
+	"\x05Files\x12\x0eGet File Pages\x1a$Retrieve pages of a file by file key\x82\xd3\xe4\x93\x02!\x12\x1f/storage/files/{file_key}/pages\x12\xd9\x01\n" +
+	"\x12GetFilePageContent\x12\x1e.ocr.GetFilePageContentRequest\x1a\x1f.ocr.GetFilePageContentResponse\"\x81\x01\x92AV\n" +
+	"\x05Files\x12\x15Get File Page Content\x1a6Retrieve the content of a specific file page by its ID\x82\xd3\xe4\x93\x02\"\x12 /storage/file-pages/{id}/contentBV\n" +
 	"\acom.ocrB\x0eFilePagesProtoP\x01Z\x0fbackend/gen/ocr\xa2\x02\x03OXX\xaa\x02\x03Ocr\xca\x02\x03Ocr\xe2\x02\x0fOcr\\GPBMetadata\xea\x02\x03Ocrb\x06proto3"
 
 var (
@@ -224,20 +327,24 @@ func file_ocr_file_pages_proto_rawDescGZIP() []byte {
 	return file_ocr_file_pages_proto_rawDescData
 }
 
-var file_ocr_file_pages_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_ocr_file_pages_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_ocr_file_pages_proto_goTypes = []any{
-	(*GetFilePagesRequest)(nil),  // 0: ocr.GetFilePagesRequest
-	(*GetFilePagesResponse)(nil), // 1: ocr.GetFilePagesResponse
-	(*FilePage)(nil),             // 2: ocr.FilePage
-	(*core.Pagination)(nil),      // 3: core.Pagination
+	(*GetFilePagesRequest)(nil),        // 0: ocr.GetFilePagesRequest
+	(*GetFilePagesResponse)(nil),       // 1: ocr.GetFilePagesResponse
+	(*FilePage)(nil),                   // 2: ocr.FilePage
+	(*GetFilePageContentRequest)(nil),  // 3: ocr.GetFilePageContentRequest
+	(*GetFilePageContentResponse)(nil), // 4: ocr.GetFilePageContentResponse
+	(*core.Pagination)(nil),            // 5: core.Pagination
 }
 var file_ocr_file_pages_proto_depIdxs = []int32{
-	3, // 0: ocr.GetFilePagesResponse.pagination:type_name -> core.Pagination
+	5, // 0: ocr.GetFilePagesResponse.pagination:type_name -> core.Pagination
 	2, // 1: ocr.GetFilePagesResponse.pages:type_name -> ocr.FilePage
 	0, // 2: ocr.FilePagesService.GetFilePages:input_type -> ocr.GetFilePagesRequest
-	1, // 3: ocr.FilePagesService.GetFilePages:output_type -> ocr.GetFilePagesResponse
-	3, // [3:4] is the sub-list for method output_type
-	2, // [2:3] is the sub-list for method input_type
+	3, // 3: ocr.FilePagesService.GetFilePageContent:input_type -> ocr.GetFilePageContentRequest
+	1, // 4: ocr.FilePagesService.GetFilePages:output_type -> ocr.GetFilePagesResponse
+	4, // 5: ocr.FilePagesService.GetFilePageContent:output_type -> ocr.GetFilePageContentResponse
+	4, // [4:6] is the sub-list for method output_type
+	2, // [2:4] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
 	2, // [2:2] is the sub-list for extension extendee
 	0, // [0:2] is the sub-list for field type_name
@@ -254,7 +361,7 @@ func file_ocr_file_pages_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_ocr_file_pages_proto_rawDesc), len(file_ocr_file_pages_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

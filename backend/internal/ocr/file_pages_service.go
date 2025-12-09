@@ -13,6 +13,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/jackc/pgx/v5/pgtype"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type FilesService struct {
@@ -65,6 +67,7 @@ func (f *FilesService) GetFilePages(
 	pages := make([]*ocr.FilePage, len(result))
 	for i, page := range result {
 		pages[i] = &ocr.FilePage{
+			Id:         page.ID.String(),
 			PageNumber: page.PageNumber + 1,
 		}
 
@@ -95,6 +98,33 @@ func (f *FilesService) GetFilePages(
 		Pages:      pages,
 		Pagination: pagination,
 	}, nil
+}
+
+// GetFilePageContent implements ocr.FilePagesServiceServer.
+func (f *FilesService) GetFilePageContent(
+	ctx context.Context,
+	req *ocr.GetFilePageContentRequest,
+) (*ocr.GetFilePageContentResponse, error) {
+	pageId, err := uuid.Parse(req.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	content, err := f.db.GetFilePageContentByID(ctx, pgtype.UUID{
+		Bytes: pageId,
+		Valid: true,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	if content != nil {
+		return &ocr.GetFilePageContentResponse{
+			Content: *content,
+		}, nil
+	}
+
+	return nil, status.Errorf(codes.NotFound, "file page content not found")
 }
 
 // Register implements service.Service.
