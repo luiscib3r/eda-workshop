@@ -12,6 +12,9 @@
       "name": "FilePagesService"
     },
     {
+      "name": "LlmDebugService"
+    },
+    {
       "name": "FilesService"
     },
     {
@@ -25,6 +28,36 @@
     "application/json"
   ],
   "paths": {
+    "/_internal/llm/ocr": {
+      "get": {
+        "operationId": "LlmDebugService_GetOcr",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/ocrGetOcrResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "pageKey",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "LlmDebugService"
+        ]
+      }
+    },
     "/healthz": {
       "get": {
         "summary": "Health check",
@@ -315,6 +348,14 @@
             "type": "object",
             "$ref": "#/definitions/ocrFilePage"
           }
+        }
+      }
+    },
+    "ocrGetOcrResponse": {
+      "type": "object",
+      "properties": {
+        "ocrText": {
+          "type": "string"
         }
       }
     },

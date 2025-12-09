@@ -1,0 +1,18 @@
+syntax = "proto3";
+package ocr;
+
+import "google/api/annotations.proto";
+
+service LlmDebugService {
+  rpc GetOcr(GetOcrRequest) returns (GetOcrResponse) {
+    option (google.api.http) = {get: "/_internal/llm/ocr"};
+  }
+}
+
+message GetOcrRequest {
+  string page_key = 1;
+}
+
+message GetOcrResponse {
+  string ocr_text = 1;
+}

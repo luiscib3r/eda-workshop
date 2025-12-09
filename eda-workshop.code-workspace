@@ -57,6 +57,15 @@
         "remotePath": "${workspaceFolder:🚀 Backend}",
         "port": 40001,
         "host": "localhost"
+      },
+      {
+        "name": "🚀 OCR LLM",
+        "type": "go",
+        "request": "attach",
+        "mode": "remote",
+        "remotePath": "${workspaceFolder:🚀 Backend}",
+        "port": 40003,
+        "host": "localhost"
       }
     ]
   }

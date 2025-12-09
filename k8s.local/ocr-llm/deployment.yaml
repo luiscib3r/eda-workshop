@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ocr-llm
+spec:
+  selector:
+    matchLabels:
+      app: ocr-llm
+  template:
+    metadata:
+      labels:
+        app: ocr-llm
+    spec:
+      containers:
+        - name: ocr-llm
+          image: ocr-llm
+          volumeMounts:
+            - name: config
+              mountPath: /app/config.yaml
+              subPath: config.yaml
+            - name: prompts
+              mountPath: /app/prompts.yaml
+              subPath: prompts.yaml
+          envFrom:
+            - configMapRef:
+                name: otel
+          env:
+            - name: OTEL_SERVICE_NAME
+              value: "ocr-llm"
+            - name: OTEL_SERVICE_VERSION
+              value: "0.0.0"
+            - name: OTEL_CAPTURE_BODIES
+              value: "true"
+      volumes:
+        - name: config
+          configMap:
+            name: backend-config
+        - name: prompts
+          configMap:
+            name: ocr-llm-config

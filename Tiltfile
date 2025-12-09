@@ -132,7 +132,6 @@ def deploy_service(service_name, main_path, port_forwards, resource_deps=[], lab
 # Backend Service
 # ===========================================================
 k8s_yaml('k8s.local/backend/config.yaml')
-k8s_yaml('k8s.local/backend/service.yaml')
 deploy_service(
     service_name='backend',
     main_path='./backend/cmd/api',
@@ -147,7 +146,7 @@ deploy_service(
     service_name='telegram',
     main_path='./backend/cmd/telegram',
     port_forwards=['40001:40000'],
-    resource_deps=['backend', 'ocr', 'ocr-image'],
+    resource_deps=['backend', 'ocr', 'ocr-image', 'ocr-llm'],
     labels=['backend'],
     build_deps=['./backend/internal/telegram', './backend/cmd/telegram']
 )
@@ -162,6 +161,19 @@ deploy_service(
     resource_deps=['backend'],
     labels=['backend'],
     build_deps=['./backend/internal/ocr', './backend/cmd/ocr']
+)
+
+# ===========================================================
+# OCR Llm
+# ===========================================================
+k8s_yaml('k8s.local/ocr-llm/config.yaml')
+deploy_service(
+    service_name='ocr-llm',
+    main_path='./backend/cmd/ocr-llm',
+    port_forwards=['40003:40000', '8081:8080'],
+    resource_deps=['ocr'],
+    labels=['backend'],
+    build_deps=['./backend/internal/ocr-llm', './backend/cmd/ocr-llm']
 )
 
 # ===========================================================
