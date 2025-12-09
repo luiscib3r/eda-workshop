@@ -19,7 +19,7 @@ func NewFileUploadedConsumer(
 ) *FileUploadedConsumer {
 	name := "tgbot_file_uploaded_consumer"
 
-	numWorkers := 5
+	numWorkers := 4
 	workerBufferSize := 10
 	consumer := &FileUploadedConsumer{
 		bot: bot,

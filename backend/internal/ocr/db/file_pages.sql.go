@@ -101,11 +101,10 @@ func (q *Queries) GetFilePagesByFileID(ctx context.Context, arg GetFilePagesByFi
 	return items, nil
 }
 
-const updateFilePageText = `-- name: UpdateFilePageText :one
+const updateFilePageText = `-- name: UpdateFilePageText :exec
 UPDATE ocr.file_pages
 SET text_content = $2
 WHERE id = $1
-RETURNING id, file_id, page_image_key, page_number, text_content, error_message, created_at, updated_at
 `
 
 type UpdateFilePageTextParams struct {
@@ -113,18 +112,7 @@ type UpdateFilePageTextParams struct {
 	TextContent *string     `json:"text_content"`
 }
 
-func (q *Queries) UpdateFilePageText(ctx context.Context, arg UpdateFilePageTextParams) (OcrFilePage, error) {
-	row := q.db.QueryRow(ctx, updateFilePageText, arg.ID, arg.TextContent)
-	var i OcrFilePage
-	err := row.Scan(
-		&i.ID,
-		&i.FileID,
-		&i.PageImageKey,
-		&i.PageNumber,
-		&i.TextContent,
-		&i.ErrorMessage,
-		&i.CreatedAt,
-		&i.UpdatedAt,
-	)
-	return i, err
+func (q *Queries) UpdateFilePageText(ctx context.Context, arg UpdateFilePageTextParams) error {
+	_, err := q.db.Exec(ctx, updateFilePageText, arg.ID, arg.TextContent)
+	return err
 }

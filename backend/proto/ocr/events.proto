@@ -18,3 +18,10 @@ message FilePageRegisteredEventData {
 message FilePagesDeletedEventData {
   repeated string file_keys = 1;
 }
+
+message FilePageOcrGeneratedEventData {
+  string id = 1;
+  string file_id = 2;
+  int32 page_number = 3;
+  string page_image_key = 4;
+}

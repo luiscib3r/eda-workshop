@@ -25,8 +25,8 @@ func NewFilesDeletedConsumer(
 	s3 *s3.Client,
 ) *FilesDeletedConsumer {
 	name := "storage_files_deleted_consumer"
-	numWorkers := 5
-	workerBufferSize := 10
+	numWorkers := 4
+	workerBufferSize := 20
 
 	consumer := &FilesDeletedConsumer{
 		s3: s3,

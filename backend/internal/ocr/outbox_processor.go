@@ -173,6 +173,24 @@ func (p *OutboxProcessor) event(
 			Id:      event.EventID.Bytes,
 			Payload: data,
 		}, nil
+	case events.FILE_PAGE_REGISTERED_EVENT:
+		data := &ocr.FilePageRegisteredEventData{}
+		if err := protojson.Unmarshal(event.Payload, data); err != nil {
+			return nil, err
+		}
+		return &events.FilePageRegisteredEvent{
+			Id:      event.EventID.Bytes,
+			Payload: data,
+		}, nil
+	case events.FILE_PAGE_OCR_GENERATED_EVENT:
+		data := &ocr.FilePageOcrGeneratedEventData{}
+		if err := protojson.Unmarshal(event.Payload, data); err != nil {
+			return nil, err
+		}
+		return &events.FilePageOcrGeneratedEvent{
+			Id:      event.EventID.Bytes,
+			Payload: data,
+		}, nil
 	}
 
 	return nil, fmt.Errorf("unknown outbox event type: %s", event.EventType)

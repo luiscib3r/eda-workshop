@@ -15,8 +15,7 @@ LIMIT $2 OFFSET $3;
 DELETE FROM ocr.file_pages
 WHERE file_id = $1;
 
--- name: UpdateFilePageText :one
+-- name: UpdateFilePageText :exec
 UPDATE ocr.file_pages
 SET text_content = $2
-WHERE id = $1
-RETURNING *;
+WHERE id = $1;

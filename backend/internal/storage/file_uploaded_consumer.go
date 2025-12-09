@@ -26,8 +26,8 @@ func NewFileUploadedConsumer(
 	s3 *s3.Client,
 ) *FileUploadedConsumer {
 	name := "storage_file_uploaded_consumer"
-	numWorkers := 10
-	workerBufferSize := 10
+	numWorkers := 4
+	workerBufferSize := 20
 
 	consumer := &FileUploadedConsumer{
 		db: db,

@@ -30,8 +30,8 @@ func NewFilesDeletedConsumer(
 	pool *pgxpool.Pool,
 ) *FilesDeletedConsumer {
 	name := "ocr_files_deleted_consumer"
-	numWorkers := 5
-	workerBufferSize := 10
+	numWorkers := 4
+	workerBufferSize := 20
 
 	consumer := &FilesDeletedConsumer{
 		db:   db,

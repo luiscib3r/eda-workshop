@@ -16,6 +16,7 @@ var NatsModule = fx.Module(
 	fx.Provide(telegram.NewFileUploadedConsumer),
 	fx.Provide(telegram.NewFilesDeletedConsumer),
 	fx.Provide(telegram.NewFilePageRenderedConsumer),
+	fx.Provide(telegram.NewFilePageOcrGenerateConsumer),
 	fx.Invoke(SubcribeTelegramConsumers),
 )
 
@@ -24,6 +25,7 @@ func SubcribeTelegramConsumers(
 	fileUploadedConsumer *telegram.FileUploadedConsumer,
 	filesDeletedConsumer *telegram.FilesDeletedConsumer,
 	filePageRenderedConsumer *telegram.FilePageRenderedConsumer,
+	filePageOcrGenerateConsumer *telegram.FilePageOcrGenerateConsumer,
 ) {
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
@@ -36,12 +38,16 @@ func SubcribeTelegramConsumers(
 			if err := filePageRenderedConsumer.Subscribe(ctx); err != nil {
 				fmt.Println("Error subscribing to file page rendered consumer:", err)
 			}
+			if err := filePageOcrGenerateConsumer.Subscribe(ctx); err != nil {
+				fmt.Println("Error subscribing to file page OCR generate consumer:", err)
+			}
 			return nil
 		},
 		OnStop: func(ctx context.Context) error {
 			fileUploadedConsumer.Stop()
 			filesDeletedConsumer.Stop()
 			filePageRenderedConsumer.Stop()
+			filePageOcrGenerateConsumer.Stop()
 			return nil
 		},
 	})

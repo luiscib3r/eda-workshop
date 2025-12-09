@@ -19,7 +19,7 @@ func NewFilesDeletedConsumer(
 ) *FilesDeletedConsumer {
 	name := "tgbot_files_deleted_consumer"
 
-	numWorkers := 5
+	numWorkers := 4
 	workerBufferSize := 10
 	consumer := &FilesDeletedConsumer{
 		bot: bot,

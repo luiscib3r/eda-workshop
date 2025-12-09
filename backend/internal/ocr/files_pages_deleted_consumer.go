@@ -31,8 +31,8 @@ func NewFilePagesDeletedConsumer(
 	s3 *s3.Client,
 ) *FilePagesDeletedConsumer {
 	name := "ocr_file_pages_deleted_consumer"
-	numWorkers := 5
-	workerBufferSize := 10
+	numWorkers := 4
+	workerBufferSize := 20
 
 	consumer := &FilePagesDeletedConsumer{
 		s3: s3,

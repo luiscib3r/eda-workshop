@@ -201,6 +201,74 @@ func (x *FilePagesDeletedEventData) GetFileKeys() []string {
 	return nil
 }
 
+type FilePageOcrGeneratedEventData struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	FileId        string                 `protobuf:"bytes,2,opt,name=file_id,json=fileId,proto3" json:"file_id,omitempty"`
+	PageNumber    int32                  `protobuf:"varint,3,opt,name=page_number,json=pageNumber,proto3" json:"page_number,omitempty"`
+	PageImageKey  string                 `protobuf:"bytes,4,opt,name=page_image_key,json=pageImageKey,proto3" json:"page_image_key,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *FilePageOcrGeneratedEventData) Reset() {
+	*x = FilePageOcrGeneratedEventData{}
+	mi := &file_ocr_events_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *FilePageOcrGeneratedEventData) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*FilePageOcrGeneratedEventData) ProtoMessage() {}
+
+func (x *FilePageOcrGeneratedEventData) ProtoReflect() protoreflect.Message {
+	mi := &file_ocr_events_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use FilePageOcrGeneratedEventData.ProtoReflect.Descriptor instead.
+func (*FilePageOcrGeneratedEventData) Descriptor() ([]byte, []int) {
+	return file_ocr_events_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *FilePageOcrGeneratedEventData) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *FilePageOcrGeneratedEventData) GetFileId() string {
+	if x != nil {
+		return x.FileId
+	}
+	return ""
+}
+
+func (x *FilePageOcrGeneratedEventData) GetPageNumber() int32 {
+	if x != nil {
+		return x.PageNumber
+	}
+	return 0
+}
+
+func (x *FilePageOcrGeneratedEventData) GetPageImageKey() string {
+	if x != nil {
+		return x.PageImageKey
+	}
+	return ""
+}
+
 var File_ocr_events_proto protoreflect.FileDescriptor
 
 const file_ocr_events_proto_rawDesc = "" +
@@ -219,7 +287,13 @@ const file_ocr_events_proto_rawDesc = "" +
 	"pageNumber\x12$\n" +
 	"\x0epage_image_key\x18\x04 \x01(\tR\fpageImageKey\"8\n" +
 	"\x19FilePagesDeletedEventData\x12\x1b\n" +
-	"\tfile_keys\x18\x01 \x03(\tR\bfileKeysBS\n" +
+	"\tfile_keys\x18\x01 \x03(\tR\bfileKeys\"\x8f\x01\n" +
+	"\x1dFilePageOcrGeneratedEventData\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
+	"\afile_id\x18\x02 \x01(\tR\x06fileId\x12\x1f\n" +
+	"\vpage_number\x18\x03 \x01(\x05R\n" +
+	"pageNumber\x12$\n" +
+	"\x0epage_image_key\x18\x04 \x01(\tR\fpageImageKeyBS\n" +
 	"\acom.ocrB\vEventsProtoP\x01Z\x0fbackend/gen/ocr\xa2\x02\x03OXX\xaa\x02\x03Ocr\xca\x02\x03Ocr\xe2\x02\x0fOcr\\GPBMetadata\xea\x02\x03Ocrb\x06proto3"
 
 var (
@@ -234,11 +308,12 @@ func file_ocr_events_proto_rawDescGZIP() []byte {
 	return file_ocr_events_proto_rawDescData
 }
 
-var file_ocr_events_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_ocr_events_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_ocr_events_proto_goTypes = []any{
-	(*FilePageRenderedEventData)(nil),   // 0: ocr.FilePageRenderedEventData
-	(*FilePageRegisteredEventData)(nil), // 1: ocr.FilePageRegisteredEventData
-	(*FilePagesDeletedEventData)(nil),   // 2: ocr.FilePagesDeletedEventData
+	(*FilePageRenderedEventData)(nil),     // 0: ocr.FilePageRenderedEventData
+	(*FilePageRegisteredEventData)(nil),   // 1: ocr.FilePageRegisteredEventData
+	(*FilePagesDeletedEventData)(nil),     // 2: ocr.FilePagesDeletedEventData
+	(*FilePageOcrGeneratedEventData)(nil), // 3: ocr.FilePageOcrGeneratedEventData
 }
 var file_ocr_events_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -259,7 +334,7 @@ func file_ocr_events_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_ocr_events_proto_rawDesc), len(file_ocr_events_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

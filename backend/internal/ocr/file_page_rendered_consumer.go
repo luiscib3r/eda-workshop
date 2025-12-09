@@ -17,7 +17,6 @@ import (
 
 type FilePageRenderedConsumer struct {
 	*nats.NatsConsumer[*events.FilePageRenderedEvent]
-
 	db   *ocrdb.Queries
 	pool *pgxpool.Pool
 }
@@ -28,8 +27,8 @@ func NewFilePageRenderedConsumer(
 	pool *pgxpool.Pool,
 ) *FilePageRenderedConsumer {
 	name := "ocr_file_page_rendered_consumer"
-	numWorkers := 5
-	workerBufferSize := 10
+	numWorkers := 4
+	workerBufferSize := 20
 
 	consumer := &FilePageRenderedConsumer{
 		db:   db,

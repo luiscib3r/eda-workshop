@@ -18,7 +18,7 @@ func NewFilePageRenderedConsumer(
 	bot *TelegramBot,
 ) *FilePageRenderedConsumer {
 	name := "tgbot_file_page_rendered_consumer"
-	numWorkers := 5
+	numWorkers := 4
 	workerBufferSize := 10
 	consumer := &FilePageRenderedConsumer{
 		bot: bot,

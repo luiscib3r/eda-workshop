@@ -17,7 +17,7 @@ type Querier interface {
 	GetFilePagesByFileID(ctx context.Context, arg GetFilePagesByFileIDParams) ([]GetFilePagesByFileIDRow, error)
 	GetOutboxUnpublishedEvents(ctx context.Context, limit int32) ([]GetOutboxUnpublishedEventsRow, error)
 	MarkEventAsPublished(ctx context.Context, eventID pgtype.UUID) error
-	UpdateFilePageText(ctx context.Context, arg UpdateFilePageTextParams) (OcrFilePage, error)
+	UpdateFilePageText(ctx context.Context, arg UpdateFilePageTextParams) error
 }
 
 var _ Querier = (*Queries)(nil)
