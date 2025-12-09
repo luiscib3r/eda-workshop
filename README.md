@@ -187,3 +187,26 @@ make up
 ```
 
 Esto abrirá la interfaz de Tilt en tu navegador, donde podrás ver el estado de todos los servicios.
+
+## 📚 Documentación (EventCatalog)
+
+En la carpeta `docs/` encontrarás la documentación detallada de la arquitectura, eventos, servicios y dominios del sistema, generada con [EventCatalog](https://www.eventcatalog.dev/).
+
+Esta documentación sirve como referencia del proyecto y como ejemplo práctico de cómo documentar sistemas basados en eventos.
+
+Para visualizar el catálogo localmente:
+
+1.  Navega a la carpeta `docs`:
+    ```bash
+    cd docs
+    ```
+2.  Instala las dependencias:
+    ```bash
+    npm install o bun install
+    ```
+3.  Inicia el servidor de desarrollo:
+    ```bash
+    npm run dev o bun dev
+    ```
+
+Esto abrirá el catálogo en `http://localhost:3000`.
