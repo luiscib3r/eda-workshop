@@ -1,12 +1,16 @@
 ---
+id: StorageService
 name: Storage Service
-summary: Servicio API para la gestión de subida de archivos.
-owners:
-  - LuisCiber
-domain: Storage
-publishes:
-  - FileUploadedEvent
+version: 0.0.1
+summary: |
+  Servicio API para la gestión de subida de archivos.
+
+sends:
+  - id: FileUploadedEvent
+    version: 1.0.0
 ---
+
+## Overview
 
 El **Storage Service** actúa como la puerta de entrada para los archivos. Expone una API gRPC/HTTP que permite a los clientes solicitar URLs de subida y confirmar cuando un archivo ha sido cargado exitosamente en S3.
 
@@ -14,3 +18,5 @@ El **Storage Service** actúa como la puerta de entrada para los archivos. Expon
 
 - **GetUploadUrl**: Genera una URL presignada de S3.
 - **ConfirmFileUpload**: Valida la subida y publica el evento `FileUploadedEvent`.
+
+<NodeGraph />

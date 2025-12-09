@@ -1,14 +1,19 @@
 ---
+id: OCRService
 name: OCR Service
-summary: Orquestador del proceso de OCR y registro de páginas.
-owners:
-  - LuisCiber
-domain: OCR
-consumes:
-  - FilePageRenderedEvent
-publishes:
-  - FilePageRegisteredEvent
+version: 0.0.1
+summary: |
+  Orquestador del proceso de OCR y registro de páginas.
+
+receives:
+  - id: FilePageRenderedEvent
+    version: 1.0.0
+sends:
+  - id: FilePageRegisteredEvent
+    version: 1.0.0
 ---
+
+## Overview
 
 El **OCR Service** mantiene el estado del procesamiento. Registra cada página renderizada en la base de datos y utiliza el **Transactional Outbox Pattern** para garantizar que el evento de registro se publique solo si la transacción de base de datos es exitosa.
 
@@ -20,3 +25,5 @@ El **OCR Service** mantiene el estado del procesamiento. Registra cada página r
 4. Inserta el evento en la tabla `outbox_events`.
 5. Confirma la transacción.
 6. Un proceso en segundo plano (Outbox Processor) publica `FilePageRegisteredEvent`.
+
+<NodeGraph />

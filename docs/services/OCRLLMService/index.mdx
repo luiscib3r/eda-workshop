@@ -1,14 +1,19 @@
 ---
+id: OCRLLMService
 name: OCR LLM Service
-summary: Servicio de IA para extracción de texto.
-owners:
-  - LuisCiber
-domain: OCR
-consumes:
-  - FilePageRegisteredEvent
-publishes:
-  - FilePageOcrGeneratedEvent
+version: 0.0.1
+summary: |
+  Servicio de IA para extracción de texto.
+
+receives:
+  - id: FilePageRegisteredEvent
+    version: 1.0.0
+sends:
+  - id: FilePageOcrGeneratedEvent
+    version: 1.0.0
 ---
+
+## Overview
 
 El **OCR LLM Service** es el encargado de la inteligencia del sistema. Utiliza modelos de lenguaje (como GPT-4o) para analizar la imagen de la página y extraer el texto con alta precisión, corrigiendo posibles errores de formato.
 
@@ -20,3 +25,5 @@ El **OCR LLM Service** es el encargado de la inteligencia del sistema. Utiliza m
 4. Recibe el texto extraído.
 5. Guarda el texto en la base de datos.
 6. Publica `FilePageOcrGeneratedEvent`.
+
+<NodeGraph />

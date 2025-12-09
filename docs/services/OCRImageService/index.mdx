@@ -1,14 +1,19 @@
 ---
+id: OCRImageService
 name: OCR Image Service
-summary: Servicio worker que convierte PDFs en imágenes.
-owners:
-  - LuisCiber
-domain: OCR
-consumes:
-  - FileUploadedEvent
-publishes:
-  - FilePageRenderedEvent
+version: 0.0.1
+summary: |
+  Servicio worker que convierte PDFs en imágenes.
+
+receives:
+  - id: FileUploadedEvent
+    version: 1.0.0
+sends:
+  - id: FilePageRenderedEvent
+    version: 1.0.0
 ---
+
+## Overview
 
 El **OCR Image Service** es un worker que reacciona cuando un nuevo archivo es subido. Descarga el PDF desde S3, lo procesa utilizando `muPDF` para renderizar cada página como una imagen PNG, y sube estas imágenes de vuelta a S3.
 
@@ -20,3 +25,5 @@ El **OCR Image Service** es un worker que reacciona cuando un nuevo archivo es s
 4. Renderiza la página como imagen PNG.
 5. Sube la imagen a S3.
 6. Publica `FilePageRenderedEvent` por cada página.
+
+<NodeGraph />

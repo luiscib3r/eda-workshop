@@ -1,7 +1,9 @@
 ---
+id: FileUploadedEvent
 name: FileUploadedEvent
 version: 1.0.0
-summary: Evento emitido cuando un archivo se ha subido correctamente a S3.
+summary: |
+  Evento emitido cuando un archivo se ha subido correctamente a S3.
 domain: Storage
 producers:
   - Storage Service
@@ -17,3 +19,5 @@ message FileUploadedEventData {
   string file_key = 2;
 }
 ```
+
+<NodeGraph />

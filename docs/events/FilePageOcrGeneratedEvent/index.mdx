@@ -1,12 +1,13 @@
 ---
+id: FilePageOcrGeneratedEvent
 name: FilePageOcrGeneratedEvent
 version: 1.0.0
-summary: Evento emitido cuando el texto de una página ha sido extraído exitosamente.
+summary: |
+  Evento emitido cuando el texto de una página ha sido extraído exitosamente.
 domain: OCR
 producers:
   - OCR LLM Service
-consumers:
-  - None
+consumers: []
 ---
 
 ### Schema
@@ -19,3 +20,5 @@ message FilePageOcrGeneratedEventData {
   string page_image_key = 4;
 }
 ```
+
+<NodeGraph />

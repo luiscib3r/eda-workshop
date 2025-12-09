@@ -1,7 +1,9 @@
 ---
+id: FilePageRenderedEvent
 name: FilePageRenderedEvent
 version: 1.0.0
-summary: Evento emitido cuando una página de un PDF ha sido convertida a imagen.
+summary: |
+  Evento emitido cuando una página de un PDF ha sido convertida a imagen.
 domain: OCR
 producers:
   - OCR Image Service
@@ -19,3 +21,5 @@ message FilePageRenderedEventData {
   int32 page_number = 3;
 }
 ```
+
+<NodeGraph />

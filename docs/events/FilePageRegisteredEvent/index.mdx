@@ -1,7 +1,9 @@
 ---
+id: FilePageRegisteredEvent
 name: FilePageRegisteredEvent
 version: 1.0.0
-summary: Evento emitido cuando una página ha sido registrada en la base de datos y está lista para OCR.
+summary: |
+  Evento emitido cuando una página ha sido registrada en la base de datos y está lista para OCR.
 domain: OCR
 producers:
   - OCR Service
@@ -19,3 +21,5 @@ message FilePageRegisteredEventData {
   string page_image_key = 4;
 }
 ```
+
+<NodeGraph />

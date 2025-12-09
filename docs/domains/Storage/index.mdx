@@ -1,9 +1,16 @@
 ---
+id: Storage
 name: Storage
-summary: Dominio encargado de la gestión y almacenamiento de archivos.
-owners:
-  - LuisCiber
+version: 0.0.1
+summary: |
+  Dominio encargado de la gestión y almacenamiento de archivos.
+
+services:
+  - id: StorageService
+    version: 0.0.1
 ---
+
+## Overview
 
 El dominio de **Storage** es responsable de la ingesta de archivos en el sistema. Gestiona la subida segura de archivos a S3 mediante Presigned URLs y notifica al resto del sistema cuando un nuevo archivo está disponible para su procesamiento.
 
@@ -13,3 +20,5 @@ El dominio de **Storage** es responsable de la ingesta de archivos en el sistema
 - Confirmación de subidas exitosas.
 - Almacenamiento de metadatos de archivos.
 - Publicación de eventos de disponibilidad de archivos.
+
+<NodeGraph />

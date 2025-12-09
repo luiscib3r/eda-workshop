@@ -1,9 +1,20 @@
 ---
+id: OCR
 name: OCR
-summary: Dominio encargado del procesamiento de imágenes y reconocimiento de texto.
-owners:
-  - LuisCiber
+version: 0.0.1
+summary: |
+  Dominio encargado del procesamiento de imágenes y reconocimiento de texto.
+
+services:
+  - id: OCRImageService
+    version: 0.0.1
+  - id: OCRService
+    version: 0.0.1
+  - id: OCRLLMService
+    version: 0.0.1
 ---
+
+## Overview
 
 El dominio de **OCR** (Optical Character Recognition) es el núcleo del procesamiento del sistema. Se encarga de transformar los archivos PDF en imágenes individuales, gestionar el flujo de procesamiento de cada página y utilizar inteligencia artificial para extraer el texto.
 
@@ -13,3 +24,5 @@ El dominio de **OCR** (Optical Character Recognition) es el núcleo del procesam
 - Orquestación del flujo de procesamiento por página.
 - Extracción de texto mediante LLMs.
 - Almacenamiento de resultados de OCR.
+
+<NodeGraph />
