@@ -27,7 +27,7 @@ spec:
             - containerPort: 8080
           volumeMounts:
             - name: config
-              mountPath: /config.yaml
+              mountPath: /app/config.yaml
               subPath: config.yaml
           envFrom:
             - configMapRef:

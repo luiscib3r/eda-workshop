@@ -30,6 +30,9 @@ spec:
             - name: config
               mountPath: /config.yaml
               subPath: config.yaml
+            - name: prompts
+              mountPath: /prompts.yaml
+              subPath: prompts.yaml
           envFrom:
             - configMapRef:
                 name: otel-config
@@ -42,6 +45,10 @@ spec:
         - name: config
           configMap:
             name: ocr-config
+        - name: prompts
+          configMap:
+            name: prompts-config
+
 ---
 apiVersion: v1
 kind: Service
