@@ -28,8 +28,6 @@ steps:
         from_secret: docker_password
       insecure:
         from_secret: docker_insecure
-      cache_from:
-        from_secret: docker_repo
       tags:
         - ${DRONE_COMMIT_SHA}
         - latest
@@ -48,8 +46,6 @@ steps:
         from_secret: docker_username
       password:
         from_secret: docker_password
-      cache_from:
-        from_secret: docker_repo_image
       tags:
         - ${DRONE_COMMIT_SHA}
         - latest
@@ -71,8 +67,6 @@ steps:
         from_secret: docker_username
       password:
         from_secret: docker_password
-      cache_from:
-        from_secret: docker_repo_frontend
       build_args_from_env:
         - VITE_API_BASE_URL
       tags:
