@@ -54,6 +54,31 @@ steps:
         - ${DRONE_COMMIT_SHA}
         - latest
 
+  - name: Build Frontend
+    image: plugins/docker
+    depends_on: [clone]
+    settings:
+      context: frontend
+      dockerfile: frontend/Dockerfile
+      registry:
+        from_secret: docker_registry
+      repo:
+        from_secret: docker_repo_frontend
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      cache_from:
+        from_secret: docker_repo_frontend
+      environment:
+        VITE_API_BASE_URL:
+          from_secret: api_base_url
+      build_args_from_env:
+        - VITE_API_BASE_URL
+      tags:
+        - ${DRONE_COMMIT_SHA}
+        - latest
+
   - name: Setup Registry Secret
     image: alpine/k8s:1.32.11
     depends_on: [clone]
@@ -121,6 +146,7 @@ steps:
     depends_on:
       - Build OCR System
       - Build OCR System Image
+      - Build Frontend
       - Setup Infrastructure
       - Setup Config
     image: alpine/k8s:1.32.11
@@ -129,6 +155,8 @@ steps:
         from_secret: docker_repo
       DOCKER_REPO_IMAGE:
         from_secret: docker_repo_image
+      DOCKER_REPO_FRONTEND:
+        from_secret: docker_repo_frontend
     commands:
       - NS="ocr-system-staging"; if [ "${DRONE_BRANCH}" = "main" ]; then NS="ocr-system"; fi
       - 'echo "Namespace: $NS"'
@@ -137,3 +165,4 @@ steps:
       - envsubst < k8s/ocr-deploy.yaml | kubectl apply -f - -n "$NS"
       - envsubst < k8s/ocr-llm-deploy.yaml | kubectl apply -f - -n "$NS"
       - envsubst < k8s/ocr-image-deploy.yaml | kubectl apply -f - -n "$NS"
+      - envsubst < k8s/frontend-deploy.yaml | kubectl apply -f - -n "$NS"

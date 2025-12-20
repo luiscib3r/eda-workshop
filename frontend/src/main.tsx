@@ -13,7 +13,7 @@ import FilePagesPage from "./file_pages/FilePagesPage";
 const queryClient = new QueryClient();
 
 client.setConfig({
-  baseUrl: "http://localhost:8080",
+  baseUrl: import.meta.env.VITE_API_BASE_URL,
 });
 
 createRoot(document.getElementById("root")!).render(
