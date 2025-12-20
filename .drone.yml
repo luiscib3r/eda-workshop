@@ -57,6 +57,9 @@ steps:
   - name: Build Frontend
     image: plugins/docker
     depends_on: [clone]
+    environment:
+      VITE_API_BASE_URL:
+        from_secret: api_base_url
     settings:
       context: frontend
       dockerfile: frontend/Dockerfile
@@ -70,9 +73,6 @@ steps:
         from_secret: docker_password
       cache_from:
         from_secret: docker_repo_frontend
-      environment:
-        VITE_API_BASE_URL:
-          from_secret: api_base_url
       build_args_from_env:
         - VITE_API_BASE_URL
       tags:
