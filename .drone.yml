@@ -14,7 +14,7 @@ trigger:
 steps:
   - name: Build OCR System
     image: plugins/docker
-    depends_on: []
+    depends_on: [clone]
     settings:
       context: backend
       dockerfile: backend/Dockerfile
@@ -34,7 +34,7 @@ steps:
 
   - name: Build OCR System Image
     image: plugins/docker
-    depends_on: []
+    depends_on: [clone]
     settings:
       context: backend
       dockerfile: backend/Dockerfile.ocr
@@ -49,3 +49,17 @@ steps:
       tags:
         - ${DRONE_COMMIT_SHA}
         - latest
+
+  - name: Setup Infrastructure Configuration
+    image: alpine/k8s:1.32.11
+    depends_on: [clone]
+    commands:
+      - |
+        if [ "${DRONE_BRANCH}" = "main" ]; then
+          NS="ocr-system"
+        else
+          NS="ocr-system-staging"
+        fi
+
+        echo "Using namespace: ${NS}"
+        kubectl apply -n "${NS}" -f k8s/postgres.yaml
