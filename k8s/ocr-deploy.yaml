@@ -11,6 +11,8 @@ spec:
       labels:
         app: ocr
     spec:
+      imagePullSecrets:
+        - name: regcred
       containers:
         - name: ocr
           image: ${DOCKER_REPO}:${DRONE_COMMIT_SHA}

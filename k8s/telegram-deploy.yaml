@@ -11,6 +11,8 @@ spec:
       labels:
         app: telegram
     spec:
+      imagePullSecrets:
+        - name: regcred
       containers:
         - name: telegram
           image: ${DOCKER_REPO}:${DRONE_COMMIT_SHA}

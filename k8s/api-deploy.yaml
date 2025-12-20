@@ -11,6 +11,8 @@ spec:
       labels:
         app: api
     spec:
+      imagePullSecrets:
+        - name: regcred
       containers:
         - name: api
           image: ${DOCKER_REPO}:${DRONE_COMMIT_SHA}

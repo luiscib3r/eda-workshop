@@ -50,6 +50,26 @@ steps:
         - ${DRONE_COMMIT_SHA}
         - latest
 
+  - name: Setup Registry Secret
+    image: alpine/k8s:1.32.11
+    depends_on: [clone]
+    environment:
+      DOCKER_REGISTRY:
+        from_secret: docker_registry
+      DOCKER_USERNAME:
+        from_secret: docker_username
+      DOCKER_PASSWORD:
+        from_secret: docker_password
+    commands:
+      - NS="ocr-system-staging"; if [ "${DRONE_BRANCH}" = "main" ]; then NS="ocr-system"; fi
+      - |
+        kubectl create secret docker-registry regcred \
+          --namespace="$NS" \
+          --docker-server="$DOCKER_REGISTRY" \
+          --docker-username="$DOCKER_USERNAME" \
+          --docker-password="$DOCKER_PASSWORD" \
+          --dry-run=client -o yaml | kubectl apply -f -
+
   - name: Setup Infrastructure
     image: alpine/k8s:1.32.11
     depends_on: [clone]
@@ -110,5 +130,5 @@ steps:
       - envsubst < k8s/api-deploy.yaml | kubectl apply -f - -n "$NS"
       - envsubst < k8s/telegram-deploy.yaml | kubectl apply -f - -n "$NS"
       - envsubst < k8s/ocr-deploy.yaml | kubectl apply -f - -n "$NS"
-      - envsubst < k8s/ocr-llm.yaml | kubectl apply -f - -n "$NS"
+      - envsubst < k8s/ocr-llm-deploy.yaml | kubectl apply -f - -n "$NS"
       - envsubst < k8s/ocr-image-deploy.yaml | kubectl apply -f - -n "$NS"
