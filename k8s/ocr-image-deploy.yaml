@@ -17,8 +17,11 @@ spec:
         - name: ocr-image
           image: ${DOCKER_REPO_IMAGE}:${DRONE_COMMIT_SHA}
           resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
             limits:
-              memory: "256Mi"
+              memory: "512Mi"
               cpu: "500m"
           ports:
             - containerPort: 8080
