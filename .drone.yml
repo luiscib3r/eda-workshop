@@ -54,14 +54,9 @@ steps:
     image: alpine/k8s:1.32.11
     depends_on: [clone]
     commands:
-      - |
-        if [ "${DRONE_BRANCH}" = "main" ]; then
-          NS="ocr-system"
-        else
-          NS="ocr-system-staging"
-        fi
-        echo "Using namespace: ${NS}"
-        kubectl apply -n "${NS}" -f k8s/postgres.yaml
+      - NS="ocr-system-staging"; if [ "${DRONE_BRANCH}" = "main" ]; then NS="ocr-system"; fi
+      - 'echo "Namespace: $NS"'
+      - kubectl apply -f k8s/postgres.yaml -n "$NS"
 
   - name: Setup Config
     image: alpine/k8s:1.32.11
@@ -92,22 +87,7 @@ steps:
       LLM_API_KEY:
         from_secret: llm_api_key
     commands:
-      - |
-        if [ "${DRONE_BRANCH}" = "main" ]; then
-          NS="ocr-system"
-        else
-          NS="ocr-system-staging"
-        fi
-
-        echo "Setting up config for namespace: ${NS}"
-
-        # Substituir variables en config.yaml
-        envsubst < k8s/config.yaml > config-filled.yaml
-
-        # Crear configmap desde el archivo filled
-        kubectl create configmap ocr-config \
-          --namespace="${NS}" \
-          --from-file=config.yaml=config-filled.yaml \
-          --dry-run=client -o yaml | kubectl apply -f -
-
-        echo "Config deployed to ${NS}"
+      - NS="ocr-system-staging"; if [ "${DRONE_BRANCH}" = "main" ]; then NS="ocr-system"; fi
+      - 'echo "Namespace: $NS"'
+      - envsubst < k8s/config.yaml > config-filled.yaml
+      - kubectl create configmap ocr-config -n "$NS" --from-file=config.yaml=config-filled.yaml --dry-run=client -o yaml | kubectl apply -f -
