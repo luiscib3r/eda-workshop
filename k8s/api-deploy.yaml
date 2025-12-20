@@ -35,7 +35,7 @@ spec:
                 name: otel-config
           env:
             - name: OTEL_SERVICE_NAME
-              value: "api"
+              value: "ocr-api"
             - name: OTEL_SERVICE_VERSION
               value: "0.0.0"
       volumes:
