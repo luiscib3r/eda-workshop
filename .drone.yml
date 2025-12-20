@@ -139,7 +139,6 @@ steps:
   - name: Deploy OCR Services
     depends_on:
       - Build OCR System
-      - Setup Infrastructure
       - Setup Config
     image: alpine/k8s:1.32.11
     environment:
@@ -156,7 +155,6 @@ steps:
   - name: Deploy OCR Image Services
     depends_on:
       - Build OCR System Image
-      - Setup Infrastructure
       - Setup Config
     image: alpine/k8s:1.32.11
     environment:
@@ -170,8 +168,6 @@ steps:
   - name: Deploy Frontend Services
     depends_on:
       - Build Frontend
-      - Setup Infrastructure
-      - Setup Config
     image: alpine/k8s:1.32.11
     environment:
       DOCKER_REPO_FRONTEND:
