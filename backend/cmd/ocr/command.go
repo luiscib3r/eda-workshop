@@ -1,12 +1,19 @@
-package main
+package ocr
 
 import (
 	"backend/cmd/ocr/bootstrap"
 
+	"github.com/spf13/cobra"
 	"go.uber.org/fx"
 )
 
-func main() {
+var OcrCmd = &cobra.Command{
+	Use:   "ocr",
+	Short: "OCR Service",
+	Run:   run,
+}
+
+func run(cmd *cobra.Command, args []string) {
 	app := fx.New(
 		bootstrap.ConfigModule,
 		bootstrap.OtelModule,

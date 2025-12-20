@@ -14,6 +14,7 @@ spec:
       containers:
         - name: ocr
           image: ocr
+          args: ["ocr"]
           volumeMounts:
             - name: config
               mountPath: /app/config.yaml

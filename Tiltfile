@@ -134,7 +134,7 @@ def deploy_service(service_name, main_path, port_forwards, resource_deps=[], lab
 k8s_yaml('k8s.local/backend/config.yaml')
 deploy_service(
     service_name='backend',
-    main_path='./backend/cmd/api',
+    main_path='./backend/cmd',
     port_forwards=['40000:40000', '8080:8080'],
     resource_deps=['nats', 'postgres', 'nginx'],
     build_deps=['./backend/internal/storage', './backend/cmd/api']
@@ -144,7 +144,7 @@ deploy_service(
 # ===========================================================
 deploy_service(
     service_name='telegram',
-    main_path='./backend/cmd/telegram',
+    main_path='./backend/cmd',
     port_forwards=['40001:40000'],
     resource_deps=['backend', 'ocr'],
     labels=['backend'],
@@ -156,7 +156,7 @@ deploy_service(
 # ===========================================================
 deploy_service(
     service_name='ocr',
-    main_path='./backend/cmd/ocr',
+    main_path='./backend/cmd',
     port_forwards=['40002:40000'],
     resource_deps=['backend'],
     labels=['backend'],
@@ -169,7 +169,7 @@ deploy_service(
 k8s_yaml('k8s.local/ocr-llm/config.yaml')
 deploy_service(
     service_name='ocr-llm',
-    main_path='./backend/cmd/ocr-llm',
+    main_path='./backend/cmd',
     port_forwards=['40003:40000', '8081:8080'],
     resource_deps=['ocr'],
     labels=['backend'],

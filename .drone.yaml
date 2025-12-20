@@ -1,0 +1,49 @@
+kind: pipeline
+type: kubernetes
+name: ocr-system
+
+service_account_name: drone-deployer
+
+trigger:
+  branch:
+    - main
+    - k8s-deploy
+  event:
+    - push
+
+steps:
+  - name: Build OCR System
+    image: plugins/docker
+    depends_on: []
+    settings:
+      context: backend
+      dockerfile: backend/Dockerfile
+      registry:
+        from_secret: docker_registry
+      repo:
+        from_secret: docker_repo
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      tags:
+        - ${DRONE_COMMIT_SHA}
+        - latest
+
+  - name: Build OCR System Image
+    image: plugins/docker
+    depends_on: []
+    settings:
+      context: backend
+      dockerfile: backend/Dockerfile.ocr
+      registry:
+        from_secret: docker_registry
+      repo:
+        from_secret: docker_repo_image
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      tags:
+        - ${DRONE_COMMIT_SHA}
+        - latest
