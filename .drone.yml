@@ -50,7 +50,7 @@ steps:
         - ${DRONE_COMMIT_SHA}
         - latest
 
-  - name: Setup Infrastructure Configuration
+  - name: Setup Infrastructure
     image: alpine/k8s:1.32.11
     depends_on: [clone]
     commands:
@@ -60,6 +60,54 @@ steps:
         else
           NS="ocr-system-staging"
         fi
-
         echo "Using namespace: ${NS}"
         kubectl apply -n "${NS}" -f k8s/postgres.yaml
+
+  - name: Setup Config
+    image: alpine/k8s:1.32.11
+    depends_on: [clone]
+    environment:
+      STORAGE_ENDPOINT:
+        from_secret: storage_endpoint
+      STORAGE_PUBLIC_ENDPOINT:
+        from_secret: storage_public_endpoint
+      STORAGE_ACCESS_KEY:
+        from_secret: storage_access_key
+      STORAGE_SECRET_KEY:
+        from_secret: storage_secret_key
+      CORS_ALLOWED_ORIGINS:
+        from_secret: cors_allowed_origins
+      NATS_URI:
+        from_secret: nats_uri
+      TELEGRAM_BOT_TOKEN:
+        from_secret: telegram_bot_token
+      TELEGRAM_CHAT_ID:
+        from_secret: telegram_chat_id
+      POSTGRES_URI:
+        from_secret: postgres_uri
+      POSTGRES_DSN:
+        from_secret: postgres_dsn
+      LLM_BASE_URL:
+        from_secret: llm_base_url
+      LLM_API_KEY:
+        from_secret: llm_api_key
+    commands:
+      - |
+        if [ "${DRONE_BRANCH}" = "main" ]; then
+          NS="ocr-system"
+        else
+          NS="ocr-system-staging"
+        fi
+
+        echo "Setting up config for namespace: ${NS}"
+
+        # Substituir variables en config.yaml
+        envsubst < k8s/config.yaml > config-filled.yaml
+
+        # Crear configmap desde el archivo filled
+        kubectl create configmap ocr-config \
+          --namespace="${NS}" \
+          --from-file=config.yaml=config-filled.yaml \
+          --dry-run=client -o yaml | kubectl apply -f -
+
+        echo "Config deployed to ${NS}"

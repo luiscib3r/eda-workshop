@@ -1,0 +1,28 @@
+server:
+  port: 8080
+
+storage:
+  endpoint: ${STORAGE_ENDPOINT}
+  public_endpoint: ${STORAGE_PUBLIC_ENDPOINT}
+  access_key: ${STORAGE_ACCESS_KEY}
+  secret_key: ${STORAGE_SECRET_KEY}
+  region: us-east-1
+  use_path_style: true
+
+cors:
+  allowed_origins: ${CORS_ALLOWED_ORIGINS}
+
+nats:
+  uri: ${NATS_URI}
+
+telegram:
+  bot_token: ${TELEGRAM_BOT_TOKEN}
+  chat_id: ${TELEGRAM_CHAT_ID}
+
+postgres:
+  uri: ${POSTGRES_URI}
+  dsn: ${POSTGRES_DSN}
+
+llm:
+  base_url: ${LLM_BASE_URL}
+  api_key: ${LLM_API_KEY}
