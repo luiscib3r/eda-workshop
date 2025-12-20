@@ -91,3 +91,15 @@ steps:
       - 'echo "Namespace: $NS"'
       - envsubst < k8s/config.yaml > config-filled.yaml
       - kubectl create configmap ocr-config -n "$NS" --from-file=config.yaml=config-filled.yaml --dry-run=client -o yaml | kubectl apply -f -
+
+  - name: Deploy Services
+    depends_on:
+      - Build OCR System
+      - Build OCR System Image
+      - Setup Infrastructure
+      - Setup Config
+    image: alpine/k8s:1.32.11
+    commands:
+      - NS="ocr-system-staging"; if [ "${DRONE_BRANCH}" = "main" ]; then NS="ocr-system"; fi
+      - 'echo "Namespace: $NS"'
+      - envsubst < k8s/api-deploy.yaml | kubectl apply -f - -n "$NS"

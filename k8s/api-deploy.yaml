@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+spec:
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+        - name: api
+          image: ${DOCKER_REPO}:${DRONE_COMMIT_SHA}
+          args: ["api"]
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: config
+              mountPath: /app/config.yaml
+              subPath: config.yaml
+          envFrom:
+            - configMapRef:
+                name: otel-config
+                namespace: otel
+          env:
+            - name: OTEL_SERVICE_NAME
+              value: "api"
+            - name: OTEL_SERVICE_VERSION
+              value: "0.0.0"
+      volumes:
+        - name: config
+          configMap:
+            name: ocr-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api
+spec:
+  selector:
+    app: api
+  ports:
+    - port: 80
+      targetPort: 8080
