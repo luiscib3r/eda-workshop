@@ -1,5 +1,7 @@
 # 🚀 EDA Workshop: Sistema de OCR Distribuido
 
+[![Build Status](https://cicd.luisciber.com/api/badges/luiscib3r/eda-workshop/status.svg)](https://cicd.luisciber.com/luiscib3r/eda-workshop)
+
 Este proyecto ha sido construido con fines educativos para demostrar en la práctica cómo implementar una **Event Driven Architecture (EDA)**, destacando sus beneficios y desafíos.
 
 El sistema es una plataforma de procesamiento de documentos que permite subir archivos PDF, los cuales son procesados asíncronamente para extraer imágenes de cada página y realizar OCR (Reconocimiento Óptico de Caracteres) utilizando Inteligencia Artificial.

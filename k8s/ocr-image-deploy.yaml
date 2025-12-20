@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ocr-image
+spec:
+  selector:
+    matchLabels:
+      app: ocr-image
+  template:
+    metadata:
+      labels:
+        app: ocr-image
+    spec:
+      imagePullSecrets:
+        - name: regcred
+      containers:
+        - name: ocr-image
+          image: ${DOCKER_REPO_IMAGE}:${DRONE_COMMIT_SHA}
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: config
+              mountPath: /app/config.yaml
+              subPath: config.yaml
+          envFrom:
+            - configMapRef:
+                name: otel-config
+          env:
+            - name: OTEL_SERVICE_NAME
+              value: "ocr-image"
+            - name: OTEL_SERVICE_VERSION
+              value: "0.0.0"
+      volumes:
+        - name: config
+          configMap:
+            name: ocr-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ocr-image
+spec:
+  selector:
+    app: ocr-image
+  ports:
+    - port: 80
+      targetPort: 8080
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ocr-image-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ocr-image
+  minReplicas: 1
+  maxReplicas: 5
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 80

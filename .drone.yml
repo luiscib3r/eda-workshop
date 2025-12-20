@@ -1,0 +1,178 @@
+kind: pipeline
+type: kubernetes
+name: ocr-system
+
+service_account_name: drone-deployer
+
+trigger:
+  branch:
+    - main
+    - k8s-deploy
+  event:
+    - push
+
+steps:
+  - name: Build OCR System
+    image: plugins/docker
+    depends_on: [clone]
+    settings:
+      context: backend
+      dockerfile: backend/Dockerfile
+      registry:
+        from_secret: docker_registry
+      repo:
+        from_secret: docker_repo
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      insecure:
+        from_secret: docker_insecure
+      tags:
+        - ${DRONE_COMMIT_SHA}
+        - latest
+
+  - name: Build OCR System Image
+    image: plugins/docker
+    depends_on: [clone]
+    settings:
+      context: backend
+      dockerfile: backend/Dockerfile.ocr
+      registry:
+        from_secret: docker_registry
+      repo:
+        from_secret: docker_repo_image
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      tags:
+        - ${DRONE_COMMIT_SHA}
+        - latest
+
+  - name: Build Frontend
+    image: plugins/docker
+    depends_on: [clone]
+    environment:
+      VITE_API_BASE_URL:
+        from_secret: api_base_url
+    settings:
+      context: frontend
+      dockerfile: frontend/Dockerfile
+      registry:
+        from_secret: docker_registry
+      repo:
+        from_secret: docker_repo_frontend
+      username:
+        from_secret: docker_username
+      password:
+        from_secret: docker_password
+      build_args_from_env:
+        - VITE_API_BASE_URL
+      tags:
+        - ${DRONE_COMMIT_SHA}
+        - latest
+
+  - name: Setup Registry Secret
+    image: alpine/k8s:1.32.11
+    depends_on: [clone]
+    environment:
+      DOCKER_REGISTRY:
+        from_secret: docker_registry
+      DOCKER_USERNAME:
+        from_secret: docker_username
+      DOCKER_PASSWORD:
+        from_secret: docker_password
+    commands:
+      - NS="ocr-system-staging"; if [ "${DRONE_BRANCH}" = "main" ]; then NS="ocr-system"; fi
+      - |
+        kubectl create secret docker-registry regcred \
+          --namespace="$NS" \
+          --docker-server="$DOCKER_REGISTRY" \
+          --docker-username="$DOCKER_USERNAME" \
+          --docker-password="$DOCKER_PASSWORD" \
+          --dry-run=client -o yaml | kubectl apply -f -
+
+  - name: Setup Infrastructure
+    image: alpine/k8s:1.32.11
+    depends_on: [clone]
+    commands:
+      - NS="ocr-system-staging"; if [ "${DRONE_BRANCH}" = "main" ]; then NS="ocr-system"; fi
+      - 'echo "Namespace: $NS"'
+      - kubectl apply -f k8s/postgres.yaml -n "$NS"
+
+  - name: Setup Config
+    image: alpine/k8s:1.32.11
+    depends_on: [clone]
+    environment:
+      STORAGE_ENDPOINT:
+        from_secret: storage_endpoint
+      STORAGE_PUBLIC_ENDPOINT:
+        from_secret: storage_public_endpoint
+      STORAGE_ACCESS_KEY:
+        from_secret: storage_access_key
+      STORAGE_SECRET_KEY:
+        from_secret: storage_secret_key
+      CORS_ALLOWED_ORIGINS:
+        from_secret: cors_allowed_origins
+      NATS_URI:
+        from_secret: nats_uri
+      TELEGRAM_BOT_TOKEN:
+        from_secret: telegram_bot_token
+      TELEGRAM_CHAT_ID:
+        from_secret: telegram_chat_id
+      POSTGRES_URI:
+        from_secret: postgres_uri
+      POSTGRES_DSN:
+        from_secret: postgres_dsn
+      LLM_BASE_URL:
+        from_secret: llm_base_url
+      LLM_API_KEY:
+        from_secret: llm_api_key
+    commands:
+      - NS="ocr-system-staging"; if [ "${DRONE_BRANCH}" = "main" ]; then NS="ocr-system"; fi
+      - 'echo "Namespace: $NS"'
+      - envsubst < k8s/config.yaml > config-filled.yaml
+      - kubectl create configmap ocr-config -n "$NS" --from-file=config.yaml=config-filled.yaml --dry-run=client -o yaml | kubectl apply -f -
+      - kubectl create configmap prompts-config -n "$NS" --from-file=k8s/prompts.yaml --dry-run=client -o yaml | kubectl apply -f -
+
+  - name: Deploy OCR Services
+    depends_on:
+      - Build OCR System
+      - Setup Config
+    image: alpine/k8s:1.32.11
+    environment:
+      DOCKER_REPO:
+        from_secret: docker_repo
+    commands:
+      - NS="ocr-system-staging"; if [ "${DRONE_BRANCH}" = "main" ]; then NS="ocr-system"; fi
+      - 'echo "Namespace: $NS"'
+      - envsubst < k8s/api-deploy.yaml | kubectl apply -f - -n "$NS"
+      - envsubst < k8s/telegram-deploy.yaml | kubectl apply -f - -n "$NS"
+      - envsubst < k8s/ocr-deploy.yaml | kubectl apply -f - -n "$NS"
+      - envsubst < k8s/ocr-llm-deploy.yaml | kubectl apply -f - -n "$NS"
+
+  - name: Deploy OCR Image Services
+    depends_on:
+      - Build OCR System Image
+      - Setup Config
+    image: alpine/k8s:1.32.11
+    environment:
+      DOCKER_REPO_IMAGE:
+        from_secret: docker_repo_image
+    commands:
+      - NS="ocr-system-staging"; if [ "${DRONE_BRANCH}" = "main" ]; then NS="ocr-system"; fi
+      - 'echo "Namespace: $NS"'
+      - envsubst < k8s/ocr-image-deploy.yaml | kubectl apply -f - -n "$NS"
+
+  - name: Deploy Frontend Services
+    depends_on:
+      - Build Frontend
+    image: alpine/k8s:1.32.11
+    environment:
+      DOCKER_REPO_FRONTEND:
+        from_secret: docker_repo_frontend
+    commands:
+      - NS="ocr-system-staging"; if [ "${DRONE_BRANCH}" = "main" ]; then NS="ocr-system"; fi
+      - 'echo "Namespace: $NS"'
+      - envsubst < k8s/frontend-deploy.yaml | kubectl apply -f - -n "$NS"
