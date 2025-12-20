@@ -142,21 +142,15 @@ steps:
       - kubectl create configmap ocr-config -n "$NS" --from-file=config.yaml=config-filled.yaml --dry-run=client -o yaml | kubectl apply -f -
       - kubectl create configmap prompts-config -n "$NS" --from-file=k8s/prompts.yaml --dry-run=client -o yaml | kubectl apply -f -
 
-  - name: Deploy Services
+  - name: Deploy OCR Services
     depends_on:
       - Build OCR System
-      - Build OCR System Image
-      - Build Frontend
       - Setup Infrastructure
       - Setup Config
     image: alpine/k8s:1.32.11
     environment:
       DOCKER_REPO:
         from_secret: docker_repo
-      DOCKER_REPO_IMAGE:
-        from_secret: docker_repo_image
-      DOCKER_REPO_FRONTEND:
-        from_secret: docker_repo_frontend
     commands:
       - NS="ocr-system-staging"; if [ "${DRONE_BRANCH}" = "main" ]; then NS="ocr-system"; fi
       - 'echo "Namespace: $NS"'
@@ -164,5 +158,31 @@ steps:
       - envsubst < k8s/telegram-deploy.yaml | kubectl apply -f - -n "$NS"
       - envsubst < k8s/ocr-deploy.yaml | kubectl apply -f - -n "$NS"
       - envsubst < k8s/ocr-llm-deploy.yaml | kubectl apply -f - -n "$NS"
+
+  - name: Deploy OCR Image Services
+    depends_on:
+      - Build OCR System Image
+      - Setup Infrastructure
+      - Setup Config
+    image: alpine/k8s:1.32.11
+    environment:
+      DOCKER_REPO_IMAGE:
+        from_secret: docker_repo_image
+    commands:
+      - NS="ocr-system-staging"; if [ "${DRONE_BRANCH}" = "main" ]; then NS="ocr-system"; fi
+      - 'echo "Namespace: $NS"'
       - envsubst < k8s/ocr-image-deploy.yaml | kubectl apply -f - -n "$NS"
+
+  - name: Deploy Frontend Services
+    depends_on:
+      - Build Frontend
+      - Setup Infrastructure
+      - Setup Config
+    image: alpine/k8s:1.32.11
+    environment:
+      DOCKER_REPO_FRONTEND:
+        from_secret: docker_repo_frontend
+    commands:
+      - NS="ocr-system-staging"; if [ "${DRONE_BRANCH}" = "main" ]; then NS="ocr-system"; fi
+      - 'echo "Namespace: $NS"'
       - envsubst < k8s/frontend-deploy.yaml | kubectl apply -f - -n "$NS"
