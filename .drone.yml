@@ -26,6 +26,8 @@ steps:
         from_secret: docker_username
       password:
         from_secret: docker_password
+      insecure:
+        from_secret: docker_insecure
       tags:
         - ${DRONE_COMMIT_SHA}
         - latest
