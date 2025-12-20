@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api
+  name: telegram
 spec:
   selector:
     matchLabels:
-      app: api
+      app: telegram
   template:
     metadata:
       labels:
-        app: api
+        app: telegram
     spec:
       containers:
-        - name: api
+        - name: telegram
           image: ${DOCKER_REPO}:${DRONE_COMMIT_SHA}
-          args: ["api"]
+          args: ["telegram"]
           resources:
             limits:
               memory: "128Mi"
@@ -36,15 +36,15 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: ocr-config
+            name: telegram-config
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: api
+  name: telegram
 spec:
   selector:
-    app: api
+    app: telegram
   ports:
     - port: 80
       targetPort: 8080

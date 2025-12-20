@@ -1,23 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api
+  name: ocr-image
 spec:
   selector:
     matchLabels:
-      app: api
+      app: ocr-image
   template:
     metadata:
       labels:
-        app: api
+        app: ocr-image
     spec:
       containers:
-        - name: api
-          image: ${DOCKER_REPO}:${DRONE_COMMIT_SHA}
-          args: ["api"]
+        - name: ocr-image
+          image: ${DOCKER_REPO_IMAGE}:${DRONE_COMMIT_SHA}
           resources:
             limits:
-              memory: "128Mi"
+              memory: "256Mi"
               cpu: "500m"
           ports:
             - containerPort: 8080
@@ -36,15 +35,15 @@ spec:
       volumes:
         - name: config
           configMap:
-            name: ocr-config
+            name: ocr-image-config
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: api
+  name: ocr-image
 spec:
   selector:
-    app: api
+    app: ocr-image
   ports:
     - port: 80
       targetPort: 8080

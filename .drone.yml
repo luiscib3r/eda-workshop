@@ -99,7 +99,16 @@ steps:
       - Setup Infrastructure
       - Setup Config
     image: alpine/k8s:1.32.11
+    environment:
+      DOCKER_REPO:
+        from_secret: docker_repo
+      DOCKER_REPO_IMAGE:
+        from_secret: docker_repo_image
     commands:
       - NS="ocr-system-staging"; if [ "${DRONE_BRANCH}" = "main" ]; then NS="ocr-system"; fi
       - 'echo "Namespace: $NS"'
       - envsubst < k8s/api-deploy.yaml | kubectl apply -f - -n "$NS"
+      - envsubst < k8s/telegram-deploy.yaml | kubectl apply -f - -n "$NS"
+      - envsubst < k8s/ocr-deploy.yaml | kubectl apply -f - -n "$NS"
+      - envsubst < k8s/ocr-llm.yaml | kubectl apply -f - -n "$NS"
+      - envsubst < k8s/ocr-image-deploy.yaml | kubectl apply -f - -n "$NS"
