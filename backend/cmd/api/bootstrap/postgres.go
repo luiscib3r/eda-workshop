@@ -42,7 +42,7 @@ func RunStorageMigrations(
 			m, err := migrate.NewWithSourceInstance(
 				"iofs",
 				source,
-				fmt.Sprintf("%s&x-migrations-table=storage_schema_migrations", cfg.Postgres.Dsn),
+				fmt.Sprintf("%s?x-migrations-table=storage_schema_migrations", cfg.Postgres.Dsn),
 			)
 			if err != nil {
 				return err

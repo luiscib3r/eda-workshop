@@ -21,8 +21,8 @@ telegram:
   chat_id: use your own chat id here
 
 postgres:
-  uri: postgres://developer:devpassword@postgres:5432/eda_workshop?sslmode=disable
-  dsn: pgx5://developer:devpassword@postgres:5432/eda_workshop?sslmode=disable
+  uri: postgres://developer:devpassword@postgres:5432/eda_workshop
+  dsn: pgx5://developer:devpassword@postgres:5432/eda_workshop
 
 llm:
   base_url: https://openrouter.ai/api/v1

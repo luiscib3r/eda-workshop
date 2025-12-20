@@ -38,7 +38,7 @@ func RunOcrMigrations(
 			m, err := migrate.NewWithSourceInstance(
 				"iofs",
 				source,
-				fmt.Sprintf("%s&x-migrations-table=ocr_schema_migrations", cfg.Postgres.Dsn),
+				fmt.Sprintf("%s?x-migrations-table=ocr_schema_migrations", cfg.Postgres.Dsn),
 			)
 			if err != nil {
 				return err
