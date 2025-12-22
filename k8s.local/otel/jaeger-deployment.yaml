@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jaeger
+spec:
+  selector:
+    matchLabels:
+      app: jaeger
+  template:
+    metadata:
+      labels:
+        app: jaeger
+    spec:
+      containers:
+        - name: jaeger
+          image: cr.jaegertracing.io/jaegertracing/jaeger:latest
+          args: ["--config=/etc/jaeger/config.yaml"]
+          ports:
+            - containerPort: 16686
+              name: ui
+            - containerPort: 4317
+              name: grpc
+            - containerPort: 4318
+              name: http
+            - containerPort: 8888
+              name: metrics
+          env:
+            - name: COLLECTOR_OTLP_ENABLED
+              value: "true"
+            - name: OTEL_TRACES_SAMPLER
+              value: "always_off"
+          volumeMounts:
+            - name: config
+              mountPath: /etc/jaeger
+            - name: storage
+              mountPath: /data
+      volumes:
+        - name: config
+          configMap:
+            name: jaeger-config
+        - name: storage
+          emptyDir:
+            sizeLimit: 500Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jaeger
+spec:
+  selector:
+    app: jaeger
+  ports:
+    - port: 80
+      targetPort: 16686
+      name: ui
+    - port: 4317
+      targetPort: 4317
+      name: grpc
+    - port: 4318
+      targetPort: 4318
+      name: http
+    - port: 8888
+      targetPort: 8888
+      name: metrics

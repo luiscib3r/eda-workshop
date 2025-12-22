@@ -6,8 +6,9 @@ load('ext://helm_remote', 'helm_remote')
 # Open Telemetry Collector
 #=======================================================================
 k8s_yaml('k8s.local/otel/config.yaml')
-k8s_yaml('k8s.local/otel/jaeger.yaml')
-k8s_yaml('k8s.local/otel/prometheus.yaml')
+k8s_yaml('k8s.local/otel/jaeger-config.yaml')
+k8s_yaml('k8s.local/otel/jaeger-deployment.yaml')
+k8s_yaml('k8s.local/otel/prometheus-deployment.yaml')
 k8s_resource('jaeger', labels='otel', port_forwards=[16686])
 k8s_resource('prometheus', labels='otel')
 
