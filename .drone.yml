@@ -7,7 +7,7 @@ service_account_name: drone-deployer
 trigger:
   branch:
     - main
-    - k8s-deploy
+    - staging
   event:
     - push
 
