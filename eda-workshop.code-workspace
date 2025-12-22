@@ -38,7 +38,7 @@
       "docker.docker",
       "ms-azuretools.vscode-docker",
       "ms-kubernetes-tools.vscode-kubernetes-tools",
-      "mongodb.mongodb-vscode"
+      "ms-ossdata.vscode-pgsql"
     ]
   },
   "launch": {
